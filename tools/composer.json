@@ -1,6 +1,9 @@
 {
     "require": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "friendsofphp/php-cs-fixer": "^3.60",
+        "kubawerlos/php-cs-fixer-custom-fixers": "^3.21",
+        "nexusphp/cs-config": "^3.24"
     },
     "config": {
         "optimize-autoloader": true,

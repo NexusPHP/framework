@@ -25,5 +25,16 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "@composer update --ansi --working-dir=tools"
+        ],
+        "cs:check": "tools/vendor/bin/php-cs-fixer check --ansi --verbose --diff",
+        "cs:fix": "tools/vendor/bin/php-cs-fixer fix --ansi --verbose --diff"
+    },
+    "scripts-descriptions": {
+        "cs:check": "Checks for coding style violations",
+        "cs:fix": "Fixes any coding style violations"
     }
 }
