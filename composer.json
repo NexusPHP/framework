@@ -19,9 +19,19 @@
     "require": {
         "php": "^8.2"
     },
+    "require-dev": {
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan-deprecation-rules": "^1.2",
+        "phpstan/phpstan-phpunit": "^1.4",
+        "phpstan/phpstan-strict-rules": "^1.6"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        },
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true
@@ -31,10 +41,14 @@
             "@composer update --ansi --working-dir=tools"
         ],
         "cs:check": "tools/vendor/bin/php-cs-fixer check --ansi --verbose --diff",
-        "cs:fix": "tools/vendor/bin/php-cs-fixer fix --ansi --verbose --diff"
+        "cs:fix": "tools/vendor/bin/php-cs-fixer fix --ansi --verbose --diff",
+        "phpstan:baseline": "phpstan analyse --ansi --generate-baseline=phpstan-baseline.php",
+        "phpstan:check": "phpstan analyse --ansi --verbose"
     },
     "scripts-descriptions": {
         "cs:check": "Checks for coding style violations",
-        "cs:fix": "Fixes any coding style violations"
+        "cs:fix": "Fixes any coding style violations",
+        "phpstan:baseline": "Runs PHPStans and dumps resulting errors to baseline",
+        "phpstan:check": "Runs PHPStan with identifiers support"
     }
 }

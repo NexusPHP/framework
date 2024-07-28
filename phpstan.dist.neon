@@ -1,0 +1,28 @@
+includes:
+  - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+  phpVersion: 80200
+  level: 8
+  tmpDir: build/phpstan
+  paths:
+    - src
+    - tests
+    - tools
+  excludePaths:
+    analyseAndScan:
+      - tools/vendor/**
+  bootstrapFiles:
+    - vendor/autoload.php
+  exceptions:
+    check:
+      missingCheckedExceptionInThrows: true
+      tooWideThrowType: true
+  checkTooWideReturnTypesInProtectedAndPublicMethods: true
+  checkUninitializedProperties: true
+  checkBenevolentUnionTypes: true
+  reportPossiblyNonexistentGeneralArrayOffset: true
+  reportPossiblyNonexistentConstantArrayOffset: true
+  reportAlwaysTrueInLastCondition: true
+  reportAnyTypeWideningInVarTag: true
+  checkMissingCallableSignature: true
