@@ -1,0 +1,29 @@
+{
+    "name": "nexusphp/framework",
+    "description": "The Nexus Framework",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "nexus"
+    ],
+    "authors": [
+        {
+            "name": "John Paul E. Balandan, CPA",
+            "email": "paulbalandan@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/NexusPHP/framework/issues",
+        "source": "https://github.com/NexusPHP/framework"
+    },
+    "require": {
+        "php": "^8.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
+}
