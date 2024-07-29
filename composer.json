@@ -30,6 +30,16 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Nexus\\": "src/Nexus/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nexus\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "allow-plugins": {
             "phpstan/extension-installer": true
