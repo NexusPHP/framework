@@ -28,12 +28,18 @@
         "phpstan/phpstan-strict-rules": "^1.6",
         "phpunit/phpunit": "^11.2"
     },
+    "replace": {
+        "nexusphp/option": "self.version"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Nexus\\": "src/Nexus/"
-        }
+        },
+        "files": [
+            "src/Nexus/Option/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

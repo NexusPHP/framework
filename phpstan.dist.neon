@@ -1,9 +1,10 @@
 includes:
   - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+  - phpstan-baseline.php
 
 parameters:
   phpVersion: 80200
-  level: 8
+  level: 9
   tmpDir: build/phpstan
   paths:
     - src
@@ -16,7 +17,6 @@ parameters:
     - vendor/autoload.php
   exceptions:
     check:
-      missingCheckedExceptionInThrows: true
       tooWideThrowType: true
   checkTooWideReturnTypesInProtectedAndPublicMethods: true
   checkUninitializedProperties: true
@@ -26,3 +26,4 @@ parameters:
   reportAlwaysTrueInLastCondition: true
   reportAnyTypeWideningInVarTag: true
   checkMissingCallableSignature: true
+  treatPhpDocTypesAsCertain: false
