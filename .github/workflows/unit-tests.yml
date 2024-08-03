@@ -63,10 +63,11 @@ jobs:
         run: composer update --ansi --no-scripts
 
       - name: Run Unit Tests
+        shell: bash
         run: |
           bin/parallel-phpunit ${{ env.COVERAGE_OPTION }}
         env:
-          COVERAGE_OPTION: ${{ matrix.os == 'windows-2022' && '' || '--coverage' }}
+          COVERAGE_OPTION: ${{ matrix.os != 'windows-2022' && '--coverage' || '' }}
 
       - name: Display structure of coverage files
         if: matrix.os != 'windows-2022'

@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Run prune-cache script
         run: |
           bin/prune-cache $REPO --pr-branch $BRANCH
