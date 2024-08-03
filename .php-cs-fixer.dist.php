@@ -37,6 +37,7 @@ $finder = Finder::create()
     ])
     ->append([
         __FILE__,
+        'bin/parallel-phpunit',
         'bin/prune-cache',
     ])
 ;

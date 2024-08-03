@@ -1,0 +1,101 @@
+name: Unit Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 1.x
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - 8.2
+          - 8.3
+        os: # always use the latest runners
+          - ubuntu-24.04
+          - windows-2022
+
+    name: Unit Tests
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Setup Git for Windows
+        if: matrix.os == 'windows-2022'
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
+      - name: Get composer cache directory
+        id: cache-dir
+        shell: bash
+        run: |
+          echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.cache-dir.outputs.COMPOSER_CACHE_DIR }}
+          key: ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ matrix.os }}-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+          restore-keys: |
+            ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ matrix.os }}-${{ hashFiles('**/composer.json') }}-
+            ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ matrix.os }}-
+            ${{ github.workflow }}-PHP_${{ matrix.php-version }}-
+
+      - name: Install dependencies
+        run: composer update --ansi --no-scripts
+
+      - name: Run Unit Tests
+        run: |
+          bin/parallel-phpunit ${{ env.COVERAGE_OPTION }}
+        env:
+          COVERAGE_OPTION: ${{ matrix.os == 'windows-2022' && '' || '--coverage' }}
+
+      - name: Display structure of coverage files
+        if: matrix.os != 'windows-2022'
+        run: ls -la
+        working-directory: build/cov
+
+      - name: Merge coverage files into Clover
+        if: matrix.os != 'windows-2022'
+        run: |
+          composer global require phpunit/phpcov --ansi
+          phpcov merge --clover build/phpunit/clover.xml build/cov
+
+      - name: Upload coverage to Coveralls
+        if: matrix.os != 'windows-2022'
+        run: |
+          composer global require php-coveralls/php-coveralls --ansi
+          php-coveralls --verbose --exclude-no-stmt --ansi --coverage_clover build/phpunit/clover.xml --json_path build/phpunit/coveralls-upload.json
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_PARALLEL: true
+          COVERALLS_FLAG_NAME: ${{ format('PHP {0}-{1}', matrix.php-version, matrix.os) }}
+
+  coveralls-finish:
+    needs: tests
+    name: Notify Coveralls API
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Complete parallel builds
+        uses: coverallsapp/github-action@v1
+        with:
+          parallel-finished: true
