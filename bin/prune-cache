@@ -12,4 +12,4 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-require __DIR__.'/prune-cache.php';
+require __DIR__.'/../tools/prune-cache.php';
