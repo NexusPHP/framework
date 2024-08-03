@@ -29,12 +29,15 @@ use PhpCsFixerCustomFixers\Fixers;
 $finder = Finder::create()
     ->files()
     ->in([
+        __DIR__.'/.github',
+        __DIR__.'/bin',
         __DIR__.'/src',
         __DIR__.'/tests',
         __DIR__.'/tools',
     ])
     ->append([
         __FILE__,
+        'bin/prune-cache',
     ])
 ;
 

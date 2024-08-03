@@ -7,6 +7,8 @@ parameters:
   level: 9
   tmpDir: build/phpstan
   paths:
+    - .github
+    - bin
     - src
     - tests
     - tools
@@ -21,8 +23,6 @@ parameters:
   checkTooWideReturnTypesInProtectedAndPublicMethods: true
   checkUninitializedProperties: true
   checkBenevolentUnionTypes: true
-  reportPossiblyNonexistentGeneralArrayOffset: true
-  reportPossiblyNonexistentConstantArrayOffset: true
   reportAlwaysTrueInLastCondition: true
   reportAnyTypeWideningInVarTag: true
   checkMissingCallableSignature: true

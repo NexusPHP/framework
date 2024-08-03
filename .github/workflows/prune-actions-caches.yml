@@ -1,0 +1,19 @@
+name: Prune GitHub Actions Caches
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  prune:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Run prune-cache script
+        run: |
+          bin/prune-cache $REPO --pr-branch $BRANCH
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.pull_request.number }}
