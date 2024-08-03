@@ -132,7 +132,7 @@ $cachesDeleteCommand = static fn(string $key, string $ref): string => implode(' 
     '-H "Accept: application/vnd.github+json"',
     '-H "X-GitHub-Api-Version: 2022-11-28"',
     sprintf('-F ref=%s', $ref),
-    sprintf('/repos/%s/actions/caches?key=%s', $repository, $key),
+    sprintf('/repos/%s/actions/caches?key=%s', $repository, rawurlencode($key)),
     '2>/dev/null',
 ]);
 
