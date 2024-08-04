@@ -20,7 +20,7 @@ if (PHP_SAPI !== 'cli') {
 $exit = 0;
 $args = $argv;
 $coverage = false;
-$runsOnGithubActions = (bool) getenv('GITHUB_ACTIONS');
+$runsOnGithubActions = getenv('GITHUB_ACTIONS') !== false;
 
 if (in_array('--coverage', $args, true)) {
     $coverage = true;

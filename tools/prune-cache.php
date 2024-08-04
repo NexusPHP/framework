@@ -19,13 +19,13 @@ declare(strict_types=1);
 // ============================================================================
 
 if ($argc < 2) {
-    echo "\033[106;30m[USAGE]\033[0m \033[32mphp\033[0m \033[33m.github/prune-cache.php\033[0m <repo> [--pr-branch=BRANCH] [--schedule]\n";
+    echo "\033[31mUSAGE\033[0m \033[32mbin/prune-cache\033[0m <repo> [--pr-branch=BRANCH] [--schedule]\n";
 
     exit(1);
 }
 
-if ((bool) getenv('GITHUB_ACTIONS') && getenv('GH_TOKEN') === false) {
-    echo "\033[97;41m[ERROR]\033[0m When running in GitHub Actions, please pass the \033[32mGH_TOKEN\033[0m environment variable.\n";
+if (getenv('GITHUB_ACTIONS') !== false && getenv('GH_TOKEN') === false) {
+    echo "\033[31mFAIL\033[0m When running in GitHub Actions, please pass the \033[32mGH_TOKEN\033[0m environment variable.\n";
 
     exit(1);
 }
@@ -97,8 +97,8 @@ if (
 }
 
 assert(isset($cacheUsageOutput['active_caches_count'], $cacheUsageOutput['active_caches_size_in_bytes']));
-$activeCachesCount = (int) $cacheUsageOutput['active_caches_count'];
-$activeCachesSize = (float) $cacheUsageOutput['active_caches_size_in_bytes'];
+$activeCachesCount = $cacheUsageOutput['active_caches_count'];
+$activeCachesSize = $cacheUsageOutput['active_caches_size_in_bytes'];
 
 echo sprintf(
     <<<EOF
@@ -124,7 +124,7 @@ $cachesListCommand = static fn(int $page = 1): string => implode(' ', [
     sprintf('-F page=%d', $page),
     $branch > 0 ? sprintf('-F ref=refs/pull/%d/merge', $branch) : '',
     sprintf('/repos/%s/actions/caches', $repository),
-    '2>/dev/null',
+    '2> /dev/null',
 ]);
 $cachesDeleteCommand = static fn(string $key, string $ref): string => implode(' ', [
     'gh api',
@@ -133,7 +133,7 @@ $cachesDeleteCommand = static fn(string $key, string $ref): string => implode(' 
     '-H "X-GitHub-Api-Version: 2022-11-28"',
     sprintf('-F ref=%s', $ref),
     sprintf('/repos/%s/actions/caches?key=%s', $repository, rawurlencode($key)),
-    '2>/dev/null',
+    '2> /dev/null',
 ]);
 
 /**
