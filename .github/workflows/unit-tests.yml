@@ -21,9 +21,9 @@ jobs:
         php-version:
           - 8.2
           - 8.3
-        os: # always use the latest runners
-          - ubuntu-24.04
-          - windows-2022
+        os:
+          - ubuntu-22.04
+          - windows-2019
 
     name: Unit Tests
     runs-on: ${{ matrix.os }}
@@ -38,7 +38,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
 
       - name: Setup Git for Windows
-        if: matrix.os == 'windows-2022'
+        if: matrix.os == 'windows-2019'
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
@@ -67,21 +67,21 @@ jobs:
         run: |
           bin/parallel-phpunit ${{ env.COVERAGE_OPTION }}
         env:
-          COVERAGE_OPTION: ${{ matrix.os != 'windows-2022' && '--coverage' || '' }}
+          COVERAGE_OPTION: ${{ matrix.os != 'windows-2019' && '--coverage' || '' }}
 
       - name: Display structure of coverage files
-        if: matrix.os != 'windows-2022'
+        if: matrix.os != 'windows-2019'
         run: ls -la
         working-directory: build/cov
 
       - name: Merge coverage files into Clover
-        if: matrix.os != 'windows-2022'
+        if: matrix.os != 'windows-2019'
         run: |
           composer global require phpunit/phpcov --ansi
           phpcov merge --clover build/phpunit/clover.xml build/cov
 
       - name: Upload coverage to Coveralls
-        if: matrix.os != 'windows-2022'
+        if: matrix.os != 'windows-2019'
         run: |
           composer global require php-coveralls/php-coveralls --ansi
           php-coveralls --verbose --exclude-no-stmt --ansi --coverage_clover build/phpunit/clover.xml --json_path build/phpunit/coveralls-upload.json
@@ -93,7 +93,7 @@ jobs:
   coveralls-finish:
     needs: tests
     name: Notify Coveralls API
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Complete parallel builds
