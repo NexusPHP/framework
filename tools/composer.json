@@ -5,9 +5,19 @@
         "kubawerlos/php-cs-fixer-custom-fixers": "^3.21",
         "nexusphp/cs-config": "^3.24"
     },
+    "autoload": {
+        "psr-4": {
+            "Nexus\\Tools\\": "src"
+        }
+    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Nexus\\Tools\\ComposerScripts::postUpdate"
+        ]
     }
 }
