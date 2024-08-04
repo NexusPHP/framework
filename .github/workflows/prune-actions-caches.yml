@@ -1,6 +1,8 @@
 name: Prune GitHub Actions Caches
 
 on:
+  schedule:
+    - cron: '0 0 * * *'
   pull_request:
     types:
       - closed
@@ -15,8 +17,9 @@ jobs:
 
       - name: Run prune-cache script
         run: |
-          bin/prune-cache $REPO --pr-branch $BRANCH
+          bin/prune-cache ${{ env.REPO }} ${{ env.PR_BRANCH }} ${{ env.SCHEDULE }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          BRANCH: ${{ github.event.pull_request.number }}
+          PR_BRANCH: ${{ github.event_name == 'pull_request' && format('--pr-branch {0}', github.event.pull_request.number) || '' }}
+          SCHEDULE: ${{ github.event_name == 'schedule' && '--schedule' || '' }}
