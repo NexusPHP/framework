@@ -6,6 +6,16 @@ on:
   pull_request:
     types:
       - closed
+  workflow_dispatch:
+    inputs:
+      date_interval:
+        description: How old should be flushed?
+        required: true
+        default: 'P2D'
+
+env:
+  GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+  REPO: ${{ github.repository }}
 
 jobs:
   prune:
@@ -15,11 +25,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run prune-cache script
+      - name: Run prune-cache on pull requests
+        if: github.event_name == 'pull_request'
         run: |
-          bin/prune-cache ${{ env.REPO }} ${{ env.PR_BRANCH }} ${{ env.SCHEDULE }}
+          bin/prune-cache ${{ env.REPO }} --pr-branch ${{ env.PR_BRANCH }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-          PR_BRANCH: ${{ github.event_name == 'pull_request' && format('--pr-branch {0}', github.event.pull_request.number) || '' }}
-          SCHEDULE: ${{ github.event_name == 'schedule' && '--schedule' || '' }}
+          PR_BRANCH: ${{ github.event.pull_request.number }}
+
+      - name: Run prune-cache on schedule
+        if: github.event_name == 'schedule'
+        run: |
+          bin/prune-cache ${{ env.REPO }} --schedule
+
+      - name: Run prune-cache on workflow dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          bin/prune-cache ${{ env.REPO }} --schedule
+        env:
+          DATE_INTERVAL: ${{ inputs.date_interval || 'P2D' }}

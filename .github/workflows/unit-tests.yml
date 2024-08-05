@@ -55,9 +55,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.cache-dir.outputs.COMPOSER_CACHE_DIR }}
-          key: ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ matrix.os }}-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+          key: ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ matrix.os }}-${{ hashFiles('**/composer.json') }}
           restore-keys: |
-            ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ matrix.os }}-${{ hashFiles('**/composer.json') }}-
             ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ matrix.os }}-
             ${{ github.workflow }}-PHP_${{ matrix.php-version }}-
 
@@ -90,7 +89,7 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_PARALLEL: true
-          COVERALLS_FLAG_NAME: ${{ format('PHP {0}-{1}', matrix.php-version, matrix.os) }}
+          COVERALLS_FLAG_NAME: ${{ format('PHP_{0}-{1}', matrix.php-version, matrix.os) }}
 
   coveralls-finish:
     needs: tests

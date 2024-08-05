@@ -46,9 +46,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.cache-dir.outputs.COMPOSER_CACHE_DIR }}
-          key: ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+          key: ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ hashFiles('**/composer.json') }}
           restore-keys: |
-            ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ hashFiles('**/composer.json') }}-
             ${{ github.workflow }}-PHP_${{ matrix.php-version }}-
 
       - name: Install dependencies

@@ -77,7 +77,7 @@ $activeCacheUsageCommand = [
     '-H "Accept: application/vnd.github+json"',
     '-H "X-GitHub-Api-Version: 2022-11-28"',
     sprintf('/repos/%s/actions/cache/usage', $repository),
-    '2>/dev/null',
+    '2> /dev/null',
 ];
 $cacheUsageOutput = (array) json_decode((string) shell_exec(implode(' ', $activeCacheUsageCommand)), true, flags: JSON_THROW_ON_ERROR);
 
@@ -88,7 +88,7 @@ if (
     && '200' !== $cacheUsageOutput['status']
 ) {
     echo sprintf(
-        "\033[97;41m[ERROR]\033[0m %s (HTTP %d)\n",
+        "\033[31mFAIL\033[0m %s (HTTP %d)\n",
         $cacheUsageOutput['message'],
         $cacheUsageOutput['status'],
     );
@@ -174,8 +174,23 @@ for ($page = 2; $page < $roundTrips; ++$page) {
 }
 
 foreach ($caches['actions_caches'] as $cache) {
-    if (preg_match('#refs/pull/\d+/merge#', $cache['ref']) !== 1) {
+    // if pruning PRs, select matching refs
+    if (preg_match('#refs/pull/\d+/merge#', $cache['ref']) !== 1 && ! $onSchedule) {
         continue;
+    }
+
+    // if pruning other branches, select older than value set by DATE_INTERVAL env
+    if (preg_match('#refs/pull/\d+/merge#', $cache['ref']) !== 1 && $onSchedule) {
+        $dateInterval = getenv('DATE_INTERVAL') !== false ? getenv('DATE_INTERVAL') : 'P2D';
+        $dateInterval = new DateInterval($dateInterval);
+        $dateTimezone = new DateTimeZone('UTC');
+        $timeNow = time();
+        $createdAt = (new DateTimeImmutable($cache['created_at'], $dateTimezone))->add($dateInterval)->getTimestamp();
+        $lastAccessedAt = (new DateTimeImmutable($cache['last_accessed_at'], $dateTimezone))->add($dateInterval)->getTimestamp();
+
+        if ($createdAt > $timeNow && $lastAccessedAt > $timeNow) {
+            continue;
+        }
     }
 
     $exitCode = 0;
