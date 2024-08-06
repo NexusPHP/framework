@@ -17,7 +17,8 @@
         "source": "https://github.com/NexusPHP/framework"
     },
     "require": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "psr/clock": "^1.0"
     },
     "require-dev": {
         "nexusphp/tachycardia": "^2.3",
@@ -29,7 +30,11 @@
         "phpunit/phpunit": "^11.2"
     },
     "replace": {
+        "nexusphp/clock": "self.version",
         "nexusphp/option": "self.version"
+    },
+    "provide": {
+        "psr/clock-implementation": "1.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

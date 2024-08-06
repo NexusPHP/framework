@@ -1,0 +1,39 @@
+{
+    "name": "nexusphp/clock",
+    "description": "Nexus Clock decouples applications from the system clock for better testing.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "nexus",
+        "clock",
+        "psr-20"
+    ],
+    "authors": [
+        {
+            "name": "John Paul E. Balandan, CPA",
+            "email": "paulbalandan@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/NexusPHP/framework/issues",
+        "source": "https://github.com/NexusPHP/framework"
+    },
+    "require": {
+        "php": "^8.2",
+        "psr/clock": "^1.0"
+    },
+    "provide": {
+        "psr/clock-implementation": "1.0"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Nexus\\Clock\\": ""
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
+}

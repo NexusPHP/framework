@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 
 if (PHP_SAPI !== 'cli') {
-    echo "\033[31mFAIL\033[0m This script must be run from the command line.\n";
+    echo "\033[41m FAIL \033[0m The \"bin/parallel-phpunit\" script must be run from the command line.\n";
 
     exit(1);
 }
@@ -33,7 +33,7 @@ $directory = $args[1] ?? 'src/Nexus';
 $components = [];
 
 if (! is_dir($directory)) {
-    echo sprintf("\033[31mFAIL\033[0m The \"%s\" directory does not exist.\n", $directory);
+    printf("\033[41m FAIL \033[0m The \"%s\" directory does not exist.\n", $directory);
 
     exit(1);
 }
@@ -49,17 +49,19 @@ foreach ($finder as $file => $splFileInfo) {
     }
 }
 
+sort($components);
+
 $githubActionsGroup = static function (string $component, string $message, int $exitCode) use ($runsOnGithubActions): string {
     if (! $runsOnGithubActions) {
         if ($exitCode > 0) {
-            return sprintf("%2\$s\n\033[31mFAIL\033[0m %1\$s\n", $component, $message);
+            return sprintf("\n%2\$s\n\033[41m FAIL \033[0m %1\$s\n", $component, $message);
         }
 
-        return sprintf("\n\033[32mOK\033[0m %1\$s\n", $component);
+        return sprintf("\033[42m OK \033[0m %1\$s\n", $component);
     }
 
     if ($exitCode > 0) {
-        return sprintf("%1\$s\n%2\$s\n\033[31mFAIL\033[0m %1\$s\n", $component, $message);
+        return sprintf("%1\$s\n%2\$s\n\033[41m FAIL \033[0m %1\$s\n", $component, $message);
     }
 
     return sprintf(
@@ -67,7 +69,7 @@ $githubActionsGroup = static function (string $component, string $message, int $
             ::group::%1\$s
             %2\$s
 
-            \033[32mOK\033[0m %1\$s
+            \033[42m OK \033[0m %1\$s
             ::endgroup::
 
             EOF,
@@ -104,7 +106,7 @@ foreach ($components as $component) {
         $runningProcesses[$component] = $process;
     } else {
         $exit = 1;
-        echo "\n\033[31mFAIL\033[0m {$component}\n";
+        printf("\033[41m FAIL \033[0m %s\n", $component);
     }
 }
 
@@ -136,7 +138,7 @@ while ([] !== $runningProcesses) {
             $lastOutput = $output;
             $lastOutputTime = microtime(true);
         } elseif (microtime(true) - $lastOutputTime > 60) {
-            echo "\n\033[31mFAIL\033[0m Timeout {$component}\n";
+            printf("\033[41m TIMEOUT \033[0m %s\n", $component);
 
             if (DIRECTORY_SEPARATOR === '\\') {
                 exec(sprintf('taskkill /F /T /PID %d 2>&1', proc_get_status($process)['pid']));
@@ -153,6 +155,10 @@ while ([] !== $runningProcesses) {
             $file = sprintf('%s/phpunit.std%s', $component, $file);
             $output .= file_get_contents($file);
             unlink($file);
+        }
+
+        if ($status > 0) {
+            $exit = $status;
         }
 
         echo $githubActionsGroup($component, $output, $status);
