@@ -1,6 +1,7 @@
 includes:
   - vendor/phpstan/phpstan/conf/bleedingEdge.neon
   - phpstan-baseline.php
+  - src/Nexus/PHPStan/extension.neon
 
 parameters:
   phpVersion: 80200
@@ -14,6 +15,7 @@ parameters:
     - tools
   excludePaths:
     analyseAndScan:
+      - tests/PHPStan/**/data/**
       - tools/vendor/**
   bootstrapFiles:
     - vendor/autoload.php

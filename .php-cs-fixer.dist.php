@@ -35,6 +35,9 @@ $finder = Finder::create()
         __DIR__.'/tests',
         __DIR__.'/tools',
     ])
+    ->notPath([
+        '#PHPStan/.+/data/.+#',
+    ])
     ->append([
         __FILE__,
         'bin/parallel-phpunit',

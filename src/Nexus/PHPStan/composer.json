@@ -1,0 +1,49 @@
+{
+    "name": "nexusphp/phpstan-nexus",
+    "description": "PHPStan extension for Nexus.",
+    "license": "MIT",
+    "type": "phpstan-extension",
+    "keywords": [
+        "nexus",
+        "phpstan"
+    ],
+    "authors": [
+        {
+            "name": "John Paul E. Balandan, CPA",
+            "email": "paulbalandan@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/NexusPHP/framework/issues",
+        "source": "https://github.com/NexusPHP/framework"
+    },
+    "require": {
+        "php": "^8.2",
+        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan-deprecation-rules": "^1.2",
+        "phpstan/phpstan-phpunit": "^1.4",
+        "phpstan/phpstan-strict-rules": "^1.6"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Nexus\\PHPStan\\": ""
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
+        }
+    }
+}

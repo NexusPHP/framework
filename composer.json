@@ -31,7 +31,8 @@
     },
     "replace": {
         "nexusphp/clock": "self.version",
-        "nexusphp/option": "self.version"
+        "nexusphp/option": "self.version",
+        "nexusphp/phpstan-nexus": "self.version"
     },
     "provide": {
         "psr/clock-implementation": "1.0"
@@ -44,6 +45,9 @@
         },
         "files": [
             "src/Nexus/Option/functions.php"
+        ],
+        "exclude-from-classmap": [
+            "tests/PHPStan/**/data/**"
         ]
     },
     "autoload-dev": {
@@ -58,6 +62,13 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "src/Nexus/PHPStan/extension.neon"
+            ]
+        }
     },
     "scripts": {
         "post-update-cmd": [
