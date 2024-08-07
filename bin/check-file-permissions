@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 set -eu
 
 FILES_WITH_WRONG_PERMISSIONS=$(
@@ -12,28 +12,28 @@ BIN_FILES_WITH_WRONG_PERMISSIONS=$(
     | sort -fh
 )
 
-if [ -n "$FILES_WITH_WRONG_PERMISSIONS" ]; then
-    printf '\033[31mFAIL\033[0m Non-executable files with +x permissions were detected!\n'
-    [ -z "${GITHUB_ACTIONS+x}" ] || echo '::group::Non-executable files'
+if [[ -n "$FILES_WITH_WRONG_PERMISSIONS" ]]; then
+    printf '\033[41m FAIL \033[0m Non-executable files with +x permissions were detected!\n'
+    [[ -z "${GITHUB_ACTIONS+x}" ]] || echo '::group::Non-executable files'
     echo "$FILES_WITH_WRONG_PERMISSIONS"
     echo ''
     echo "$FILES_WITH_WRONG_PERMISSIONS" | awk '{print $4}' | xargs -n1 printf 'Please run "\033[32msudo chmod\033[0m -x %s".\n'
-    [ -z "${GITHUB_ACTIONS+x}" ] || echo '::endgroup::'
+    [[ -z "${GITHUB_ACTIONS+x}" ]] || echo '::endgroup::'
 fi
 
-if [ -n "$BIN_FILES_WITH_WRONG_PERMISSIONS" ]; then
-    printf '\033[31mFAIL\033[0m Executable files with -x permissions were detected!\n'
-    [ -z "${GITHUB_ACTIONS+x}" ] || echo '::group::Executable files'
+if [[ -n "$BIN_FILES_WITH_WRONG_PERMISSIONS" ]]; then
+    printf '\033[41m FAIL \033[0m Executable files with -x permissions were detected!\n'
+    [[ -z "${GITHUB_ACTIONS+x}" ]] || echo '::group::Executable files'
     echo "$BIN_FILES_WITH_WRONG_PERMISSIONS"
     echo ''
     echo $BIN_FILES_WITH_WRONG_PERMISSIONS | awk '{print $4}' | xargs -n1 printf 'Please run "\033[32msudo chmod\033[0m +x %s".\n'
-    [ -z "${GITHUB_ACTIONS+x}" ] || echo '::endgroup::'
+    [[ -z "${GITHUB_ACTIONS+x}" ]] || echo '::endgroup::'
 fi
 
-if [ -n "$FILES_WITH_WRONG_PERMISSIONS" ]; then
+if [[ -n "$FILES_WITH_WRONG_PERMISSIONS" ]]; then
     exit 3
-elif [ -n "$BIN_FILES_WITH_WRONG_PERMISSIONS" ]; then
+elif [[ -n "$BIN_FILES_WITH_WRONG_PERMISSIONS" ]]; then
     exit 4
 fi
 
-printf '\033[32mOK\033[0m No wrong permissions were detected.\n'
+printf '\033[42m OK \033[0m No wrong permissions were detected.\n'
