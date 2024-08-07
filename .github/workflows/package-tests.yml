@@ -1,0 +1,54 @@
+name: Package Tests
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  pull_request:
+  push:
+    branches:
+      - 1.x
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Package Tests
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          coverage: none
+
+      - name: Get composer cache directory
+        id: cache-dir
+        shell: bash
+        run: |
+          echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.cache-dir.outputs.COMPOSER_CACHE_DIR }}
+          key: ${{ github.workflow }}-PHP_8.3-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            ${{ github.workflow }}-PHP_8.3-
+
+      - name: Install dependencies
+        run: composer update --ansi --no-scripts
+
+      - name: Run Package Tests
+        run: |
+          vendor/bin/phpunit --color=always --group=package-test --no-coverage
+        env:
+          TACHYCARDIA_MONITOR_GA: enabled
