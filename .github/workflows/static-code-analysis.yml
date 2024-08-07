@@ -51,7 +51,37 @@ jobs:
             ${{ github.workflow }}-PHP_${{ matrix.php-version }}-
 
       - name: Install dependencies
-        run: composer update --ansi
+        run: |
+          composer update --ansi
+
+      - name: Check - Composer validate
+        run: |
+          COMPONENTS=$(
+            find src/Nexus -mindepth 2 -type f -name composer.json \
+            | cut -d '/' -f 1-3 \
+            | sort -fh
+          )
+
+          echo "+ composer validate --strict --ansi"
+          composer validate --strict --ansi
+          echo "$COMPONENTS" | xargs -I {} bash -xc "composer validate --strict --ansi --working-dir {}"
+
+      - name: Check - Composer normalize
+        run: |
+          COMPONENTS=$(
+            find src/Nexus -mindepth 2 -type f -name composer.json \
+            | cut -d '/' -f 1-3 \
+            | sort -fh
+          )
+
+          echo "::group::composer normalize"
+          composer global config --ansi allow-plugins.ergebnis/composer-normalize true
+          composer global require --ansi ergebnis/composer-normalize
+          echo "::endgroup::"
+
+          echo "+ composer normalize --dry-run --diff --ansi"
+          composer normalize --dry-run --diff --ansi
+          echo "$COMPONENTS" | xargs -I {} bash -xc "composer normalize --dry-run --diff --ansi --working-dir {}"
 
       - name: Check - file permissions
         run: bin/check-file-permissions
