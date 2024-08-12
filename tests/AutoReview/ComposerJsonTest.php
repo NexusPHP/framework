@@ -25,10 +25,7 @@ use PHPUnit\Framework\TestCase;
 #[Group('package-test')]
 final class ComposerJsonTest extends TestCase
 {
-    /**
-     * @var list<string>
-     */
-    private static array $packages = [];
+    use PackageTrait;
 
     public function testRootComposerJsonReplacesPackages(): void
     {
@@ -64,6 +61,37 @@ final class ComposerJsonTest extends TestCase
         self::assertArrayHasKey('source', $composerJson['support']);
         self::assertSame('https://github.com/NexusPHP/framework/issues', $composerJson['support']['issues']);
         self::assertSame('https://github.com/NexusPHP/framework', $composerJson['support']['source']);
+    }
+
+    #[DataProvider('providePackageHasComposerJsonCases')]
+    public function testComposerJsonHasAutoloadEntries(string $package): void
+    {
+        $composerJson = $this->getComposer(\sprintf('%s/composer.json', $package));
+
+        self::assertArrayHasKey('autoload', $composerJson);
+        self::assertIsArray($composerJson['autoload']);
+        self::assertArrayHasKey('psr-4', $composerJson['autoload']);
+        self::assertIsArray($composerJson['autoload']['psr-4']);
+        self::assertArrayHasKey(str_replace('/', '\\', substr($package, 4)).'\\', $composerJson['autoload']['psr-4']);
+
+        $functionsFile = $package.\DIRECTORY_SEPARATOR.'functions.php';
+
+        if (! is_file($functionsFile)) {
+            self::assertFileDoesNotExist($package.\DIRECTORY_SEPARATOR.'function.php');
+
+            return;
+        }
+
+        self::assertArrayHasKey('files', $composerJson['autoload']);
+        self::assertIsArray($composerJson['autoload']['files']);
+        self::assertContains('functions.php', $composerJson['autoload']['files']);
+
+        $rootComposer = $this->getComposer(__DIR__.'/../../composer.json');
+        self::assertArrayHasKey('autoload', $rootComposer);
+        self::assertIsArray($rootComposer['autoload']);
+        self::assertArrayHasKey('files', $rootComposer['autoload']);
+        self::assertIsArray($rootComposer['autoload']['files']);
+        self::assertContains($functionsFile, $rootComposer['autoload']['files']);
     }
 
     /**
@@ -104,52 +132,5 @@ final class ComposerJsonTest extends TestCase
         } catch (\InvalidArgumentException|\JsonException $e) {
             self::fail(\sprintf('Retrieving the contents failed: %s', $e->getMessage()));
         }
-    }
-
-    /**
-     * @return list<string>
-     */
-    private static function getPackageDirectories(): array
-    {
-        if ([] !== self::$packages) {
-            return self::$packages;
-        }
-
-        $finder = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(
-                'src/Nexus',
-                \FilesystemIterator::KEY_AS_FILENAME | \FilesystemIterator::UNIX_PATHS,
-            ),
-        );
-        $finder->setMaxDepth(3);
-
-        /**
-         * @var \SplFileInfo $splFileInfo
-         */
-        foreach ($finder as $file => $splFileInfo) {
-            if ('composer.json' === $file) {
-                self::$packages[] = \dirname($splFileInfo->getPathname());
-            }
-        }
-
-        return self::$packages;
-    }
-
-    private function getPackageName(string $package): string
-    {
-        static $specialCases = [
-            'PHPStan' => 'phpstan-nexus',
-        ];
-
-        $package = basename($package);
-
-        return \sprintf(
-            'nexusphp/%s',
-            $specialCases[$package] ?? strtolower(preg_replace(
-                '/(?<!^)((?=[A-Z][^A-Z])|(?<![A-Z])(?=[A-Z]))/u',
-                '_',
-                $package,
-            ) ?? $package),
-        );
     }
 }
