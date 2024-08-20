@@ -18,7 +18,7 @@
         "source": "https://github.com/NexusPHP/framework"
     },
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "phpstan/phpstan": "^1.11",
         "phpstan/phpstan-deprecation-rules": "^1.2",
         "phpstan/phpstan-phpunit": "^1.4",

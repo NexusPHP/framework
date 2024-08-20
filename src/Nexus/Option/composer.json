@@ -18,7 +18,7 @@
         "source": "https://github.com/NexusPHP/framework"
     },
     "require": {
-        "php": "^8.2"
+        "php": "^8.3"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
