@@ -86,6 +86,11 @@ jobs:
       - name: Check - file permissions
         run: bin/check-file-permissions
 
+      - name: Check - Auto-Review
+        run: vendor/bin/phpunit --colors=always --group=auto-review --no-coverage
+        env:
+          TACHYCARDIA_MONITOR_GA: enabled
+
       - name: Check - PHP-CS-Fixer
         run: composer cs:check
 

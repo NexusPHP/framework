@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @extends RuleTestCase<MethodNamingRule>
  */
 #[CoversClass(MethodNamingRule::class)]
-#[Group('unit')]
+#[Group('unit-test')]
 final class MethodNamingRuleTest extends RuleTestCase
 {
     public function testRule(): void

@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\Group;
  * @extends RuleTestCase<PropertyNamingRule>
  */
 #[CoversClass(PropertyNamingRule::class)]
-#[Group('unit')]
+#[Group('unit-test')]
 final class PropertyNamingRuleTest extends RuleTestCase
 {
     public function testRule(): void

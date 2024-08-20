@@ -13,5 +13,11 @@ $ignoreErrors[] = [
 	'count' => 1,
 	'path' => __DIR__ . '/tests/AutoReview/ComposerJsonTest.php',
 ];
+$ignoreErrors[] = [
+	// identifier: function.impossibleType
+	'message' => '#^Call to function in_array\\(\\) with arguments string, array\\{\\} and true will always evaluate to false\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/AutoReview/TestCodeTest.php',
+];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];

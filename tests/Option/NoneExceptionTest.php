@@ -22,7 +22,7 @@ use PHPUnit\Framework\TestCase;
  * @internal
  */
 #[CoversClass(NoneException::class)]
-#[Group('unit')]
+#[Group('unit-test')]
 final class NoneExceptionTest extends TestCase
 {
     public function testNoneExceptionGivesCorrectMessage(): void

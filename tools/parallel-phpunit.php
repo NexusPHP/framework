@@ -83,7 +83,7 @@ $phpunitCommand = static function (string $component) use ($directory, $coverage
         PHP_BINARY,
         'vendor/bin/phpunit',
         sprintf('--colors=%s', getenv('NO_COLOR') !== false ? 'never' : 'always'),
-        '--group=unit',
+        '--group=unit-test',
         $coverage ? sprintf('--coverage-php %s', $coverageFile) : '--no-coverage',
         'tests/'.substr($component, strlen($directory) + 1),
     ]);

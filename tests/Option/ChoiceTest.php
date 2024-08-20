@@ -28,7 +28,7 @@ use function Nexus\Option\option;
  */
 #[CoversClass(Choice::class)]
 #[CoversFunction('Nexus\Option\option')]
-#[Group('unit')]
+#[Group('unit-test')]
 final class ChoiceTest extends TestCase
 {
     public function testChoiceFrom(): void

@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
  */
 #[CoversClass(None::class)]
 #[CoversClass(Some::class)]
-#[Group('unit')]
+#[Group('unit-test')]
 final class OptionTest extends TestCase
 {
     public function testOptionIsSome(): void

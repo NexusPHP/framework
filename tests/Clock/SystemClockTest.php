@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
  * @internal
  */
 #[CoversClass(SystemClock::class)]
-#[Group('unit')]
+#[Group('unit-test')]
 final class SystemClockTest extends TestCase
 {
     public function testTimezoneOfSystemClock(): void

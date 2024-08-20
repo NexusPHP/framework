@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
  * @internal
  */
 #[CoversClass(FrozenClock::class)]
-#[Group('unit')]
+#[Group('unit-test')]
 final class FrozenClockTest extends TestCase
 {
     public function testFrozenClockAlwaysReturnTheSameDate(): void
