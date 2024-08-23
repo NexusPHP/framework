@@ -23,12 +23,7 @@
         </include>
     </source>
 
-    <coverage ignoreDeprecatedCodeUnits="true">
-        <report>
-            <clover outputFile="build/phpunit/clover.xml" />
-            <html outputDirectory="build/phpunit/html" lowUpperBound="50" highLowerBound="90" />
-        </report>
-    </coverage>
+    <coverage ignoreDeprecatedCodeUnits="true" />
 
     <php>
         <ini name="date.timezone" value="UTC" />
