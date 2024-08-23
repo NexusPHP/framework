@@ -40,7 +40,6 @@ final class PackageMetadataTest extends TestCase
     {
         $metadataFile = $package.\DIRECTORY_SEPARATOR.$metadata;
 
-        self::assertFileExists($metadataFile);
         self::assertFileIsReadable($metadataFile);
         self::assertFileIsWritable($metadataFile);
     }

@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       date_interval:
-        description: How old should be flushed?
+        description: How old of the cache should be flushed?
         required: true
         default: 'P2D'
 
@@ -42,4 +42,4 @@ jobs:
         run: |
           bin/prune-cache ${{ env.REPO }} --schedule
         env:
-          DATE_INTERVAL: ${{ inputs.date_interval || 'P2D' }}
+          DATE_INTERVAL: ${{ inputs.date_interval }}
