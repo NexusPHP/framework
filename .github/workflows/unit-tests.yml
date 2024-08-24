@@ -21,7 +21,8 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - 8.3
+          - '8.3'
+          - '8.4'
         os:
           - ubuntu-22.04
           - windows-2019
@@ -44,30 +45,33 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
 
-      - name: Get composer cache directory
-        id: cache-dir
+      - name: Setup global variables
+        id: globals
         shell: bash
         run: |
           echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_OUTPUT
+          echo "EXPERIMENTAL_FLAG=${{ matrix.php-version == '8.4' && '--ignore-platform-req=php' || '' }}" >> $GITHUB_OUTPUT
 
       - name: Cache Composer dependencies
         uses: actions/cache@v4
         with:
-          path: ${{ steps.cache-dir.outputs.COMPOSER_CACHE_DIR }}
+          path: ${{ steps.globals.outputs.COMPOSER_CACHE_DIR }}
           key: ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ matrix.os }}-${{ hashFiles('**/composer.json') }}
           restore-keys: |
             ${{ github.workflow }}-PHP_${{ matrix.php-version }}-${{ matrix.os }}-
             ${{ github.workflow }}-PHP_${{ matrix.php-version }}-
 
       - name: Install dependencies
-        run: composer update --ansi --no-scripts
+        run: composer update --ansi --no-scripts ${{ steps.globals.outputs.EXPERIMENTAL_FLAG }}
 
       - name: Run Unit Tests
         shell: bash
+        continue-on-error: ${{ matrix.php-version == 8.4 }}
         run: |
           bin/parallel-phpunit ${{ env.COVERAGE_OPTION }}
         env:
           COVERAGE_OPTION: ${{ matrix.os != 'windows-2019' && '--coverage' || '' }}
+          TACHYCARDIA_MONITOR_GA: enabled
 
       - name: Display structure of coverage files
         if: matrix.os != 'windows-2019'
@@ -77,13 +81,13 @@ jobs:
       - name: Merge coverage files into Clover
         if: matrix.os != 'windows-2019'
         run: |
-          composer global require phpunit/phpcov --ansi
+          composer global require phpunit/phpcov --ansi ${{ steps.globals.outputs.EXPERIMENTAL_FLAG }}
           phpcov merge --clover build/phpunit/clover.xml build/cov
 
       - name: Upload coverage to Coveralls
         if: matrix.os != 'windows-2019'
         run: |
-          composer global require php-coveralls/php-coveralls --ansi
+          composer global require php-coveralls/php-coveralls --ansi ${{ steps.globals.outputs.EXPERIMENTAL_FLAG }}
           php-coveralls --verbose --exclude-no-stmt --ansi --coverage_clover build/phpunit/clover.xml --json_path build/phpunit/coveralls-upload.json
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -91,9 +95,9 @@ jobs:
           COVERALLS_FLAG_NAME: ${{ format('PHP_{0}-{1}', matrix.php-version, matrix.os) }}
 
   coveralls-finish:
-    needs: tests
     name: Notify Coveralls API
     runs-on: ubuntu-22.04
+    needs: tests
 
     steps:
       - name: Complete parallel builds
