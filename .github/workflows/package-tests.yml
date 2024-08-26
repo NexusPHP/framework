@@ -51,6 +51,6 @@ jobs:
 
       - name: Run Package Tests
         run: |
-          vendor/bin/phpunit --color=always --group=package-test --no-coverage
+          composer test:package
         env:
           TACHYCARDIA_MONITOR_GA: enabled

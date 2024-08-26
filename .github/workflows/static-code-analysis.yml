@@ -86,7 +86,7 @@ jobs:
         run: bin/check-file-permissions
 
       - name: Check - Auto-Review
-        run: vendor/bin/phpunit --colors=always --group=auto-review --no-coverage
+        run: composer test:auto-review
         env:
           TACHYCARDIA_MONITOR_GA: enabled
 
