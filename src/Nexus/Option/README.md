@@ -1,6 +1,6 @@
 # Nexus Option
 
-Nexus Option implements Rust's [Option type][1] into PHP.
+Nexus Option implements Rust's [Option type][5] into PHP.
 
 > **Note:** Not all methods of the Option enum are implemented by this library.
 
@@ -79,14 +79,14 @@ $int = option(objectOrString(), 'bar')->unwrapOr(new Bar());
 
 ## License
 
-Nexus Option is licensed under the [MIT License][5].
+Nexus Option is licensed under the [MIT License][1].
 
 ## Resources
 
 * [Report issues][2] and [send pull requests][3] in the [main Nexus repository][4]
 
-[1]: https://doc.rust-lang.org/std/option/enum.Option.html
+[1]: LICENSE
 [2]: https://github.com/NexusPHP/framework/issues
 [3]: https://github.com/NexusPHP/framework/pulls
 [4]: https://github.com/NexusPHP/framework
-[5]: LICENSE
+[5]: https://doc.rust-lang.org/std/option/enum.Option.html

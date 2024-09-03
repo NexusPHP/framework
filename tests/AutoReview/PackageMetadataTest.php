@@ -27,32 +27,65 @@ final class PackageMetadataTest extends TestCase
 {
     use PackageTrait;
 
-    /**
-     * @var list<string>
-     */
-    private const METADATA_FILES = [
-        'LICENSE',
-        'README.md',
-    ];
-
-    #[DataProvider('provideMetadataFilesExistForPackageCases')]
-    public function testMetadataFilesExistForPackage(string $package, string $metadata): void
+    #[DataProvider('providePackageCases')]
+    public function testLicenseContainsCorrectDetails(string $package): void
     {
-        $metadataFile = $package.\DIRECTORY_SEPARATOR.$metadata;
+        $license = $package.'/LICENSE';
 
-        self::assertFileIsReadable($metadataFile);
-        self::assertFileIsWritable($metadataFile);
+        self::assertFileIsReadable($license);
+        self::assertFileIsWritable($license);
+        self::assertStringContainsString(
+            'Copyright (c) 2024 John Paul E. Balandan, CPA <paulbalandan@gmail.com>',
+            (string) file_get_contents($license),
+        );
+    }
+
+    #[DataProvider('providePackageCases')]
+    public function testReadmeContainsCorrectDetails(string $package): void
+    {
+        $readme = $package.'/README.md';
+        self::assertFileIsReadable($readme);
+        self::assertFileIsWritable($readme);
+
+        $contents = (string) file_get_contents($readme);
+        self::assertMatchesRegularExpression(
+            \sprintf('/composer require( --dev)? %s/', preg_quote($this->getPackageName($package), '/')),
+            $contents,
+        );
+        self::assertStringContainsString(
+            \sprintf('Nexus %s is licensed under the [MIT License][1].', basename($package)),
+            $contents,
+        );
+        self::assertStringContainsString(
+            <<<'TXT'
+                * [Report issues][2] and [send pull requests][3] in the [main Nexus repository][4]
+
+                [1]: LICENSE
+                [2]: https://github.com/NexusPHP/framework/issues
+                [3]: https://github.com/NexusPHP/framework/pulls
+                [4]: https://github.com/NexusPHP/framework
+                TXT,
+            $contents,
+        );
+
+        foreach ([
+            \sprintf('# Nexus %s', basename($package)),
+            '## Installation',
+            '## Getting Started',
+            '## License',
+            '## Resources',
+        ] as $section) {
+            self::assertStringContainsString($section, $contents);
+        }
     }
 
     /**
-     * @return iterable<string, array{string, string}>
+     * @return iterable<string, array{string}>
      */
-    public static function provideMetadataFilesExistForPackageCases(): iterable
+    public static function providePackageCases(): iterable
     {
         foreach (self::getPackageDirectories() as $package) {
-            foreach (self::METADATA_FILES as $metadata) {
-                yield $package.\DIRECTORY_SEPARATOR.$metadata => [$package, $metadata];
-            }
+            yield $package => [$package];
         }
     }
 }

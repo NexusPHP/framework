@@ -39,7 +39,7 @@ $warper->warp(); // Outputs: int(60)
 
 ## License
 
-Nexus Option is licensed under the [MIT License][1].
+Nexus Clock is licensed under the [MIT License][1].
 
 ## Resources
 
