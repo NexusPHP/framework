@@ -24,6 +24,30 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class AbstractCollectionTestCase extends TestCase
 {
+    public function testAll(): void
+    {
+        $collection = $this->collection(static function (): iterable {
+            yield 'a' => 1;
+
+            yield 2 => 2;
+
+            yield 3.25 => 3;
+
+            yield null => 4;
+
+            yield true => 5;
+
+            yield false => 6;
+        });
+
+        self::assertSame([1, 2, 3, 4, 5, 6], $collection->all());
+        self::assertSame(['a' => 1, 2 => 2, 3 => 3, '' => 4, 1 => 5, 0 => 6], $collection->all(true));
+
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Cannot access offset of type stdClass on array');
+        $this->collection(static fn(): iterable => yield new \stdClass() => 5)->all(true);
+    }
+
     public function testCount(): void
     {
         self::assertCount(5, $this->collection());
@@ -32,12 +56,12 @@ abstract class AbstractCollectionTestCase extends TestCase
     }
 
     /**
-     * @template TKey of array-key
+     * @template TKey
      * @template T
      *
-     * @param array<TKey, T> $items
+     * @param (\Closure(): iterable<TKey, T>)|iterable<TKey, T> $items
      *
      * @return CollectionInterface<TKey, T>
      */
-    abstract protected function collection(array $items = [1, 2, 3, 4, 5]): CollectionInterface;
+    abstract protected function collection(\Closure|iterable $items = [1, 2, 3, 4, 5]): CollectionInterface;
 }

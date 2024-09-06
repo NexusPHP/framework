@@ -56,6 +56,14 @@ final class Collection implements CollectionInterface
         return new self(static fn(): \Generator => yield from $items);
     }
 
+    /**
+     * @return ($preserveKeys is false ? list<T> : array<array-key, T>)
+     */
+    public function all(bool $preserveKeys = false): array
+    {
+        return iterator_to_array($this, $preserveKeys);
+    }
+
     public function count(): int
     {
         return iterator_count($this);

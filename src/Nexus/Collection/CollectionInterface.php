@@ -18,10 +18,12 @@ namespace Nexus\Collection;
  * @template T
  *
  * @extends \IteratorAggregate<TKey, T>
+ * @extends Operation\All<TKey, T>
  */
 interface CollectionInterface extends
     \Countable,
-    \IteratorAggregate
+    \IteratorAggregate,
+    Operation\All
 {
     /**
      * @template WKey

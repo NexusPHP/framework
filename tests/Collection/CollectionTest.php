@@ -35,7 +35,7 @@ final class CollectionTest extends AbstractCollectionTestCase
         self::assertSame($expected, iterator_to_array(Collection::wrap((static fn(): \Generator => yield from $expected)())));
     }
 
-    protected function collection(array $items = [1, 2, 3, 4, 5]): CollectionInterface
+    protected function collection(\Closure|iterable $items = [1, 2, 3, 4, 5]): CollectionInterface
     {
         return Collection::wrap($items);
     }
