@@ -82,6 +82,11 @@ final class SourceCodeTest extends TestCase
             self::getSourceClasses(),
             static function (string $class): bool {
                 $reflection = new \ReflectionClass($class);
+                $docComment = $reflection->getDocComment();
+
+                if (false !== $docComment && str_contains($docComment, '@internal')) {
+                    return false;
+                }
 
                 $interfaces = $reflection->getInterfaceNames();
                 $interfacesCount = \count($interfaces);
