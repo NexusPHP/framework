@@ -31,12 +31,14 @@ final class Collection implements CollectionInterface
     private ClosureIteratorAggregate $innerIterator;
 
     /**
-     * @param (\Closure(iterable<int, mixed>): iterable<TKey, T>) $callable
-     * @param iterable<int, mixed>                                $parameter
+     * @template S
+     *
+     * @param (\Closure(S): iterable<TKey, T>) $callable
+     * @param iterable<int, S>                 $parameter
      */
     public function __construct(\Closure $callable, iterable $parameter = [])
     {
-        $this->innerIterator = ClosureIteratorAggregate::from($callable, $parameter);
+        $this->innerIterator = ClosureIteratorAggregate::from($callable, ...$parameter);
     }
 
     public static function wrap(\Closure|iterable $items): CollectionInterface
@@ -72,5 +74,14 @@ final class Collection implements CollectionInterface
     public function getIterator(): \Traversable
     {
         yield from $this->innerIterator->getIterator();
+    }
+
+    public function values(): CollectionInterface
+    {
+        return new self(static function (iterable $collection): iterable {
+            foreach ($collection as $item) {
+                yield $item;
+            }
+        }, [$this]);
     }
 }

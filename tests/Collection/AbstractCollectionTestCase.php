@@ -55,6 +55,19 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertCount(2, $this->collection([1, 2]));
     }
 
+    public function testValues(): void
+    {
+        $collection = $this->collection(static function (): \Generator {
+            yield 'bananas' => 5;
+
+            yield 'apples' => 4;
+
+            yield 'oranges' => 7;
+        });
+
+        self::assertSame([5, 4, 7], $collection->values()->all(true));
+    }
+
     /**
      * @template TKey
      * @template T

@@ -44,7 +44,7 @@ final class ClosureIteratorAggregate implements \IteratorAggregate
      *
      * @return self<VKey, V>
      */
-    public static function from(\Closure $callable, mixed $parameter): self
+    public static function from(\Closure $callable, mixed $parameter = null): self
     {
         return new self($callable, $parameter);
     }
