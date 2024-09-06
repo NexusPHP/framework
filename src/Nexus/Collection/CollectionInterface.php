@@ -19,12 +19,14 @@ namespace Nexus\Collection;
  *
  * @extends \IteratorAggregate<TKey, T>
  * @extends Operation\All<TKey, T>
+ * @extends Operation\Keys<TKey, T>
  * @extends Operation\Values<TKey, T>
  */
 interface CollectionInterface extends
     \Countable,
     \IteratorAggregate,
     Operation\All,
+    Operation\Keys,
     Operation\Values
 {
     /**

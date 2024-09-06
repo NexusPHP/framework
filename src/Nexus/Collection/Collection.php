@@ -76,6 +76,15 @@ final class Collection implements CollectionInterface
         yield from $this->innerIterator->getIterator();
     }
 
+    public function keys(): CollectionInterface
+    {
+        return new self(static function (iterable $collection): iterable {
+            foreach ($collection as $key => $_) {
+                yield $key;
+            }
+        }, [$this]);
+    }
+
     public function values(): CollectionInterface
     {
         return new self(static function (iterable $collection): iterable {
