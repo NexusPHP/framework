@@ -81,22 +81,25 @@
         "test:all": [
             "@test:unit",
             "@test:auto-review",
+            "@test:stan",
             "@test:package"
         ],
         "test:auto-review": "phpunit --group=auto-review --colors=always",
         "test:coverage": "@test:unit --coverage-html=build/phpunit/html",
         "test:package": "phpunit --group=package-test --colors=always",
+        "test:stan": "phpunit --group=static-analysis --colors=always",
         "test:unit": "phpunit --group=unit-test --colors=always"
     },
     "scripts-descriptions": {
         "cs:check": "Checks for coding style violations",
         "cs:fix": "Fixes any coding style violations",
-        "phpstan:baseline": "Runs PHPStans and dumps resulting errors to baseline",
+        "phpstan:baseline": "Runs PHPStan and dumps resulting errors to baseline",
         "phpstan:check": "Runs PHPStan with identifiers support",
         "test:all": "Runs all PHPUnit tests",
         "test:auto-review": "Runs the Auto-Review Tests",
-        "test:coverage": "Runs UnitTests with code coverage",
+        "test:coverage": "Runs Unit Tests with code coverage",
         "test:package": "Runs the Package Tests",
+        "test:stan": "Runs the Static Analysis Tests",
         "test:unit": "Runs the Unit Tests"
     }
 }

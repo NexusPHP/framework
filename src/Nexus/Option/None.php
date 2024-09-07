@@ -33,11 +33,18 @@ final readonly class None implements Option
         return true;
     }
 
-    public function unwrap(): mixed
+    public function unwrap(): never
     {
         throw new NoneException();
     }
 
+    /**
+     * @template S
+     *
+     * @param S $default
+     *
+     * @return S
+     */
     public function unwrapOr(mixed $default): mixed
     {
         return $default;
@@ -48,7 +55,7 @@ final readonly class None implements Option
         return $default();
     }
 
-    public function map(\Closure $predicate): Option
+    public function map(\Closure $predicate): self
     {
         return clone $this;
     }
@@ -63,17 +70,17 @@ final readonly class None implements Option
         return $default();
     }
 
-    public function and(Option $other): Option
+    public function and(Option $other): self
     {
         return clone $this;
     }
 
-    public function andThen(\Closure $predicate): Option
+    public function andThen(\Closure $predicate): self
     {
         return clone $this;
     }
 
-    public function filter(\Closure $predicate): Option
+    public function filter(\Closure $predicate): self
     {
         return clone $this;
     }
@@ -88,6 +95,13 @@ final readonly class None implements Option
         return $other();
     }
 
+    /**
+     * @template S
+     *
+     * @param Option<S> $other
+     *
+     * @return ($other is Some<S> ? Some<S> : self<T>)
+     */
     public function xor(Option $other): Option
     {
         return $other->isSome() ? $other : clone $this;

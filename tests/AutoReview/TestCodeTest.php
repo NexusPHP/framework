@@ -16,6 +16,7 @@ namespace Nexus\Tests\AutoReview;
 use Nexus\Option\None;
 use Nexus\Option\Some;
 use Nexus\Tests\Option\OptionTest;
+use PHPStan\Testing\TypeInferenceTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\CoversNothing;
@@ -36,6 +37,7 @@ final class TestCodeTest extends TestCase
     private const RECOGNISED_GROUP_NAMES = [
         'auto-review',
         'package-test',
+        'static-analysis',
         'unit-test',
     ];
 
@@ -170,6 +172,12 @@ final class TestCodeTest extends TestCase
     #[DataProvider('provideDataProviderMethodCases')]
     public function testDataProvidersDeclareCorrectReturnType(string $testClassName, string $dataProviderMethod): void
     {
+        if (str_ends_with($testClassName, 'TypeInferenceTest')) {
+            $this->expectNotToPerformAssertions();
+
+            return;
+        }
+
         $dataProvider = new \ReflectionMethod($testClassName, $dataProviderMethod);
         self::assertSame(
             'iterable',
@@ -182,7 +190,7 @@ final class TestCodeTest extends TestCase
         self::assertMatchesRegularExpression(
             '/@return iterable<(?:class-)?string(?:\<\S+\>)?, array\{/',
             $docComment,
-            \sprintf('Return PHPDoc of data provider "%s::%s" must be an iterable of named array shape (i.e., iterable<string, array{string}>).', $testClassName, $dataProviderMethod),
+            \sprintf('Return PHPDoc of data provider "%s::%s" must be an iterable of named array shape (e.g., iterable<string, array{string}>).', $testClassName, $dataProviderMethod),
         );
     }
 
@@ -327,6 +335,61 @@ final class TestCodeTest extends TestCase
     {
         foreach (self::getTestClasses() as $class) {
             yield $class => [$class];
+        }
+    }
+
+    #[DataProvider('provideGenericClassHasTypeInferenceTestForNamespaceCases')]
+    public function testGenericClassHasTypeInferenceTestForNamespace(string $package): void
+    {
+        $expectedTypeInferentTest = \sprintf('Nexus\\Tests\\%1$s\\%1$sTypeInferenceTest', $package);
+
+        self::assertTrue(class_exists($expectedTypeInferentTest), \sprintf(
+            'The %s package has generic class(es) thus it requires a %s.',
+            $package,
+            $expectedTypeInferentTest,
+        ));
+        self::assertTrue(is_subclass_of($expectedTypeInferentTest, TypeInferenceTestCase::class), \sprintf(
+            'Type inference test "%s" should extend %s.',
+            $expectedTypeInferentTest,
+            TypeInferenceTestCase::class,
+        ));
+
+        $groupAttributes = array_map(static function (\ReflectionAttribute $attribute): string {
+            $groupAttribute = $attribute->newInstance();
+            \assert($groupAttribute instanceof Group);
+
+            return $groupAttribute->name();
+        }, (new \ReflectionClass($expectedTypeInferentTest))->getAttributes(Group::class));
+        self::assertContains('static-analysis', $groupAttributes, \sprintf(
+            'Test "%s" should have the #[Group(\'static-analysis\')] attribute.',
+            $expectedTypeInferentTest,
+        ));
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideGenericClassHasTypeInferenceTestForNamespaceCases(): iterable
+    {
+        $packages = [];
+
+        foreach (self::getSourceClasses() as $class) {
+            $reflection = new \ReflectionClass($class);
+            $docComment = $reflection->getDocComment();
+
+            if (false === $docComment || ! str_contains($docComment, '* @template')) {
+                continue;
+            }
+
+            $package = explode('\\', $reflection->getNamespaceName())[1];
+
+            if (\array_key_exists($package, $packages)) {
+                continue;
+            }
+
+            $packages[$package] = true;
+
+            yield $package => [$package];
         }
     }
 }

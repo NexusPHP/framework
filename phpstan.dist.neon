@@ -15,6 +15,7 @@ parameters:
     - tools
   excludePaths:
     analyseAndScan:
+      - tests/**/data/**
       - tests/PHPStan/**/data/**
       - tools/vendor/**
   bootstrapFiles:

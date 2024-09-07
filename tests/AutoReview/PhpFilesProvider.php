@@ -117,8 +117,8 @@ trait PhpFilesProvider
             if (
                 ! $file->isFile()
                 || $file->getExtension() !== 'php'
-                || str_contains($file->getPath(), \DIRECTORY_SEPARATOR.'Fixtures'.\DIRECTORY_SEPARATOR)
-                || str_contains($file->getPath(), \DIRECTORY_SEPARATOR.'data'.\DIRECTORY_SEPARATOR)
+                || str_contains($file->getPath(), \DIRECTORY_SEPARATOR.'Fixtures')
+                || str_contains($file->getPath(), \DIRECTORY_SEPARATOR.'data')
             ) {
                 continue;
             }

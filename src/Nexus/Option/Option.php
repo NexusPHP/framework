@@ -26,6 +26,11 @@ interface Option extends \IteratorAggregate
 {
     /**
      * Returns `true` if the option is a **Some** value.
+     *
+     * @phpstan-assert-if-true  Some<T> $this
+     * @phpstan-assert-if-true  false   $this->isNone()
+     * @phpstan-assert-if-false None    $this
+     * @phpstan-assert-if-false true    $this->isNone()
      */
     public function isSome(): bool;
 
@@ -40,6 +45,11 @@ interface Option extends \IteratorAggregate
 
     /**
      * Returns `true` if the option is a **None** value.
+     *
+     * @phpstan-assert-if-true  None    $this
+     * @phpstan-assert-if-true  false   $this->isSome()
+     * @phpstan-assert-if-false Some<T> $this
+     * @phpstan-assert-if-false true    $this->isSome()
      */
     public function isNone(): bool;
 
@@ -139,11 +149,11 @@ interface Option extends \IteratorAggregate
      * passing the result of a function call, it is recommended to use `Option::andThen()`,
      * which is lazily evaluated.
      *
-     * @template U
+     * @template U of Option
      *
-     * @param self<U> $other
+     * @param U $other
      *
-     * @return self<U>
+     * @return U
      */
     public function and(self $other): self;
 
@@ -151,13 +161,13 @@ interface Option extends \IteratorAggregate
      * Returns **None** if the option is **None**, otherwise calls `$other` with the wrapped
      * value and returns the result.
      *
-     * @template U
+     * @template U of Option
      *
-     * @param (\Closure(T): self<U>) $predicate
+     * @param (\Closure(T): U) $predicate
      *
      * @param-immediately-invoked-callable $predicate
      *
-     * @return self<U>
+     * @return U
      */
     public function andThen(\Closure $predicate): self;
 
@@ -182,11 +192,11 @@ interface Option extends \IteratorAggregate
      * passing the result of a function call, it is recommended to use `Option::orElse()`,
      * which is lazily evaluated.
      *
-     * @template S
+     * @template S of Option
      *
-     * @param self<S> $other
+     * @param S $other
      *
-     * @return self<S>
+     * @return S
      */
     public function or(self $other): self;
 
@@ -194,13 +204,13 @@ interface Option extends \IteratorAggregate
      * Returns the option if it contains a value, otherwise calls
      * `$other` and returns the result.
      *
-     * @template S
+     * @template S of Option
      *
-     * @param (\Closure(): self<S>) $other
+     * @param (\Closure(): S) $other
      *
      * @param-immediately-invoked-callable $other
      *
-     * @return self<S>
+     * @return S
      */
     public function orElse(\Closure $other): self;
 

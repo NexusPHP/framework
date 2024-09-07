@@ -19,5 +19,11 @@ $ignoreErrors[] = [
 	'count' => 1,
 	'path' => __DIR__ . '/tests/AutoReview/TestCodeTest.php',
 ];
+$ignoreErrors[] = [
+	// identifier: method.impossibleType
+	'message' => '#^Call to method Nexus\\\\Option\\\\Some\\<int\\>\\:\\:isNone\\(\\) will always evaluate to false\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Option/OptionTest.php',
+];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];

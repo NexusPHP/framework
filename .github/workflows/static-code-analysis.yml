@@ -90,6 +90,11 @@ jobs:
         env:
           TACHYCARDIA_MONITOR_GA: enabled
 
+      - name: Check - Static Analysis
+        run: composer test:stan
+        env:
+          TACHYCARDIA_MONITOR_GA: enabled
+
       - name: Check - PHP-CS-Fixer
         run: composer cs:check
 

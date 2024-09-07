@@ -47,21 +47,46 @@ final readonly class Some implements Option
         return $this->value;
     }
 
+    /**
+     * @return T
+     */
     public function unwrapOr(mixed $default): mixed
     {
         return $this->value;
     }
 
+    /**
+     * @return T
+     */
     public function unwrapOrElse(\Closure $default): mixed
     {
         return $this->value;
     }
 
-    public function map(\Closure $predicate): Option
+    /**
+     * @template U
+     *
+     * @param (\Closure(T): U) $predicate
+     *
+     * @param-immediately-invoked-callable $predicate
+     *
+     * @return self<U>
+     */
+    public function map(\Closure $predicate): self
     {
         return new self($predicate($this->value));
     }
 
+    /**
+     * @template U
+     *
+     * @param U                $default
+     * @param (\Closure(T): U) $predicate
+     *
+     * @param-immediately-invoked-callable $predicate
+     *
+     * @return U
+     */
     public function mapOr(mixed $default, \Closure $predicate): mixed
     {
         return $predicate($this->value);
@@ -87,16 +112,37 @@ final readonly class Some implements Option
         return $predicate($this->value) ? clone $this : new None();
     }
 
-    public function or(Option $other): Option
+    /**
+     * @template S of Option
+     *
+     * @param S $other
+     *
+     * @return self<T>
+     */
+    public function or(Option $other): self
     {
         return clone $this;
     }
 
-    public function orElse(\Closure $other): Option
+    /**
+     * @template S of Option
+     *
+     * @param (\Closure(): S) $other
+     *
+     * @return self<T>
+     */
+    public function orElse(\Closure $other): self
     {
         return clone $this;
     }
 
+    /**
+     * @template S
+     *
+     * @param Option<S> $other
+     *
+     * @return ($other is Some<S> ? None : self<T>)
+     */
     public function xor(Option $other): Option
     {
         return $other->isSome() ? new None() : clone $this;
