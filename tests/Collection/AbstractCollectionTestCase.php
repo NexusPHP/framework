@@ -66,6 +66,15 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertSame([], $collection->filter(static fn(int $item): bool => $item < 0)->all());
     }
 
+    public function testFilterKeys(): void
+    {
+        $predicate = static fn(string $key): bool => \strlen($key) > 5;
+        $collection = $this->collection(['apple' => 5, 'banana' => 6]);
+
+        self::assertSame(['banana' => 6], $collection->filterKeys($predicate)->all(true));
+        self::assertSame([2, 3, 4, 5], $this->collection()->filterKeys()->all());
+    }
+
     public function testKeys(): void
     {
         $collection = $this->collection(static function (): \Generator {
