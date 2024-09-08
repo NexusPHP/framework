@@ -110,6 +110,39 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertSame([5, 4, 7], $collection->values()->all(true));
     }
 
+    public function testCollectionHasMethodsArrangedInParticularOrder(): void
+    {
+        $reflection = new \ReflectionClass($this->collection());
+        $publicMethods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $sortedPublicMethods = $publicMethods;
+        usort(
+            $sortedPublicMethods,
+            static function (\ReflectionMethod $a, \ReflectionMethod $b): int {
+                if ($a->isConstructor()) {
+                    return -1;
+                }
+
+                if ($b->isConstructor()) {
+                    return 1;
+                }
+
+                if ($a->isStatic() && ! $b->isStatic()) {
+                    return -1;
+                }
+
+                if (! $a->isStatic() && $b->isStatic()) {
+                    return 1;
+                }
+
+                return strcmp($a->getName(), $b->getName());
+            },
+        );
+        $publicMethods = array_map(static fn(\ReflectionMethod $rm): string => $rm->getName(), $publicMethods);
+        $sortedPublicMethods = array_map(static fn(\ReflectionMethod $rm): string => $rm->getName(), $sortedPublicMethods);
+
+        self::assertSame($sortedPublicMethods, $publicMethods);
+    }
+
     /**
      * @template TKey
      * @template T
