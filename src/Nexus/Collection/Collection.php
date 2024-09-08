@@ -41,7 +41,15 @@ final class Collection implements CollectionInterface
         $this->innerIterator = ClosureIteratorAggregate::from($callable, ...$parameter);
     }
 
-    public static function wrap(\Closure|iterable $items): CollectionInterface
+    /**
+     * @template WKey
+     * @template W
+     *
+     * @param (\Closure(): iterable<WKey, W>)|iterable<WKey, W> $items
+     *
+     * @return self<WKey, W>
+     */
+    public static function wrap(\Closure|iterable $items): self
     {
         if ($items instanceof \Closure) {
             return new self(static fn(): \Generator => yield from $items());
@@ -76,7 +84,10 @@ final class Collection implements CollectionInterface
         yield from $this->innerIterator->getIterator();
     }
 
-    public function keys(): CollectionInterface
+    /**
+     * @return self<int, TKey>
+     */
+    public function keys(): self
     {
         return new self(static function (iterable $collection): iterable {
             foreach ($collection as $key => $_) {
@@ -85,7 +96,10 @@ final class Collection implements CollectionInterface
         }, [$this]);
     }
 
-    public function values(): CollectionInterface
+    /**
+     * @return self<int, T>
+     */
+    public function values(): self
     {
         return new self(static function (iterable $collection): iterable {
             foreach ($collection as $item) {
