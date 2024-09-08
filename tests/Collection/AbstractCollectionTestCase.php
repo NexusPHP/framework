@@ -31,7 +31,7 @@ abstract class AbstractCollectionTestCase extends TestCase
 
             yield 2 => 2;
 
-            yield 3.25 => 3;
+            yield 3 => 3;
 
             yield null => 4;
 
@@ -53,6 +53,17 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertCount(5, $this->collection());
         self::assertCount(0, $this->collection([]));
         self::assertCount(2, $this->collection([1, 2]));
+    }
+
+    public function testFilter(): void
+    {
+        $predicate = static fn(int $item): bool => $item > 2;
+        $collection = $this->collection([0, 1, 2, 3, 4]);
+
+        self::assertSame([3, 4], $collection->filter($predicate)->all());
+        self::assertSame([3 => 3, 4 => 4], $collection->filter($predicate)->all(true));
+        self::assertSame([1, 2, 3, 4], $collection->filter()->all());
+        self::assertSame([], $collection->filter(static fn(int $item): bool => $item < 0)->all());
     }
 
     public function testKeys(): void

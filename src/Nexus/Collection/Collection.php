@@ -79,6 +79,24 @@ final class Collection implements CollectionInterface
         return iterator_count($this);
     }
 
+    /**
+     * @param null|(\Closure(T): bool) $predicate
+     *
+     * @return self<TKey, T>
+     */
+    public function filter(?\Closure $predicate = null): self
+    {
+        $predicate ??= static fn(mixed $item): bool => (bool) $item;
+
+        return new self(static function (iterable $collection) use ($predicate): iterable {
+            foreach ($collection as $key => $item) {
+                if ($predicate($item)) {
+                    yield $key => $item;
+                }
+            }
+        }, [$this]);
+    }
+
     public function getIterator(): \Traversable
     {
         yield from $this->innerIterator->getIterator();
