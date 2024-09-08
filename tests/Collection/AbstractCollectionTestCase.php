@@ -75,6 +75,15 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertSame([2, 3, 4, 5], $this->collection()->filterKeys()->all());
     }
 
+    public function testFilterWithKey(): void
+    {
+        $predicate = static fn(int $item, string $key): bool => str_starts_with($key, 'd') && $item > 2;
+        $collection = $this->collection(['banana' => 3, 'apple' => 4, 'dates' => 5, 'dragon fruit' => 0]);
+
+        self::assertSame(['dates' => 5], $collection->filterWithKey($predicate)->all(true));
+        self::assertSame(['banana' => 3, 'apple' => 4, 'dates' => 5], $collection->filterWithKey()->all(true));
+    }
+
     public function testKeys(): void
     {
         $collection = $this->collection(static function (): \Generator {
