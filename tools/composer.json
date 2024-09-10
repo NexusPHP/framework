@@ -2,6 +2,7 @@
     "require": {
         "php": "^8.3",
         "friendsofphp/php-cs-fixer": "^3.60",
+        "infection/infection": "^0.29.6",
         "kubawerlos/php-cs-fixer-custom-fixers": "^3.21",
         "nexusphp/cs-config": "^3.24"
     },
@@ -11,6 +12,9 @@
         }
     },
     "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        },
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true

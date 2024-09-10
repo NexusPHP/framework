@@ -44,6 +44,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
+          coverage: xdebug
 
       - name: Setup global variables
         id: globals
@@ -62,7 +63,7 @@ jobs:
             ${{ github.workflow }}-PHP_${{ matrix.php-version }}-
 
       - name: Install dependencies
-        run: composer update --ansi --no-scripts ${{ steps.globals.outputs.EXPERIMENTAL_FLAG }}
+        run: composer update --ansi ${{ steps.globals.outputs.EXPERIMENTAL_FLAG }}
 
       - name: Run Unit Tests
         shell: bash
@@ -72,6 +73,18 @@ jobs:
         env:
           COVERAGE_OPTION: ${{ matrix.os != 'windows-2019' && '--coverage' || '' }}
           TACHYCARDIA_MONITOR_GA: enabled
+
+      - name: Run Mutation Testing
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch --depth=1 origin $GITHUB_BASE_REF
+            composer mutation:filter
+          else
+            composer mutation:check
+          fi
+        env:
+          INFECTION_DASHBOARD_API_KEY: ${{ secrets.INFECTION_DASHBOARD_API_KEY }}
 
       - name: Display structure of coverage files
         if: matrix.os != 'windows-2019'

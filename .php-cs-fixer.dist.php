@@ -40,6 +40,7 @@ $finder = Finder::create()
     ])
     ->append([
         __FILE__,
+        'bin/build-infection',
         'bin/parallel-phpunit',
         'bin/prune-cache',
     ])

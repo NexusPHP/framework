@@ -76,6 +76,8 @@
         ],
         "cs:check": "tools/vendor/bin/php-cs-fixer check --ansi --verbose --diff",
         "cs:fix": "tools/vendor/bin/php-cs-fixer fix --ansi --verbose --diff",
+        "mutation:check": "tools/vendor/bin/infection --threads=max --ansi",
+        "mutation:filter": "@mutation:check --git-diff-filter=AM --git-diff-base=origin/1.x",
         "phpstan:baseline": "phpstan analyse --ansi --generate-baseline=phpstan-baseline.php",
         "phpstan:check": "phpstan analyse --ansi --verbose",
         "test:all": [
@@ -93,6 +95,8 @@
     "scripts-descriptions": {
         "cs:check": "Checks for coding style violations",
         "cs:fix": "Fixes any coding style violations",
+        "mutation:check": "Runs Infection on whole codebase",
+        "mutation:filter": "Runs Infection on added and modified files only",
         "phpstan:baseline": "Runs PHPStan and dumps resulting errors to baseline",
         "phpstan:check": "Runs PHPStan with identifiers support",
         "test:all": "Runs all PHPUnit tests",

@@ -83,7 +83,11 @@ final class OptionTest extends TestCase
         $option = (new Some('Hello, World!'))->map($predicate);
         self::assertTrue($option->isSome());
         self::assertSame(13, $option->unwrap());
-        self::assertTrue((new None())->map($predicate)->isNone());
+
+        $none = new None();
+        $newNone = $none->map($predicate);
+        self::assertTrue($newNone->isNone());
+        self::assertNotSame($newNone, $none);
     }
 
     public function testOptionMapOr(): void
@@ -105,9 +109,11 @@ final class OptionTest extends TestCase
 
     public function testOptionAnd(): void
     {
-        self::assertTrue((new Some(2))->and(new None())->isNone());
-        self::assertTrue((new None())->and(new Some('foo'))->isNone());
-        self::assertTrue((new None())->and(new None())->isNone());
+        $none = new None();
+        self::assertTrue((new Some(2))->and($none)->isNone());
+        self::assertTrue($none->and(new Some('foo'))->isNone());
+        self::assertTrue($none->and($none)->isNone());
+        self::assertNotSame($none, $none->and($none));
 
         $option = (new Some(2))->and(new Some('foo'));
         self::assertInstanceOf(Some::class, $option);
@@ -121,16 +127,25 @@ final class OptionTest extends TestCase
         $option = (new Some(2))->andThen($squareThenToString);
         self::assertTrue($option->isSome());
         self::assertSame('4', $option->unwrap());
-        self::assertTrue((new None())->andThen($squareThenToString)->isNone());
+
+        $none = new None();
+        self::assertTrue($none->andThen($squareThenToString)->isNone());
+        self::assertNotSame($none, $none->andThen($squareThenToString));
     }
 
     public function testOptionFilter(): void
     {
         $isEven = static fn(int $n): bool => $n % 2 === 0;
 
-        self::assertTrue((new None())->filter($isEven)->isNone());
+        $none = new None();
+        self::assertTrue($none->filter($isEven)->isNone());
+        self::assertNotSame($none, $none->filter($isEven));
+
         self::assertFalse((new Some(3))->filter($isEven)->isSome());
-        self::assertTrue((new Some(4))->filter($isEven)->isSome());
+
+        $some = new Some(4);
+        self::assertTrue($some->filter($isEven)->isSome());
+        self::assertNotSame($some, $some->filter($isEven));
     }
 
     public function testOptionOr(): void
@@ -141,6 +156,7 @@ final class OptionTest extends TestCase
 
         self::assertTrue($some02->or($none)->isSome());
         self::assertSame(2, $some02->or($none)->unwrap());
+        self::assertNotSame($some02, $some02->or($none));
 
         self::assertTrue($none->or($some100)->isSome());
         self::assertSame(100, $none->or($some100)->unwrap());
@@ -156,8 +172,10 @@ final class OptionTest extends TestCase
         $nobody = static fn(): None => new None();
         $vikings = static fn(): Some => new Some('vikings');
 
-        $option = (new Some('barbarians'))->orElse($vikings);
+        $some = new Some('barbarians');
+        $option = $some->orElse($vikings);
         self::assertTrue($option->isSome());
+        self::assertNotSame($some, $option);
         self::assertSame('barbarians', $option->unwrap());
 
         $option = (new None())->orElse($vikings);
@@ -174,12 +192,14 @@ final class OptionTest extends TestCase
 
         self::assertInstanceOf(Some::class, $some->xor($none));
         self::assertSame(2, $some->xor($none)->unwrap());
+        self::assertNotSame($some, $some->xor($none));
 
         self::assertInstanceOf(Some::class, $none->xor($some));
         self::assertSame(2, $none->xor($some)->unwrap());
 
         self::assertInstanceOf(None::class, $some->xor($some));
         self::assertInstanceOf(None::class, $none->xor($none));
+        self::assertNotSame($none, $none->xor($none));
     }
 
     public function testOptionIteration(): void
