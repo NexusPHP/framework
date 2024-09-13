@@ -75,7 +75,7 @@ jobs:
           TACHYCARDIA_MONITOR_GA: enabled
 
       - name: Run Mutation Testing
-        shell: bash
+        if: matrix.os != 'windows-2019'
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             git fetch --depth=1 origin $GITHUB_BASE_REF
