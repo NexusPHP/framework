@@ -33,7 +33,11 @@
         "BitwiseXor": true,
         "Break_": true,
         "CastArray": true,
-        "CastBool": true,
+        "CastBool": {
+            "ignore": [
+                "Nexus\\Collection\\Collection::filterWithKey"
+            ]
+        },
         "CastFloat": true,
         "CastInt": {
             "ignore": [

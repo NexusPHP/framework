@@ -52,18 +52,10 @@ final class Collection implements CollectionInterface
     public static function wrap(\Closure|iterable $items): self
     {
         if ($items instanceof \Closure) {
-            return new self(static fn(): \Generator => yield from $items());
+            return new self(static fn(): iterable => yield from $items());
         }
 
-        if ($items instanceof \Generator) {
-            return new self(static fn(): \Generator => yield from new \NoRewindIterator($items));
-        }
-
-        if ($items instanceof \Traversable) {
-            return new self(static fn(): \Generator => yield from $items);
-        }
-
-        return new self(static fn(): \Generator => yield from $items);
+        return new self(static fn(): iterable => yield from $items);
     }
 
     /**
