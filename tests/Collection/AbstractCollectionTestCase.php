@@ -97,6 +97,18 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertSame(['bananas', 'apples', 'oranges'], $collection->keys()->all());
     }
 
+    public function testMap(): void
+    {
+        self::assertSame([1, 4, 9, 16, 25], $this->collection()->map(static fn(int $item): int => $item * $item)->all());
+        self::assertSame(
+            ['a' => '3', 'b' => '3', 'c' => '5', 'd' => '4', 'e' => '4'],
+            $this->collection(['a' => 'one', 'b' => 'two', 'c' => 'three', 'd' => 'four', 'e' => 'five'])
+                ->map(static fn(string $item): int => \strlen($item))
+                ->map(static fn(int $length): string => (string) $length)
+                ->all(true),
+        );
+    }
+
     public function testValues(): void
     {
         $collection = $this->collection(static function (): \Generator {

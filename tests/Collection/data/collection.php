@@ -42,3 +42,6 @@ assertType('array<int, int>', Collection::wrap(['a' => 1, 'b' => 2])->all());
 $collection = Collection::wrap(['apples' => 10, 'bananas' => 20]);
 assertType('Nexus\Collection\Collection<int, string>', $collection->keys());
 assertType('Nexus\Collection\Collection<int, int>', $collection->values());
+
+assertType('Nexus\Collection\Collection<int, int>', Collection::wrap([10, 11])->map(static fn(int $item): int => $item ** 2));
+assertType('Nexus\Collection\Collection<int, string>', Collection::wrap([1])->map(static fn(int $item): string => $item > 1 ? 'Yes' : 'No'));

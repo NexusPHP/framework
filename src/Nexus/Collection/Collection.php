@@ -143,6 +143,22 @@ final class Collection implements CollectionInterface
     }
 
     /**
+     * @template U
+     *
+     * @param (\Closure(T): U) $predicate
+     *
+     * @return self<TKey, U>
+     */
+    public function map(\Closure $predicate): self
+    {
+        return new self(static function (iterable $collection) use ($predicate): iterable {
+            foreach ($collection as $key => $item) {
+                yield $key => $predicate($item);
+            }
+        }, [$this]);
+    }
+
+    /**
      * @return self<int, T>
      */
     public function values(): self
