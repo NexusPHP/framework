@@ -24,6 +24,7 @@ namespace Nexus\Collection;
  * @extends Operation\FilterWithKey<TKey, T>
  * @extends Operation\Keys<TKey, T>
  * @extends Operation\Map<TKey, T>
+ * @extends Operation\MapKeys<TKey, T>
  * @extends Operation\Values<TKey, T>
  */
 interface CollectionInterface extends
@@ -35,6 +36,7 @@ interface CollectionInterface extends
     Operation\FilterWithKey,
     Operation\Keys,
     Operation\Map,
+    Operation\MapKeys,
     Operation\Values
 {
     /**

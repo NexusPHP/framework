@@ -109,6 +109,16 @@ abstract class AbstractCollectionTestCase extends TestCase
         );
     }
 
+    public function testMapKeys(): void
+    {
+        self::assertSame(
+            [7 => 5, 6 => 4, 5 => 6],
+            $this->collection(['bananas' => 5, 'apples' => 4, 'limes' => 6])
+                ->mapKeys(static fn(string $key): int => \strlen($key))
+                ->all(true),
+        );
+    }
+
     public function testValues(): void
     {
         $collection = $this->collection(static function (): \Generator {
