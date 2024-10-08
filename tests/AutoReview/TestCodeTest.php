@@ -20,7 +20,6 @@ use PHPStan\Testing\TypeInferenceTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -244,9 +243,8 @@ final class TestCodeTest extends TestCase
 
         $functions = $rc->getAttributes(CoversFunction::class);
         $classes = $rc->getAttributes(CoversClass::class);
-        $traits = $rc->getAttributes(CoversTrait::class);
 
-        if (([] !== $functions || [] !== $traits) && [] === $classes) {
+        if ([] !== $functions && [] === $classes) {
             $this->expectNotToPerformAssertions();
 
             return;
