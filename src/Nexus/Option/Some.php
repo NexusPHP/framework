@@ -79,8 +79,9 @@ final readonly class Some implements Option
 
     /**
      * @template U
+     * @template V
      *
-     * @param U                $default
+     * @param V                $default
      * @param (\Closure(T): U) $predicate
      *
      * @param-immediately-invoked-callable $predicate

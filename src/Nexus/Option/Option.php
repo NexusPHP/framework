@@ -116,13 +116,14 @@ interface Option extends \IteratorAggregate
      * which is lazily evaluated.
      *
      * @template U
+     * @template V
      *
-     * @param U                $default
+     * @param V                $default
      * @param (\Closure(T): U) $predicate
      *
      * @param-immediately-invoked-callable $predicate
      *
-     * @return U
+     * @return U|V
      */
     public function mapOr(mixed $default, \Closure $predicate): mixed;
 
@@ -131,14 +132,15 @@ interface Option extends \IteratorAggregate
      * to the contained value (if any).
      *
      * @template U
+     * @template V
      *
-     * @param (\Closure(): U)  $default
+     * @param (\Closure(): V)  $default
      * @param (\Closure(T): U) $predicate
      *
      * @param-immediately-invoked-callable $default
      * @param-immediately-invoked-callable $predicate
      *
-     * @return U
+     * @return U|V
      */
     public function mapOrElse(\Closure $default, \Closure $predicate): mixed;
 

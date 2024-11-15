@@ -24,6 +24,13 @@ trait PackageTrait
     private static array $packages = [];
 
     /**
+     * @var array<string, string>
+     */
+    private static array $specialPackageNames = [
+        'PHPStan' => 'phpstan-nexus',
+    ];
+
+    /**
      * @return list<string>
      */
     private static function getPackageDirectories(): array
@@ -54,15 +61,11 @@ trait PackageTrait
 
     private function getPackageName(string $package): string
     {
-        static $specialCases = [
-            'PHPStan' => 'phpstan-nexus',
-        ];
-
         $package = basename($package);
 
         return \sprintf(
             'nexusphp/%s',
-            $specialCases[$package] ?? strtolower(preg_replace(
+            self::$specialPackageNames[$package] ?? strtolower(preg_replace(
                 '/(?<!^)((?=[A-Z][^A-Z])|(?<![A-Z])(?=[A-Z]))/u',
                 '_',
                 $package,

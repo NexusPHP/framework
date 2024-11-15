@@ -40,25 +40,25 @@ assertType('string', (new Some('car'))->unwrap());
 assertType('string', (new Some('car'))->unwrapOr(100));
 assertType('string', (new Some('car'))->unwrapOrElse(static fn(): bool => true));
 assertType('never', (new None())->unwrap());
-assertType('int', (new None())->unwrapOr(100));
-assertType('bool', (new None())->unwrapOrElse(static fn(): bool => true));
+assertType('100', (new None())->unwrapOr(100));
+assertType('true', (new None())->unwrapOrElse(static fn(): bool => true));
 
 $mapper = static fn(string $item): int => \strlen($item);
 $default = static fn(): int => 12;
-assertType('Nexus\Option\Some<int>', (new Some('car'))->map($mapper));
-assertType('int', (new Some('car'))->mapOr($default(), $mapper));
-assertType('int', (new Some('car'))->mapOrElse($default, $mapper));
+assertType('Nexus\Option\Some<int<0, max>>', (new Some('car'))->map($mapper));
+assertType('int<0, max>', (new Some('car'))->mapOr($default(), $mapper));
+assertType('int<0, max>', (new Some('car'))->mapOrElse($default, $mapper));
 assertType(None::class, (new None())->map($mapper));
-assertType('int', (new None())->mapOr($default(), $mapper));
-assertType('int', (new None())->mapOrElse($default, $mapper));
+assertType('12', (new None())->mapOr($default(), $mapper));
+assertType('12', (new None())->mapOrElse($default, $mapper));
 
 assertType(None::class, (new Some('car'))->and(new None()));
 assertType(None::class, (new None())->and(new Some('car')));
 assertType('Nexus\Option\Some<bool>', (new Some('car'))->and(new Some(true)));
 
 $option = (new Some(2))->andThen(static fn(int $number): Some => new Some((string) ($number ** 2)));
-assertType('Nexus\Option\Some<string>', $option);
-assertType('string', $option->unwrap());
+assertType('Nexus\Option\Some<numeric-string>', $option);
+assertType('numeric-string', $option->unwrap());
 
 assertType('Nexus\Option\Some<int>', (new Some(2))->or(new None()));
 assertType('Nexus\Option\Some<int>', (new Some(2))->or(new Some('car')));

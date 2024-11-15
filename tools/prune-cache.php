@@ -97,8 +97,9 @@ if (
 }
 
 assert(isset($cacheUsageOutput['active_caches_count'], $cacheUsageOutput['active_caches_size_in_bytes']));
-$activeCachesCount = $cacheUsageOutput['active_caches_count'];
-$activeCachesSize = $cacheUsageOutput['active_caches_size_in_bytes'];
+assert(is_numeric($cacheUsageOutput['active_caches_count']) && is_numeric($cacheUsageOutput['active_caches_size_in_bytes']));
+$activeCachesCount = (int) $cacheUsageOutput['active_caches_count'];
+$activeCachesSize = (int) $cacheUsageOutput['active_caches_size_in_bytes'];
 
 echo sprintf(
     <<<EOF

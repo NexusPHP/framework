@@ -60,11 +60,34 @@ final readonly class None implements Option
         return clone $this;
     }
 
+    /**
+     * @template U
+     * @template V
+     *
+     * @param V                    $default
+     * @param (\Closure(never): U) $predicate
+     *
+     * @param-immediately-invoked-callable $predicate
+     *
+     * @return V
+     */
     public function mapOr(mixed $default, \Closure $predicate): mixed
     {
         return $default;
     }
 
+    /**
+     * @template U
+     * @template V
+     *
+     * @param (\Closure(): V)      $default
+     * @param (\Closure(never): U) $predicate
+     *
+     * @param-immediately-invoked-callable $default
+     * @param-immediately-invoked-callable $predicate
+     *
+     * @return V
+     */
     public function mapOrElse(\Closure $default, \Closure $predicate): mixed
     {
         return $default();
