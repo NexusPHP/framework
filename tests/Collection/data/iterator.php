@@ -19,7 +19,7 @@ use Nexus\Collection\Iterator\ClosureIteratorAggregate;
 use function PHPStan\Testing\assertType;
 
 assertType(
-    'Nexus\Collection\Iterator\ClosureIteratorAggregate<int, string>',
+    'Nexus\Collection\Iterator\ClosureIteratorAggregate<int, \'a\'>',
     ClosureIteratorAggregate::from(
         static fn(string $item): iterable => yield $item,
         'a',
