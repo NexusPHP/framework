@@ -25,6 +25,11 @@ interface MapKeys
      * Returns a new collection consisting of items transformed by the
      * mapping function `$predicate` that accepts the keys as inputs.
      *
+     * ```
+     * Collection::wrap([1, 2, 3])->mapKeys(static fn(int $k): int => $k ** 2);
+     * => Collection([0 => 1, 1 => 2, 4 => 3])
+     * ```
+     *
      * @template UKey
      *
      * @param (\Closure(TKey): UKey) $predicate
