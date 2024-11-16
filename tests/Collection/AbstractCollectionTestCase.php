@@ -129,6 +129,22 @@ abstract class AbstractCollectionTestCase extends TestCase
         );
     }
 
+    public function testSlice(): void
+    {
+        $collection = $this->collection(['a' => 1, 'b' => 2, 'c' => 3]);
+
+        self::assertSame(['a' => 1, 'b' => 2, 'c' => 3], $collection->slice(1, 0)->all(true));
+        self::assertSame(['b' => 2, 'c' => 3], $collection->slice(1)->all(true));
+        self::assertSame(['b' => 2], $collection->slice(1, 1)->all(true));
+
+        self::assertSame(
+            [-3, -2],
+            $this->collection([-5, -4, -3, -2, -1, 0])
+                ->slice(2, 2)
+                ->all(),
+        );
+    }
+
     public function testValues(): void
     {
         $collection = $this->collection(static function (): \Generator {

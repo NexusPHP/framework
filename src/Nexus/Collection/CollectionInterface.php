@@ -26,6 +26,7 @@ namespace Nexus\Collection;
  * @extends Operation\Map<TKey, T>
  * @extends Operation\MapKeys<TKey, T>
  * @extends Operation\MapWithKey<TKey, T>
+ * @extends Operation\Slice<TKey, T>
  * @extends Operation\Values<TKey, T>
  */
 interface CollectionInterface extends
@@ -39,6 +40,7 @@ interface CollectionInterface extends
     Operation\Map,
     Operation\MapKeys,
     Operation\MapWithKey,
+    Operation\Slice,
     Operation\Values
 {
     /**

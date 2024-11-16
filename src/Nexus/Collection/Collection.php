@@ -191,6 +191,37 @@ final class Collection implements CollectionInterface
     }
 
     /**
+     * @param int<0, max>      $start
+     * @param null|int<0, max> $length
+     *
+     * @return self<TKey, T>
+     */
+    public function slice(int $start, ?int $length = null): self
+    {
+        return new self(static function (iterable $collection) use ($start, $length): iterable {
+            if (0 === $length) {
+                yield from $collection;
+
+                return;
+            }
+
+            $i = 0;
+
+            foreach ($collection as $key => $item) {
+                if ($i++ < $start) {
+                    continue;
+                }
+
+                yield $key => $item;
+
+                if (null !== $length && $i >= $start + $length) {
+                    break;
+                }
+            }
+        }, [$this]);
+    }
+
+    /**
      * @return self<int, T>
      */
     public function values(): self
