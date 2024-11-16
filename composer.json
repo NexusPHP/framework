@@ -81,10 +81,13 @@
         "phpstan:baseline": "phpstan analyse --ansi --generate-baseline=phpstan-baseline.php",
         "phpstan:check": "phpstan analyse --ansi --verbose",
         "test:all": [
+            "@cs:check",
+            "@phpstan:check",
             "@test:unit",
             "@test:auto-review",
             "@test:stan",
-            "@test:package"
+            "@test:package",
+            "@mutation:check"
         ],
         "test:auto-review": "phpunit --group=auto-review --colors=always",
         "test:coverage": "@test:unit --coverage-html=build/phpunit/html",
