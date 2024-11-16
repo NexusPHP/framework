@@ -46,3 +46,4 @@ assertType('Nexus\Collection\Collection<int, int>', $collection->values());
 assertType('Nexus\Collection\Collection<int, int>', Collection::wrap([10, 11])->map(static fn(int $item): int => $item ** 2));
 assertType('Nexus\Collection\Collection<int, string>', Collection::wrap([1])->map(static fn(int $item): string => $item > 1 ? 'Yes' : 'No'));
 assertType('Nexus\Collection\Collection<int<0, max>, int>', Collection::wrap(['apples' => 2])->mapKeys(static fn(string $key): int => \strlen($key)));
+assertType('Nexus\Collection\Collection<int, int>', Collection::wrap([10])->mapWithKey(static fn(int $v, int $k): int => $v ** $k));
