@@ -238,6 +238,22 @@ final class Collection implements CollectionInterface
     }
 
     /**
+     * @return self<TKey, T>
+     */
+    public function tap(\Closure ...$callbacks): self
+    {
+        return new self(static function (iterable $collection) use ($callbacks): iterable {
+            foreach ($collection as $key => $item) {
+                foreach ($callbacks as $callback) {
+                    $callback($item, $key);
+                }
+            }
+
+            yield from $collection;
+        }, [$this]);
+    }
+
+    /**
      * @return self<int, T>
      */
     public function values(): self

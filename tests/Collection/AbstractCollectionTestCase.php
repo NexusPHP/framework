@@ -159,6 +159,24 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertSame(['a' => 1], $this->collection(['a' => 1, 'b' => 2])->take(1)->all(true));
     }
 
+    public function testTap(): void
+    {
+        $stack = [];
+        $this->collection(['a' => 'apple', 'b' => 'banana'])->tap(
+            static function (string $item) use (&$stack): void {
+                $stack[\strlen($item)] = [];
+            },
+            static function (string $item, string $key) use (&$stack): void {
+                $stack[\strlen($item)][] = [$key, $item];
+            },
+        )->all();
+
+        self::assertSame([
+            5 => [['a', 'apple']],
+            6 => [['b', 'banana']],
+        ], $stack);
+    }
+
     public function testValues(): void
     {
         $collection = $this->collection(static function (): \Generator {
