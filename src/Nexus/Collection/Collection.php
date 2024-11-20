@@ -230,6 +230,14 @@ final class Collection implements CollectionInterface
     }
 
     /**
+     * @return self<TKey, T>
+     */
+    public function take(int $length): self
+    {
+        return $this->slice(0, $length);
+    }
+
+    /**
      * @return self<int, T>
      */
     public function values(): self

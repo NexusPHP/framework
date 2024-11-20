@@ -153,6 +153,12 @@ abstract class AbstractCollectionTestCase extends TestCase
         );
     }
 
+    public function testTake(): void
+    {
+        self::assertSame([5, 4, 3], $this->collection([5, 4, 3, 2, 1])->take(3)->all());
+        self::assertSame(['a' => 1], $this->collection(['a' => 1, 'b' => 2])->take(1)->all(true));
+    }
+
     public function testValues(): void
     {
         $collection = $this->collection(static function (): \Generator {
