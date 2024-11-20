@@ -19,6 +19,7 @@ namespace Nexus\Collection;
  *
  * @extends \IteratorAggregate<TKey, T>
  * @extends Operation\All<TKey, T>
+ * @extends Operation\Drop<TKey, T>
  * @extends Operation\Filter<TKey, T>
  * @extends Operation\FilterKeys<TKey, T>
  * @extends Operation\FilterWithKey<TKey, T>
@@ -33,6 +34,7 @@ interface CollectionInterface extends
     \Countable,
     \IteratorAggregate,
     Operation\All,
+    Operation\Drop,
     Operation\Filter,
     Operation\FilterKeys,
     Operation\FilterWithKey,

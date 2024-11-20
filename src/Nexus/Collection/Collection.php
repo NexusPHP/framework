@@ -72,6 +72,14 @@ final class Collection implements CollectionInterface
     }
 
     /**
+     * @return self<TKey, T>
+     */
+    public function drop(int $length): self
+    {
+        return $this->slice($length);
+    }
+
+    /**
      * @param null|(\Closure(T): bool) $predicate
      *
      * @return self<TKey, T>

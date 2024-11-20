@@ -55,6 +55,14 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertCount(2, $this->collection([1, 2]));
     }
 
+    public function testDrop(): void
+    {
+        $collection = $this->collection(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]);
+
+        self::assertSame(['d' => 4, 'e' => 5], $collection->drop(3)->all(true));
+        self::assertSame([], $collection->drop(5)->all(true));
+    }
+
     public function testFilter(): void
     {
         $predicate = static fn(int $item): bool => $item > 2;
