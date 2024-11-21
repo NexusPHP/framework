@@ -42,12 +42,10 @@ final class Collection implements CollectionInterface
     }
 
     /**
-     * @template WKey
-     * @template W
+     * @template WrapKey
+     * @template Wrap
      *
-     * @param (\Closure(): iterable<WKey, W>)|iterable<WKey, W> $items
-     *
-     * @return self<WKey, W>
+     * @return self<WrapKey, Wrap>
      */
     public static function wrap(\Closure|iterable $items): self
     {

@@ -50,12 +50,12 @@ interface CollectionInterface extends
     Operation\Values
 {
     /**
-     * @template WKey
-     * @template W
+     * @template WrapKey
+     * @template Wrap
      *
-     * @param (\Closure(): iterable<WKey, W>)|iterable<WKey, W> $items
+     * @param (\Closure(): iterable<WrapKey, Wrap>)|iterable<WrapKey, Wrap> $items
      *
-     * @return self<WKey, W>
+     * @return self<WrapKey, Wrap>
      */
     public static function wrap(\Closure|iterable $items): self;
 }
