@@ -80,8 +80,6 @@ final class Collection implements CollectionInterface
     }
 
     /**
-     * @param null|(\Closure(T): bool) $predicate
-     *
      * @return self<TKey, T>
      */
     public function filter(?\Closure $predicate = null): self
@@ -98,8 +96,6 @@ final class Collection implements CollectionInterface
     }
 
     /**
-     * @param null|(\Closure(TKey): bool) $predicate
-     *
      * @return self<TKey, T>
      */
     public function filterKeys(?\Closure $predicate = null): self
@@ -116,8 +112,6 @@ final class Collection implements CollectionInterface
     }
 
     /**
-     * @param null|(\Closure(T, TKey): bool) $predicate
-     *
      * @return self<TKey, T>
      */
     public function filterWithKey(?\Closure $predicate = null): self
@@ -153,8 +147,6 @@ final class Collection implements CollectionInterface
     /**
      * @template U
      *
-     * @param (\Closure(T): U) $predicate
-     *
      * @return self<TKey, U>
      */
     public function map(\Closure $predicate): self
@@ -168,8 +160,6 @@ final class Collection implements CollectionInterface
 
     /**
      * @template UKey
-     *
-     * @param (\Closure(TKey): UKey) $predicate
      *
      * @return self<UKey, T>
      */
@@ -185,8 +175,6 @@ final class Collection implements CollectionInterface
     /**
      * @template U
      *
-     * @param (\Closure(T, TKey): U) $predicate
-     *
      * @return self<TKey, U>
      */
     public function mapWithKey(\Closure $predicate): self
@@ -199,9 +187,6 @@ final class Collection implements CollectionInterface
     }
 
     /**
-     * @param int<0, max>      $start
-     * @param null|int<0, max> $length
-     *
      * @return self<TKey, T>
      */
     public function slice(int $start, ?int $length = null): self
