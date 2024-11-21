@@ -114,6 +114,25 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertSame(['bananas', 'apples', 'oranges'], $collection->keys()->all());
     }
 
+    public function testLimit(): void
+    {
+        self::assertSame([1, 2, 3, 4, 5], $this->collection()->limit(5)->all());
+        self::assertSame([1, 2, 3, 4], $this->collection()->limit(4)->all());
+        self::assertSame([1, 2, 3], $this->collection()->limit(3)->all());
+        self::assertSame([1, 2], $this->collection()->limit(2)->all());
+        self::assertSame([1], $this->collection()->limit(1)->all());
+
+        self::assertSame(
+            [5, 5, 5, 5, 5, 5],
+            $this->collection(static function (): iterable {
+                // @phpstan-ignore while.alwaysTrue
+                while (true) {
+                    yield 5;
+                }
+            })->limit(6)->all(),
+        );
+    }
+
     public function testMap(): void
     {
         self::assertSame([1, 4, 9, 16, 25], $this->collection()->map(static fn(int $item): int => $item * $item)->all());

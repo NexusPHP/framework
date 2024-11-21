@@ -170,6 +170,20 @@ final class Collection implements CollectionInterface
     }
 
     /**
+     * @return self<TKey, T>
+     */
+    public function limit(int $limit = -1, int $offset = 0): self
+    {
+        return new self(static function (iterable $collection) use ($limit, $offset): iterable {
+            $iterator = static function () use ($collection): iterable {
+                yield from $collection;
+            };
+
+            yield from new \LimitIterator($iterator(), $offset, $limit);
+        }, [$this]);
+    }
+
+    /**
      * @template U
      *
      * @return self<TKey, U>
