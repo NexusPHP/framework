@@ -64,6 +64,33 @@ final class Collection implements CollectionInterface
         return iterator_to_array($this, $preserveKeys);
     }
 
+    /**
+     * @return self<int, non-empty-array<TKey, T>>
+     */
+    public function chunk(int $size): self
+    {
+        return new self(static function (iterable $collection) use ($size): iterable {
+            $chunk = [];
+            $count = 0;
+
+            foreach ($collection as $key => $item) {
+                $chunk[$key] = $item;
+                ++$count;
+
+                if ($count === $size) {
+                    yield $chunk;
+
+                    $chunk = [];
+                    $count = 0;
+                }
+            }
+
+            if ([] !== $chunk) {
+                yield $chunk;
+            }
+        }, [$this]);
+    }
+
     public function count(): int
     {
         return iterator_count($this);

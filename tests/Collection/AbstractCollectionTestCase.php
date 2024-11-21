@@ -48,6 +48,15 @@ abstract class AbstractCollectionTestCase extends TestCase
         $this->collection(static fn(): iterable => yield new \stdClass() => 5)->all(true);
     }
 
+    public function testChunk(): void
+    {
+        $collection = $this->collection(['a' => 1, 'b' => 2, 'c' => 3]);
+
+        self::assertSame([['a' => 1, 'b' => 2, 'c' => 3]], $collection->chunk(3)->all(true));
+        self::assertSame([['a' => 1, 'b' => 2], ['c' => 3]], $collection->chunk(2)->all(true));
+        self::assertSame([['a' => 1], ['b' => 2], ['c' => 3]], $collection->chunk(1)->all(true));
+    }
+
     public function testCount(): void
     {
         self::assertCount(5, $this->collection());
