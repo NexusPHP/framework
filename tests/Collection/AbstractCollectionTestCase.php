@@ -64,6 +64,11 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertCount(2, $this->collection([1, 2]));
     }
 
+    public function testCycle(): void
+    {
+        self::assertCount(8, $this->collection([1])->cycle()->limit(8));
+    }
+
     public function testDrop(): void
     {
         $collection = $this->collection(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]);

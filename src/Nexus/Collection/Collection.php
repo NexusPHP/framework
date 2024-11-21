@@ -99,6 +99,19 @@ final class Collection implements CollectionInterface
     /**
      * @return self<TKey, T>
      */
+    public function cycle(): self
+    {
+        return new self(static function (iterable $collection): iterable {
+            // @phpstan-ignore while.alwaysTrue
+            while (true) {
+                yield from $collection;
+            }
+        }, [$this]);
+    }
+
+    /**
+     * @return self<TKey, T>
+     */
     public function drop(int $length): self
     {
         return $this->slice($length);
