@@ -54,22 +54,31 @@ sort($components);
 $githubActionsGroup = static function (string $component, string $message, int $exitCode) use ($runsOnGithubActions): string {
     if (! $runsOnGithubActions) {
         if ($exitCode > 0) {
-            return sprintf("\n%2\$s\n\033[41m FAIL \033[0m %1\$s\n", $component, $message);
+            return sprintf("\n%1\$s\n+ %2\$s\n\033[41m FAIL \033[0m %1\$s\n\n", $component, $message);
+        }
+
+        if ($exitCode < 0) {
+            return sprintf("\n%1\$s\n+ %2\$s\n\n\033[41m TIMEOUT \033[0m %1\$s\n\n", $component, $message);
         }
 
         return sprintf("\033[42m OK \033[0m %1\$s\n", $component);
     }
 
     if ($exitCode > 0) {
-        return sprintf("%1\$s\n%2\$s\n\033[41m FAIL \033[0m %1\$s\n", $component, $message);
+        return sprintf("%1\$s\n+ %2\$s\n\033[41m FAIL \033[0m %1\$s\n\n", $component, $message);
+    }
+
+    if ($exitCode < 0) {
+        return sprintf("%1\$s\n+ %2\$s\n\033[41m TIMEOUT \033[0m %1\$s\n\n", $component, $message);
     }
 
     return sprintf(
         <<<EOF
             ::group::%1\$s
-            %2\$s
+            + %2\$s
 
             \033[42m OK \033[0m %1\$s
+
             ::endgroup::
 
             EOF,
@@ -138,8 +147,6 @@ while ([] !== $runningProcesses) {
             $lastOutput = $output;
             $lastOutputTime = microtime(true);
         } elseif (microtime(true) - $lastOutputTime > 60) {
-            printf("\033[41m TIMEOUT \033[0m %s\n", $component);
-
             if (DIRECTORY_SEPARATOR === '\\') {
                 exec(sprintf('taskkill /F /T /PID %d 2>&1', proc_get_status($process)['pid']));
             } else {
@@ -151,13 +158,13 @@ while ([] !== $runningProcesses) {
     foreach ($terminatedProcesses as $component => [$command, $status]) {
         $output = $command."\n\n";
 
-        foreach (['out', 'err'] as $file) {
-            $file = sprintf('%s/phpunit.std%s', $component, $file);
+        foreach (['stdout', 'stderr'] as $file) {
+            $file = sprintf('%s/phpunit.%s', $component, $file);
             $output .= file_get_contents($file);
             unlink($file);
         }
 
-        if ($status > 0) {
+        if (0 !== $status) {
             $exit = $status;
         }
 
