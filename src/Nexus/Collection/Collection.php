@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Nexus\Collection;
 
 use Nexus\Collection\Iterator\ClosureIteratorAggregate;
+use Nexus\Collection\Iterator\RewindableIterator;
 
 /**
  * @template TKey
@@ -102,10 +103,13 @@ final class Collection implements CollectionInterface
     public function cycle(): self
     {
         return new self(static function (iterable $collection): iterable {
-            // @phpstan-ignore while.alwaysTrue
-            while (true) {
-                yield from $collection;
-            }
+            return new \InfiniteIterator(
+                new RewindableIterator(
+                    static function () use ($collection): \Generator {
+                        yield from $collection;
+                    },
+                ),
+            );
         }, [$this]);
     }
 

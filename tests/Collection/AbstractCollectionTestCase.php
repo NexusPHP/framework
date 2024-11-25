@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Nexus\Tests\Collection;
 
 use Nexus\Collection\CollectionInterface;
+use Nexus\Collection\Iterator\RewindableIterator;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -128,13 +129,12 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertSame([1], $this->collection()->limit(1)->all());
 
         self::assertSame(
-            [5, 5, 5, 5, 5, 5],
-            $this->collection(static function (): iterable {
-                // @phpstan-ignore while.alwaysTrue
-                while (true) {
-                    yield 5;
-                }
-            })->limit(6)->all(),
+            [1, 2, 1, 2, 1, 2],
+            $this->collection(new \InfiniteIterator(
+                new RewindableIterator(
+                    static fn(): \ArrayIterator => new \ArrayIterator([1, 2]),
+                ),
+            ))->limit(6)->all(),
         );
     }
 

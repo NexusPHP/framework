@@ -15,6 +15,7 @@ namespace Nexus\Tests\Collection;
 
 use Nexus\Collection\Collection;
 use Nexus\Collection\Iterator\ClosureIteratorAggregate;
+use Nexus\Collection\Iterator\RewindableIterator;
 
 use function PHPStan\Testing\assertType;
 
@@ -39,3 +40,15 @@ assertType(
         Collection::wrap([1, new \stdClass()]),
     ),
 );
+
+$rewindableIterator = new RewindableIterator(
+    static function (): iterable {
+        yield 'a' => 1;
+
+        yield 'b' => 2;
+    },
+);
+
+assertType('Nexus\Collection\Iterator\RewindableIterator<string, int>', $rewindableIterator);
+assertType('int', $rewindableIterator->current());
+assertType('string', $rewindableIterator->key());
