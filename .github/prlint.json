@@ -1,0 +1,16 @@
+{
+    "title": [
+        {
+            "pattern": "((?<=`)@\\S*`)|(^[^@]*$)",
+            "message": "Put backticks around @keyword so it does not reference a GitHub user."
+        },
+        {
+            "pattern": "^[A-Z][a-z]+?\\s",
+            "message": "Your title must start with a capital letter."
+        },
+        {
+            "pattern": "^(?!\\S+ing\\s)(?!\\S+ed\\s)",
+            "message": "Use the imperative mood in the verb (i.e., write \"Fix\", not \"Fixing\" or \"Fixed\")"
+        }
+    ]
+}
