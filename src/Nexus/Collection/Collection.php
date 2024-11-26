@@ -139,6 +139,29 @@ final class Collection implements CollectionInterface
     /**
      * @return self<TKey, T>
      */
+    public function diffKey(iterable ...$others): self
+    {
+        return new self(static function (iterable $collection) use ($others): iterable {
+            $hashTable = [];
+            $toArrayKey = static fn(mixed $input): string => \is_string($input) ? $input : (string) json_encode($input);
+
+            foreach ($others as $other) {
+                foreach ($other as $key) {
+                    $hashTable[$toArrayKey($key)] = true;
+                }
+            }
+
+            foreach ($collection as $key => $value) {
+                if (! \array_key_exists($toArrayKey($key), $hashTable)) {
+                    yield $key => $value;
+                }
+            }
+        }, [$this]);
+    }
+
+    /**
+     * @return self<TKey, T>
+     */
     public function drop(int $length): self
     {
         return $this->slice($length);

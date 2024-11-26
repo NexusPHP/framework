@@ -22,6 +22,7 @@ namespace Nexus\Collection;
  * @extends Operation\Chunk<TKey, T>
  * @extends Operation\Cycle<TKey, T>
  * @extends Operation\Diff<TKey, T>
+ * @extends Operation\DiffKey<TKey, T>
  * @extends Operation\Drop<TKey, T>
  * @extends Operation\Filter<TKey, T>
  * @extends Operation\FilterKeys<TKey, T>
@@ -43,6 +44,7 @@ interface CollectionInterface extends
     Operation\Chunk,
     Operation\Cycle,
     Operation\Diff,
+    Operation\DiffKey,
     Operation\Drop,
     Operation\Filter,
     Operation\FilterKeys,
