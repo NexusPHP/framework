@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+#
+# Inspired from: https://github.com/rhukster/sphp.sh
+#
+# Original copyright (c) 2023 Andy Miller
+
+SUPPORTED_PHP_VERSIONS=("8.2" "8.3" "8.4")
+
+TARGET_VERSION=$1
+PHP_VERSION="php@$TARGET_VERSION"
+
+if [[ -z "$TARGET_VERSION" ]]; then
+    NEXUS_VERSION=$(git describe --tags --abbrev=0 2> /dev/null)
+
+    if [[ -z "$NEXUS_VERSION" ]]; then
+        NEXUS_VERSION="1.0.0-dev"
+    fi
+
+    printf "\033[32mNexus PHP Switcher\033[0m version \033[33m$NEXUS_VERSION\033[0m"
+    printf "\n\n"
+    printf "usage: \033[32m$(basename "$0")\033[0m version"
+    printf "\n\n"
+    echo "            version is one of:" "$(echo ${SUPPORTED_PHP_VERSIONS[@]} | sed 's/ /, /g')"
+    exit
+fi
+
+for VERSION in ${SUPPORTED_PHP_VERSIONS[*]}; do
+    if [[ -d "$(brew --prefix)/etc/php/$VERSION" ]]; then
+        INSTALLED_PHP_VERSIONS+=("$VERSION")
+    fi
+done
+
+if [[ " ${SUPPORTED_PHP_VERSIONS[*]} " == *"$TARGET_VERSION"* ]]; then
+    if [[ " ${INSTALLED_PHP_VERSIONS[*]} " == *"$TARGET_VERSION"* ]]; then
+        printf "Switching to \033[32mPHP $TARGET_VERSION\033[0m\n"
+
+        for VER in "${INSTALLED_PHP_VERSIONS[@]}"; do
+            brew unlink "php@$VER"
+        done
+        brew link --force --overwrite "$PHP_VERSION"
+
+        echo
+        php -v
+        echo
+
+        printf "\033[42m OK \033[0m Done!\n"
+    else
+        printf "\033[41m FAIL \033[0m PHP $TARGET_VERSION is not installed via Homebrew. "
+        printf "Install it by running: \033[32mbrew\033[0m install shivammathur/php/$PHP_VERSION\n"
+
+        exit 1
+    fi
+else
+    printf "\033[41m FAIL \033[0m Unknown or unsupported PHP version. "
+    echo "Expecting one of:" "$(echo ${SUPPORTED_PHP_VERSIONS[@]} | sed 's/ /, /g')"
+
+    exit 1
+fi
