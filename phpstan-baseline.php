@@ -2,26 +2,26 @@
 
 $ignoreErrors = [];
 $ignoreErrors[] = [
-	// identifier: return.unusedType
 	'message' => '#^Method Nexus\\\\Option\\\\Choice\\:\\:from\\(\\) never returns Nexus\\\\Option\\\\Some\\<T of mixed\\> so it can be removed from the return type\\.$#',
+	'identifier' => 'return.unusedType',
 	'count' => 1,
 	'path' => __DIR__ . '/src/Nexus/Option/Choice.php',
 ];
 $ignoreErrors[] = [
-	// identifier: return.type
 	'message' => '#^Method Nexus\\\\Tests\\\\AutoReview\\\\ComposerJsonTest\\:\\:getComposer\\(\\) should return array\\<string, mixed\\> but returns mixed\\.$#',
+	'identifier' => 'return.type',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/AutoReview/ComposerJsonTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: function.impossibleType
 	'message' => '#^Call to function in_array\\(\\) with arguments string, array\\{\\} and true will always evaluate to false\\.$#',
+	'identifier' => 'function.impossibleType',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/AutoReview/TestCodeTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: method.impossibleType
 	'message' => '#^Call to method Nexus\\\\Option\\\\Some\\<int\\>\\:\\:isNone\\(\\) will always evaluate to false\\.$#',
+	'identifier' => 'method.impossibleType',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Option/OptionTest.php',
 ];
