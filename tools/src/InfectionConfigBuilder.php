@@ -56,8 +56,10 @@ final class InfectionConfigBuilder
     public const PER_MUTATOR_IGNORE = [
         'CastBool' => [Collection::class.'::filterWithKey'],
         'CastInt' => [SystemClock::class],
+        'CastString' => [Collection::class.'::diff'],
         'Division' => [SystemClock::class],
         'ModEqual' => [SystemClock::class],
+        'TrueValue' => [Collection::class.'::diff'],
     ];
 
     /**

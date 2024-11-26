@@ -19,4 +19,4 @@ file_put_contents(
     __DIR__.'/../infection.json5',
     json_encode(InfectionConfigBuilder::build(), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)."\n",
 );
-printf("\033[42;30m DONE \033[0m\n");
+printf("\033[42;30m OK \033[0m Done!\n");

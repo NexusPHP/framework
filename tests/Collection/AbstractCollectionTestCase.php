@@ -70,6 +70,20 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertCount(8, $this->collection([1])->cycle()->limit(8));
     }
 
+    public function testDiff(): void
+    {
+        self::assertSame([4, 5], $this->collection()->diff([1, 2, 3])->all());
+        self::assertSame(['a' => 1], $this->collection(static function (): iterable {
+            yield 'a' => 1;
+
+            yield 'b' => 2;
+
+            yield 'c' => 3;
+
+            yield 'd' => new \stdClass();
+        })->diff([2], [3], [new \stdClass()])->all(true));
+    }
+
     public function testDrop(): void
     {
         $collection = $this->collection(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5]);

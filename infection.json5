@@ -45,7 +45,11 @@
             ]
         },
         "CastObject": true,
-        "CastString": true,
+        "CastString": {
+            "ignore": [
+                "Nexus\\Collection\\Collection::diff"
+            ]
+        },
         "CatchBlockRemoval": true,
         "Catch_": true,
         "CloneRemoval": true,
@@ -126,7 +130,11 @@
         "Ternary": true,
         "This": true,
         "Throw_": true,
-        "TrueValue": true,
+        "TrueValue": {
+            "ignore": [
+                "Nexus\\Collection\\Collection::diff"
+            ]
+        },
         "UnwrapArrayChangeKeyCase": true,
         "UnwrapArrayChunk": true,
         "UnwrapArrayColumn": true,
