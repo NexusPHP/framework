@@ -19,13 +19,13 @@ declare(strict_types=1);
 // ============================================================================
 
 if ($argc < 2) {
-    echo "\033[31mUSAGE\033[0m \033[32mbin/prune-cache\033[0m <repo> [--pr-branch=BRANCH] [--schedule]\n";
+    echo "usage: \033[32mbin/prune-cache\033[0m <repo> [--pr-branch=BRANCH] [--schedule]\n";
 
     exit(1);
 }
 
 if (getenv('GITHUB_ACTIONS') !== false && getenv('GH_TOKEN') === false) {
-    echo "\033[31mFAIL\033[0m When running in GitHub Actions, please pass the \033[32mGH_TOKEN\033[0m environment variable.\n";
+    echo "\033[41m FAIL \033[0m When running in GitHub Actions, please pass the \033[32mGH_TOKEN\033[0m environment variable.\n";
 
     exit(1);
 }
@@ -88,7 +88,7 @@ if (
     && '200' !== $cacheUsageOutput['status']
 ) {
     echo sprintf(
-        "\033[31mFAIL\033[0m %s (HTTP %d)\n",
+        "\033[41m FAIL \033[0m %s (HTTP %d)\n",
         $cacheUsageOutput['message'],
         $cacheUsageOutput['status'],
     );
@@ -207,17 +207,12 @@ foreach ($caches['actions_caches'] as $cache) {
     exec($cachesDeleteCommand($cache['key'], $cache['ref']), $result, $exitCode);
 
     if (0 === $exitCode) {
-        echo "\033[1A";
-        echo sprintf("\033[%dC", mb_strlen($message) - 27);
-        echo "\033[32mDone\033[0m";
-        echo "\033[1B";
-        echo "\033[0G";
         ++$counter;
     }
 }
 
 echo sprintf(
-    "\nDeleted \033[32m%d caches\033[0m from %s.\n",
+    "\n\033[42m OK \033[0m Deleted \033[32m%d caches\033[0m from %s.\n",
     $counter,
-    $branch > 0 ? sprintf('PR #%d branch', $branch) : ($onSchedule ? 'merged PR branches' : 'all branches'),
+    $branch > 0 ? sprintf('PR #%d branch', $branch) : 'all branches',
 );
