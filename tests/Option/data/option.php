@@ -57,8 +57,8 @@ assertType(None::class, (new None())->and(new Some('car')));
 assertType('Nexus\Option\Some<bool>', (new Some('car'))->and(new Some(true)));
 
 $option = (new Some(2))->andThen(static fn(int $number): Some => new Some((string) ($number ** 2)));
-assertType('Nexus\Option\Some<numeric-string>', $option);
-assertType('numeric-string', $option->unwrap());
+assertType('Nexus\Option\Some<numeric-string&uppercase-string>', $option);
+assertType('numeric-string&uppercase-string', $option->unwrap());
 
 assertType('Nexus\Option\Some<int>', (new Some(2))->or(new None()));
 assertType('Nexus\Option\Some<int>', (new Some(2))->or(new Some('car')));
