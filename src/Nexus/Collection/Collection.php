@@ -215,6 +215,18 @@ final class Collection implements CollectionInterface
         }, [$this]);
     }
 
+    /**
+     * @return self<T, TKey>
+     */
+    public function flip(): self
+    {
+        return new self(static function (iterable $collection): iterable {
+            foreach ($collection as $key => $item) {
+                yield $item => $key;
+            }
+        }, [$this]);
+    }
+
     public function getIterator(): \Traversable
     {
         yield from $this->innerIterator->getIterator();

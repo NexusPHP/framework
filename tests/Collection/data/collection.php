@@ -50,3 +50,5 @@ assertType('Nexus\Collection\Collection<int, int>', Collection::wrap([10])->mapW
 
 assertType('list<non-empty-array<int, int>>', Collection::wrap([5, 4, 3, 2, 1])->chunk(3)->all());
 assertType('Nexus\Collection\Collection<int, non-empty-array<int, int>>', Collection::wrap([5, 4, 3, 2, 1])->chunk(4));
+
+assertType('Nexus\Collection\Collection<float, string>', Collection::wrap(['a' => 1.5, 'b' => 2.5])->flip());
