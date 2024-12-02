@@ -25,11 +25,6 @@ interface Diff
      * Computes the difference of the collection against a series of other
      * iterables (i.e., collections, arrays, Traversable objects).
      *
-     * ```
-     * Collection::wrap([1, 2, 3, 4, 5])->diff([1, 2, 3]);
-     * => Collection([4, 5])
-     * ```
-     *
      * @param iterable<mixed, T> ...$others
      *
      * @return CollectionInterface<TKey, T>

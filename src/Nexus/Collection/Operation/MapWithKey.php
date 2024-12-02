@@ -26,11 +26,6 @@ interface MapWithKey
      * mapping function `$predicate` that accepts the keys and values
      * as inputs. The keys are left unchanged.
      *
-     * ```
-     * Collection::wrap([1, 2, 3])->mapWithKey(static fn(int $v, int $k): int => $v + $k);
-     * => Collection([1, 3, 5])
-     * ```
-     *
      * @template U
      *
      * @param (\Closure(T, TKey): U) $predicate

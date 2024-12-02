@@ -26,11 +26,6 @@ interface FilterWithKey
      *
      * If `$predicate` is not provided, this just checks for non-falsey keys and values.
      *
-     * ```
-     * Collection::wrap([1, 0, 2, 5])->filterWithKey()->all();
-     * => [2, 5]
-     * ```
-     *
      * @param null|(\Closure(T, TKey): bool) $predicate
      *
      * @return CollectionInterface<TKey, T>

@@ -26,11 +26,6 @@ interface All
      * duplicate keys. In case keys are preserved, the last of the duplicate keys
      * will be retained and the previous keys will be lost.
      *
-     * ```
-     * Collection::wrap(['a' => 1, 'c' => 2, 'f' => 3])->all();
-     * => [1, 2, 3]
-     * ```
-     *
      * @param bool $preserveKeys Whether keys will be preserved during conversion.
      *                           Set this to `false` to prevent data loss when dealing
      *                           with duplicate keys.

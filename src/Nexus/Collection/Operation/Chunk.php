@@ -29,11 +29,6 @@ interface Chunk
      * collection does not split evenly, the final chunk will be
      * smaller.
      *
-     * ```
-     * Collection::wrap([5, 4, 3, 2, 1])->chunk(3);
-     * => Collection([[5, 4, 3], [2, 1]])
-     * ```
-     *
      * @param int<1, max> $size
      *
      * @return CollectionInterface<int, non-empty-array<TKey, T>>

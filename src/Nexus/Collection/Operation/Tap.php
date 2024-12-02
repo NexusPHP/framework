@@ -28,13 +28,6 @@ interface Tap
      * each item in the collection. The return value of the
      * callbacks are ignored.
      *
-     * ```
-     * Collection::wrap(['a' => 'apple', 'b' => 'banana'])->tap(static function (string $item): void { var_dump($item); });
-     * => Collection(['a' => 'apple', 'b' => 'banana'])
-     * => string(5) "apple"
-     * => string(6) "banana"
-     * ```
-     *
      * @param (\Closure(T, TKey): void) ...$callbacks
      *
      * @return CollectionInterface<TKey, T>

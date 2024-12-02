@@ -25,11 +25,6 @@ interface Keys
      * Returns a new collection from keys of the original collection as
      * the new values.
      *
-     * ```
-     * Collection::wrap(['banana' => 1, 'apple' => 2])->keys();
-     * => Collection(['banana', 'apple'])
-     * ```
-     *
      * @return CollectionInterface<int, TKey>
      */
     public function keys(): CollectionInterface;

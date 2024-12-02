@@ -29,11 +29,6 @@ interface Map
      * the keys, you need to use `CollectionInterface::mapKeys()`. If you
      * want both keys and values, you need `CollectionInterface::mapWithKey()`.
      *
-     * ```
-     * Collection::wrap([1, 2, 3, 4, 5])->map(static fn(int $item): int => $item ** 2)->all();
-     * => [1, 4, 9, 16, 25]
-     * ```
-     *
      * @template U
      *
      * @param (\Closure(T): U) $predicate

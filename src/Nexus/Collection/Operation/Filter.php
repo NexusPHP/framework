@@ -26,11 +26,6 @@ interface Filter
      *
      * If no `$predicate` is provided, this will just check for non-falsey values.
      *
-     * ```
-     * Collection::wrap([1, 2, 3])->filter(static fn(int $item): bool => $item % 2 === 1)->all();
-     * => [1, 3]
-     * ```
-     *
      * @param null|(\Closure(T): bool) $predicate
      *
      * @return CollectionInterface<TKey, T>

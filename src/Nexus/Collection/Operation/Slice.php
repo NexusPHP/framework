@@ -25,11 +25,6 @@ interface Slice
      * Takes a slice from a collection and returns it
      * as a new collection.
      *
-     * ```
-     * Collection::wrap([-5, -4, -3, -2, -1, 0])->slice(2, 2);
-     * => Collection([-3, -2])
-     * ```
-     *
      * @param int<0, max>      $start  Start offset
      * @param null|int<0, max> $length Length of collection (if not specified,
      *                                 all remaining values from the collection

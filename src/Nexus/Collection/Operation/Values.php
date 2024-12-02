@@ -24,11 +24,6 @@ interface Values
     /**
      * Returns a new collection of values, ignoring the original keys.
      *
-     * ```
-     * Collection::wrap(['a' => 2, 'b' => 4])->values();
-     * => Collection([2, 4])
-     * ```
-     *
      * @return CollectionInterface<int, T>
      */
     public function values(): CollectionInterface;

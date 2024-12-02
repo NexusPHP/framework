@@ -25,11 +25,6 @@ interface Drop
      * Drops the first items with `$length` from the collection
      * and returns a new collection on the remaining items.
      *
-     * ```
-     * Collection::wrap(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5])->drop(3);
-     * => Collection(['d' => 4, 'e' => 5])
-     * ```
-     *
      * @param int<0, max> $length Number of items to drop from the start
      *
      * @return CollectionInterface<TKey, T>

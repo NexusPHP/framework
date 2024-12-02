@@ -25,11 +25,6 @@ interface DiffKey
      * Computes the difference of the collection against other iterables
      * using the keys for comparison.
      *
-     * ```
-     * Collection::wrap(['a' => 1, 'b' => 2])->diff(['a'])->all(true);
-     * => ['b' => 2]
-     * ```
-     *
      * @param iterable<mixed, TKey> ...$others
      *
      * @return CollectionInterface<TKey, T>
