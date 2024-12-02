@@ -213,6 +213,15 @@ abstract class AbstractCollectionTestCase extends TestCase
         );
     }
 
+    public function testReject(): void
+    {
+        $predicate = static fn(int $item, string $key): bool => str_starts_with($key, 'd') && $item > 2;
+        $collection = $this->collection(['banana' => 3, 'apple' => 4, 'dates' => 5, 'dragon fruit' => 0]);
+
+        self::assertSame(['banana' => 3, 'apple' => 4, 'dragon fruit' => 0], $collection->reject($predicate)->all(true));
+        self::assertSame(['dragon fruit' => 0], $collection->reject()->all(true));
+    }
+
     public function testSlice(): void
     {
         $collection = $this->collection(['a' => 1, 'b' => 2, 'c' => 3]);

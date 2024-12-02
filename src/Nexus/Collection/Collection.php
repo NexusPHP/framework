@@ -303,6 +303,22 @@ final class Collection implements CollectionInterface
     /**
      * @return self<TKey, T>
      */
+    public function reject(?\Closure $predicate = null): self
+    {
+        $predicate ??= static fn(mixed $item, mixed $key): bool => (bool) $item && (bool) $key;
+
+        return new self(static function (iterable $collection) use ($predicate): iterable {
+            foreach ($collection as $key => $item) {
+                if (! $predicate($item, $key)) {
+                    yield $key => $item;
+                }
+            }
+        }, [$this]);
+    }
+
+    /**
+     * @return self<TKey, T>
+     */
     public function slice(int $start, ?int $length = null): self
     {
         return new self(static function (iterable $collection) use ($start, $length): iterable {

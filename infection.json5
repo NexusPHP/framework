@@ -35,7 +35,8 @@
         "CastArray": true,
         "CastBool": {
             "ignore": [
-                "Nexus\\Collection\\Collection::filterWithKey"
+                "Nexus\\Collection\\Collection::filterWithKey",
+                "Nexus\\Collection\\Collection::reject"
             ]
         },
         "CastFloat": true,

@@ -54,7 +54,10 @@ final class InfectionConfigBuilder
      * @var array<string, list<string>>
      */
     public const PER_MUTATOR_IGNORE = [
-        'CastBool' => [Collection::class.'::filterWithKey'],
+        'CastBool' => [
+            Collection::class.'::filterWithKey',
+            Collection::class.'::reject',
+        ],
         'CastInt' => [SystemClock::class],
         'CastString' => [
             Collection::class.'::diff',
