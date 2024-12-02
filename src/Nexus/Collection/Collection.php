@@ -301,6 +301,18 @@ final class Collection implements CollectionInterface
     }
 
     /**
+     * @return self<int, CollectionInterface<TKey, T>>
+     */
+    public function partition(\Closure $predicate): self
+    {
+        return new self(static function (iterable $collection) use ($predicate): iterable {
+            yield $collection->filterWithKey($predicate);
+
+            yield $collection->reject($predicate);
+        }, [$this]);
+    }
+
+    /**
      * @return self<TKey, T>
      */
     public function reject(?\Closure $predicate = null): self

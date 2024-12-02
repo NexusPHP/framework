@@ -213,6 +213,20 @@ abstract class AbstractCollectionTestCase extends TestCase
         );
     }
 
+    public function testPartition(): void
+    {
+        $collection = $this->collection([
+            1 => 'apple',
+            2 => 'banana',
+            3 => 'cherry',
+            4 => 'date',
+        ])->partition(static fn(string $v, int $k): bool => str_contains($v, 'a') && $k % 2 === 1);
+
+        self::assertCount(2, $collection);
+        self::assertSame([1 => 'apple'], $collection->all()[0]->all(true));
+        self::assertSame([2 => 'banana', 3 => 'cherry', 4 => 'date'], $collection->all()[1]->all(true));
+    }
+
     public function testReject(): void
     {
         $predicate = static fn(int $item, string $key): bool => str_starts_with($key, 'd') && $item > 2;

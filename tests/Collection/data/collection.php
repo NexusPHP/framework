@@ -52,3 +52,6 @@ assertType('list<non-empty-array<int, int>>', Collection::wrap([5, 4, 3, 2, 1])-
 assertType('Nexus\Collection\Collection<int, non-empty-array<int, int>>', Collection::wrap([5, 4, 3, 2, 1])->chunk(4));
 
 assertType('Nexus\Collection\Collection<float, string>', Collection::wrap(['a' => 1.5, 'b' => 2.5])->flip());
+
+$collection = Collection::wrap([1, 2, 3, 4])->partition(static fn(int $v): bool => $v > 2);
+assertType('Nexus\Collection\Collection<int, Nexus\Collection\CollectionInterface<int, int>>', $collection);
