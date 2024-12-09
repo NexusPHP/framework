@@ -25,14 +25,14 @@ jobs:
           - '8.4'
         os:
           - ubuntu-22.04
-          - windows-2019
+          - windows-2022
 
     name: Unit Tests
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Setup Git for Windows
-        if: matrix.os == 'windows-2019'
+        if: matrix.os == 'windows-2022'
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
@@ -71,11 +71,11 @@ jobs:
         run: |
           bin/parallel-phpunit ${{ env.COVERAGE_OPTION }}
         env:
-          COVERAGE_OPTION: ${{ matrix.os != 'windows-2019' && '--coverage' || '' }}
+          COVERAGE_OPTION: ${{ matrix.os != 'windows-2022' && '--coverage' || '' }}
           TACHYCARDIA_MONITOR_GA: enabled
 
       - name: Run Mutation Testing
-        if: matrix.os != 'windows-2019'
+        if: matrix.os != 'windows-2022'
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             git fetch --depth=1 origin $GITHUB_BASE_REF
@@ -87,18 +87,18 @@ jobs:
           INFECTION_DASHBOARD_API_KEY: ${{ secrets.INFECTION_DASHBOARD_API_KEY }}
 
       - name: Display structure of coverage files
-        if: matrix.os != 'windows-2019'
+        if: matrix.os != 'windows-2022'
         run: ls -la
         working-directory: build/cov
 
       - name: Merge coverage files into Clover
-        if: matrix.os != 'windows-2019'
+        if: matrix.os != 'windows-2022'
         run: |
           composer global require phpunit/phpcov --ansi ${{ steps.globals.outputs.EXPERIMENTAL_FLAG }}
           phpcov merge --clover build/phpunit/clover.xml build/cov
 
       - name: Upload coverage to Coveralls
-        if: matrix.os != 'windows-2019'
+        if: matrix.os != 'windows-2022'
         run: |
           composer global require php-coveralls/php-coveralls --ansi ${{ steps.globals.outputs.EXPERIMENTAL_FLAG }}
           php-coveralls --verbose --exclude-no-stmt --ansi --coverage_clover build/phpunit/clover.xml --json_path build/phpunit/coveralls-upload.json
