@@ -119,17 +119,10 @@ final class Collection implements CollectionInterface
     public function diff(iterable ...$others): self
     {
         return new self(static function (iterable $collection) use ($others): iterable {
-            $hashTable = [];
-            $toArrayKey = static fn(mixed $input): string => \is_string($input) ? $input : (string) json_encode($input);
-
-            foreach ($others as $other) {
-                foreach ($other as $value) {
-                    $hashTable[$toArrayKey($value)] = true;
-                }
-            }
+            $hashTable = self::generateDiffHashTable($others);
 
             foreach ($collection as $key => $value) {
-                if (! \array_key_exists($toArrayKey($value), $hashTable)) {
+                if (! \array_key_exists(self::toArrayKey($value), $hashTable)) {
                     yield $key => $value;
                 }
             }
@@ -142,17 +135,10 @@ final class Collection implements CollectionInterface
     public function diffKey(iterable ...$others): self
     {
         return new self(static function (iterable $collection) use ($others): iterable {
-            $hashTable = [];
-            $toArrayKey = static fn(mixed $input): string => \is_string($input) ? $input : (string) json_encode($input);
-
-            foreach ($others as $other) {
-                foreach ($other as $key) {
-                    $hashTable[$toArrayKey($key)] = true;
-                }
-            }
+            $hashTable = self::generateDiffHashTable($others);
 
             foreach ($collection as $key => $value) {
-                if (! \array_key_exists($toArrayKey($key), $hashTable)) {
+                if (! \array_key_exists(self::toArrayKey($key), $hashTable)) {
                     yield $key => $value;
                 }
             }
@@ -390,5 +376,34 @@ final class Collection implements CollectionInterface
                 yield $item;
             }
         }, [$this]);
+    }
+
+    /**
+     * Generates a hash table for lookup by `diff` and `diffKey`.
+     *
+     * @param array<array-key, iterable<mixed, mixed>> $iterables
+     *
+     * @return array<string, true>
+     */
+    private static function generateDiffHashTable(array $iterables): array
+    {
+        $hashTable = [];
+
+        foreach ($iterables as $iterable) {
+            foreach ($iterable as $value) {
+                $hashTable[self::toArrayKey($value)] = true;
+            }
+        }
+
+        return $hashTable;
+    }
+
+    private static function toArrayKey(mixed $input): string
+    {
+        if (\is_string($input)) {
+            return $input;
+        }
+
+        return (string) json_encode($input);
     }
 }

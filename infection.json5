@@ -48,8 +48,7 @@
         "CastObject": true,
         "CastString": {
             "ignore": [
-                "Nexus\\Collection\\Collection::diff",
-                "Nexus\\Collection\\Collection::diffKey"
+                "Nexus\\Collection\\Collection::toArrayKey"
             ]
         },
         "CatchBlockRemoval": true,
@@ -134,8 +133,7 @@
         "Throw_": true,
         "TrueValue": {
             "ignore": [
-                "Nexus\\Collection\\Collection::diff",
-                "Nexus\\Collection\\Collection::diffKey"
+                "Nexus\\Collection\\Collection::generateDiffHashTable"
             ]
         },
         "UnwrapArrayChangeKeyCase": true,

@@ -60,14 +60,12 @@ final class InfectionConfigBuilder
         ],
         'CastInt' => [SystemClock::class],
         'CastString' => [
-            Collection::class.'::diff',
-            Collection::class.'::diffKey',
+            Collection::class.'::toArrayKey',
         ],
         'Division' => [SystemClock::class],
         'ModEqual' => [SystemClock::class],
         'TrueValue' => [
-            Collection::class.'::diff',
-            Collection::class.'::diffKey',
+            Collection::class.'::generateDiffHashTable',
         ],
     ];
 
