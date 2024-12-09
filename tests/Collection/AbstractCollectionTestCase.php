@@ -150,6 +150,19 @@ abstract class AbstractCollectionTestCase extends TestCase
         );
     }
 
+    public function testIntersect(): void
+    {
+        self::assertSame(
+            [2 => 'c', 3 => [1, 2], 4 => true],
+            $this->collection(['a', 'b', 'c', [1, 2], true, false])
+                ->intersect(
+                    ['b', 'c', [1, 2], true],
+                    ['c', [1, 2], false, true],
+                )
+                ->all(true),
+        );
+    }
+
     public function testKeys(): void
     {
         $collection = $this->collection(static function (): \Generator {

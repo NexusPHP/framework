@@ -219,6 +219,28 @@ final class Collection implements CollectionInterface
     }
 
     /**
+     * @return self<TKey, T>
+     */
+    public function intersect(iterable ...$others): self
+    {
+        return new self(static function (iterable $collection) use ($others): iterable {
+            $hashTable = self::generateIntersectHashTable($others);
+            $count = \count($others);
+
+            foreach ($collection as $key => $value) {
+                $encodedValue = self::toArrayKey($value);
+
+                if (
+                    \array_key_exists($encodedValue, $hashTable)
+                    && $hashTable[$encodedValue] === $count
+                ) {
+                    yield $key => $value;
+                }
+            }
+        }, [$this]);
+    }
+
+    /**
      * @return self<int, TKey>
      */
     public function keys(): self
@@ -392,6 +414,32 @@ final class Collection implements CollectionInterface
         foreach ($iterables as $iterable) {
             foreach ($iterable as $value) {
                 $hashTable[self::toArrayKey($value)] = true;
+            }
+        }
+
+        return $hashTable;
+    }
+
+    /**
+     * Generates a hash table for lookup by `intersect` and `intersectKey`.
+     *
+     * @param array<array-key, iterable<mixed, mixed>> $iterables
+     *
+     * @return array<string, int<1, max>>
+     */
+    private static function generateIntersectHashTable(array $iterables): array
+    {
+        $hashTable = [];
+
+        foreach ($iterables as $iterable) {
+            foreach ($iterable as $value) {
+                $encodedValue = self::toArrayKey($value);
+
+                if (! \array_key_exists($encodedValue, $hashTable)) {
+                    $hashTable[$encodedValue] = 1;
+                } else {
+                    ++$hashTable[$encodedValue];
+                }
             }
         }
 
