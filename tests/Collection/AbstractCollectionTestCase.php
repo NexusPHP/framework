@@ -163,6 +163,19 @@ abstract class AbstractCollectionTestCase extends TestCase
         );
     }
 
+    public function testIntersectKey(): void
+    {
+        self::assertSame(
+            ['c' => 3],
+            $this->collection(['a' => 1, 'b' => 2, 'c' => 3])
+                ->intersectKey(
+                    ['b', 'c'],
+                    ['c'],
+                )
+                ->all(true),
+        );
+    }
+
     public function testKeys(): void
     {
         $collection = $this->collection(static function (): \Generator {

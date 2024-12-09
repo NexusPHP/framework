@@ -241,6 +241,28 @@ final class Collection implements CollectionInterface
     }
 
     /**
+     * @return self<TKey, T>
+     */
+    public function intersectKey(iterable ...$others): self
+    {
+        return new self(static function (iterable $collection) use ($others): iterable {
+            $hashTable = self::generateIntersectHashTable($others);
+            $count = \count($others);
+
+            foreach ($collection as $key => $value) {
+                $encodedKey = self::toArrayKey($key);
+
+                if (
+                    \array_key_exists($encodedKey, $hashTable)
+                    && $hashTable[$encodedKey] === $count
+                ) {
+                    yield $key => $value;
+                }
+            }
+        }, [$this]);
+    }
+
+    /**
      * @return self<int, TKey>
      */
     public function keys(): self
