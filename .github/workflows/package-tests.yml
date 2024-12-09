@@ -11,7 +11,7 @@ on:
       - src/**
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  group: pkg-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 permissions:
