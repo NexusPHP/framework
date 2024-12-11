@@ -15,6 +15,7 @@ namespace Nexus\Tests\Collection;
 
 use Nexus\Collection\CollectionInterface;
 use Nexus\Collection\Iterator\RewindableIterator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -47,6 +48,56 @@ abstract class AbstractCollectionTestCase extends TestCase
         $this->expectException(\TypeError::class);
         $this->expectExceptionMessage('Cannot access offset of type stdClass on array');
         $this->collection(static fn(): iterable => yield new \stdClass() => 5)->all(true);
+    }
+
+    public function testAssociate(): void
+    {
+        $collection = $this->collection(static function (): iterable {
+            yield 1;
+
+            yield 2;
+
+            yield 3;
+        });
+
+        self::assertSame(
+            [1 => 'a', 2 => 'b', 3 => 'c'],
+            $collection->associate(['a', 'b', 'c'])->all(true),
+        );
+    }
+
+    /**
+     * @param list<string> $values
+     */
+    #[DataProvider('provideInvalidAssociateCases')]
+    public function testInvalidAssociate(string $message, array $values): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
+
+        $this->collection(static function (): iterable {
+            yield 1;
+
+            yield 2;
+
+            yield 3;
+        })->associate($values)->all();
+    }
+
+    /**
+     * @return iterable<string, array{string, list<string>}>
+     */
+    public static function provideInvalidAssociateCases(): iterable
+    {
+        yield 'lesser keys' => [
+            'The number of values is lesser than the keys.',
+            ['a', 'b'],
+        ];
+
+        yield 'greater keys' => [
+            'The number of values is greater than the keys.',
+            ['a', 'b', 'c', 'd'],
+        ];
     }
 
     public function testChunk(): void

@@ -66,6 +66,33 @@ final class Collection implements CollectionInterface
     }
 
     /**
+     * @template U
+     *
+     * @return self<T, U>
+     */
+    public function associate(iterable $values): self
+    {
+        $valuesIterator = (static function () use ($values): \Generator {
+            yield from $values;
+        })();
+
+        return new self(static function (iterable $collection) use ($valuesIterator): iterable {
+            foreach ($collection->values() as $key) {
+                if (! $valuesIterator->valid()) {
+                    throw new \InvalidArgumentException('The number of values is lesser than the keys.');
+                }
+
+                yield $key => $valuesIterator->current();
+                $valuesIterator->next();
+            }
+
+            if ($valuesIterator->valid()) {
+                throw new \InvalidArgumentException('The number of values is greater than the keys.');
+            }
+        }, [$this]);
+    }
+
+    /**
      * @return self<int, non-empty-array<TKey, T>>
      */
     public function chunk(int $size): self

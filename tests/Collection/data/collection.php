@@ -55,3 +55,7 @@ assertType('Nexus\Collection\Collection<float, string>', Collection::wrap(['a' =
 
 $collection = Collection::wrap([1, 2, 3, 4])->partition(static fn(int $v): bool => $v > 2);
 assertType('Nexus\Collection\Collection<int, Nexus\Collection\CollectionInterface<int, int>>', $collection);
+
+$collection = Collection::wrap([1, 2, 3]);
+assertType('Nexus\Collection\Collection<int, int>', $collection);
+assertType('Nexus\Collection\Collection<int, float>', $collection->associate([1.0, 2.0, 3.0]));
