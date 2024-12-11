@@ -304,6 +304,16 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertSame([2 => 'banana', 3 => 'cherry', 4 => 'date'], $collection->all()[1]->all(true));
     }
 
+    public function testReduction(): void
+    {
+        self::assertSame(
+            [1, 4, 9, 16, 25],
+            $this->collection()
+                ->reductions(static fn(int $acc, int $v, int $k): int => $acc + $v + $k, 0)
+                ->all(),
+        );
+    }
+
     public function testReject(): void
     {
         $predicate = static fn(int $item, string $key): bool => str_starts_with($key, 'd') && $item > 2;

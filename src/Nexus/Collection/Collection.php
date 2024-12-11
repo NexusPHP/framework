@@ -370,6 +370,27 @@ final class Collection implements CollectionInterface
     }
 
     /**
+     * @template TAcc
+     *
+     * @return self<int, TAcc>
+     */
+    public function reductions(\Closure $predicate, mixed $initial = null): self
+    {
+        return new self(
+            static function (iterable $collection) use ($predicate, $initial): iterable {
+                $accumulator = $initial;
+
+                foreach ($collection as $key => $item) {
+                    $accumulator = $predicate($accumulator, $item, $key);
+
+                    yield $accumulator;
+                }
+            },
+            [$this],
+        );
+    }
+
+    /**
      * @return self<TKey, T>
      */
     public function reject(?\Closure $predicate = null): self
