@@ -2,4 +2,5 @@ rules:
   - Nexus\PHPStan\Rules\Constants\ClassConstantNamingRule
   - Nexus\PHPStan\Rules\Functions\FunctionNamingRule
   - Nexus\PHPStan\Rules\Methods\MethodNamingRule
+  - Nexus\PHPStan\Rules\PhpDoc\DisallowedPhpstanDocTagRule
   - Nexus\PHPStan\Rules\Properties\PropertyNamingRule
