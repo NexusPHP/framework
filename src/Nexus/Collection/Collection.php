@@ -436,6 +436,17 @@ final class Collection implements CollectionInterface
         }, [$this]);
     }
 
+    public function reduce(\Closure $predicate, mixed $initial = null): mixed
+    {
+        $accumulator = $initial;
+
+        foreach ($this as $key => $item) {
+            $accumulator = $predicate($accumulator, $item, $key);
+        }
+
+        return $accumulator;
+    }
+
     /**
      * @template TAcc
      *

@@ -42,6 +42,7 @@ namespace Nexus\Collection;
  * @extends Operation\MapKeys<TKey, T>
  * @extends Operation\MapWithKey<TKey, T>
  * @extends Operation\Partition<TKey, T>
+ * @extends Operation\Reduce<TKey, T>
  * @extends Operation\Reductions<TKey, T>
  * @extends Operation\Reject<TKey, T>
  * @extends Operation\Slice<TKey, T>
@@ -76,6 +77,7 @@ interface CollectionInterface extends
     Operation\MapKeys,
     Operation\MapWithKey,
     Operation\Partition,
+    Operation\Reduce,
     Operation\Reductions,
     Operation\Reject,
     Operation\Slice,
