@@ -85,17 +85,22 @@ final class Collection implements CollectionInterface
      */
     public function append(mixed ...$items): self
     {
-        return new self(static function (iterable $collection) use ($items): iterable {
-            $iterator = new \AppendIterator();
+        return new self(
+            static function (iterable $collection) use ($items): iterable {
+                $iterator = new \AppendIterator();
 
-            foreach ([$collection, $items] as $iterable) {
-                $iterator->append(
-                    new \NoRewindIterator((static fn(): \Generator => yield from $iterable)()),
-                );
-            }
+                foreach ([$collection, $items] as $iterable) {
+                    $iterator->append(
+                        new \NoRewindIterator(
+                            (static fn(): \Generator => yield from $iterable)(),
+                        ),
+                    );
+                }
 
-            yield from $iterator;
-        }, [$this]);
+                yield from $iterator;
+            },
+            [$this],
+        );
     }
 
     /**
@@ -105,24 +110,26 @@ final class Collection implements CollectionInterface
      */
     public function associate(iterable $values): self
     {
-        $valuesIterator = (static function () use ($values): \Generator {
-            yield from $values;
-        })();
+        $valuesIterator = (static fn(): \Generator => yield from $values)();
 
-        return new self(static function (iterable $collection) use ($valuesIterator): iterable {
-            foreach ($collection->values() as $key) {
-                if (! $valuesIterator->valid()) {
-                    throw new \InvalidArgumentException('The number of values is lesser than the keys.');
+        return new self(
+            static function (iterable $collection) use ($valuesIterator): iterable {
+                foreach ($collection->values() as $key) {
+                    if (! $valuesIterator->valid()) {
+                        throw new \InvalidArgumentException('The number of values is lesser than the keys.');
+                    }
+
+                    yield $key => $valuesIterator->current();
+
+                    $valuesIterator->next();
                 }
 
-                yield $key => $valuesIterator->current();
-                $valuesIterator->next();
-            }
-
-            if ($valuesIterator->valid()) {
-                throw new \InvalidArgumentException('The number of values is greater than the keys.');
-            }
-        }, [$this]);
+                if ($valuesIterator->valid()) {
+                    throw new \InvalidArgumentException('The number of values is greater than the keys.');
+                }
+            },
+            [$this],
+        );
     }
 
     /**
@@ -130,26 +137,29 @@ final class Collection implements CollectionInterface
      */
     public function chunk(int $size): self
     {
-        return new self(static function (iterable $collection) use ($size): \Generator {
-            $chunk = [];
-            $count = 0;
+        return new self(
+            static function (iterable $collection) use ($size): \Generator {
+                $chunk = [];
+                $count = 0;
 
-            foreach ($collection as $key => $item) {
-                $chunk[$key] = $item;
-                ++$count;
+                foreach ($collection as $key => $item) {
+                    $chunk[$key] = $item;
+                    ++$count;
 
-                if ($count === $size) {
-                    yield $chunk;
+                    if ($count === $size) {
+                        yield $chunk;
 
-                    $chunk = [];
-                    $count = 0;
+                        $chunk = [];
+                        $count = 0;
+                    }
                 }
-            }
 
-            if ([] !== $chunk) {
-                yield $chunk;
-            }
-        }, [$this]);
+                if ([] !== $chunk) {
+                    yield $chunk;
+                }
+            },
+            [$this],
+        );
     }
 
     public function count(): int
@@ -162,15 +172,14 @@ final class Collection implements CollectionInterface
      */
     public function cycle(): self
     {
-        return new self(static function (iterable $collection): iterable {
-            return new \InfiniteIterator(
+        return new self(
+            static fn(iterable $collection): iterable => new \InfiniteIterator(
                 new RewindableIterator(
-                    static function () use ($collection): \Generator {
-                        yield from $collection;
-                    },
+                    static fn(): \Generator => yield from $collection,
                 ),
-            );
-        }, [$this]);
+            ),
+            [$this],
+        );
     }
 
     /**
@@ -178,15 +187,18 @@ final class Collection implements CollectionInterface
      */
     public function diff(iterable ...$others): self
     {
-        return new self(static function (iterable $collection) use ($others): iterable {
-            $hashTable = self::generateDiffHashTable($others);
+        return new self(
+            static function (iterable $collection) use ($others): iterable {
+                $hashTable = self::generateDiffHashTable($others);
 
-            foreach ($collection as $key => $value) {
-                if (! \array_key_exists(self::toArrayKey($value), $hashTable)) {
-                    yield $key => $value;
+                foreach ($collection as $key => $value) {
+                    if (! \array_key_exists(self::toArrayKey($value), $hashTable)) {
+                        yield $key => $value;
+                    }
                 }
-            }
-        }, [$this]);
+            },
+            [$this],
+        );
     }
 
     /**
@@ -194,15 +206,18 @@ final class Collection implements CollectionInterface
      */
     public function diffKey(iterable ...$others): self
     {
-        return new self(static function (iterable $collection) use ($others): iterable {
-            $hashTable = self::generateDiffHashTable($others);
+        return new self(
+            static function (iterable $collection) use ($others): iterable {
+                $hashTable = self::generateDiffHashTable($others);
 
-            foreach ($collection as $key => $value) {
-                if (! \array_key_exists(self::toArrayKey($key), $hashTable)) {
-                    yield $key => $value;
+                foreach ($collection as $key => $value) {
+                    if (! \array_key_exists(self::toArrayKey($key), $hashTable)) {
+                        yield $key => $value;
+                    }
                 }
-            }
-        }, [$this]);
+            },
+            [$this],
+        );
     }
 
     /**
@@ -231,13 +246,16 @@ final class Collection implements CollectionInterface
     {
         $predicate ??= static fn(mixed $item): bool => (bool) $item;
 
-        return new self(static function (iterable $collection) use ($predicate): iterable {
-            foreach ($collection as $key => $item) {
-                if ($predicate($item)) {
-                    yield $key => $item;
+        return new self(
+            static function (iterable $collection) use ($predicate): iterable {
+                foreach ($collection as $key => $item) {
+                    if ($predicate($item)) {
+                        yield $key => $item;
+                    }
                 }
-            }
-        }, [$this]);
+            },
+            [$this],
+        );
     }
 
     /**
@@ -247,13 +265,16 @@ final class Collection implements CollectionInterface
     {
         $predicate ??= static fn(mixed $key): bool => (bool) $key;
 
-        return new self(static function (iterable $collection) use ($predicate): iterable {
-            foreach ($collection as $key => $item) {
-                if ($predicate($key)) {
-                    yield $key => $item;
+        return new self(
+            static function (iterable $collection) use ($predicate): iterable {
+                foreach ($collection as $key => $item) {
+                    if ($predicate($key)) {
+                        yield $key => $item;
+                    }
                 }
-            }
-        }, [$this]);
+            },
+            [$this],
+        );
     }
 
     /**
@@ -263,13 +284,16 @@ final class Collection implements CollectionInterface
     {
         $predicate ??= static fn(mixed $item, mixed $key): bool => (bool) $item && (bool) $key;
 
-        return new self(static function (iterable $collection) use ($predicate): iterable {
-            foreach ($collection as $key => $item) {
-                if ($predicate($item, $key)) {
-                    yield $key => $item;
+        return new self(
+            static function (iterable $collection) use ($predicate): iterable {
+                foreach ($collection as $key => $item) {
+                    if ($predicate($item, $key)) {
+                        yield $key => $item;
+                    }
                 }
-            }
-        }, [$this]);
+            },
+            [$this],
+        );
     }
 
     public function first(\Closure $predicate, mixed $default = null): mixed
@@ -288,11 +312,14 @@ final class Collection implements CollectionInterface
      */
     public function flip(): self
     {
-        return new self(static function (iterable $collection): iterable {
-            foreach ($collection as $key => $item) {
-                yield $item => $key;
-            }
-        }, [$this]);
+        return new self(
+            static function (iterable $collection): iterable {
+                foreach ($collection as $key => $item) {
+                    yield $item => $key;
+                }
+            },
+            [$this],
+        );
     }
 
     /**
@@ -339,21 +366,24 @@ final class Collection implements CollectionInterface
      */
     public function intersect(iterable ...$others): self
     {
-        return new self(static function (iterable $collection) use ($others): iterable {
-            $hashTable = self::generateIntersectHashTable($others);
-            $count = \count($others);
+        return new self(
+            static function (iterable $collection) use ($others): iterable {
+                $hashTable = self::generateIntersectHashTable($others);
+                $count = \count($others);
 
-            foreach ($collection as $key => $value) {
-                $encodedValue = self::toArrayKey($value);
+                foreach ($collection as $key => $value) {
+                    $encodedValue = self::toArrayKey($value);
 
-                if (
-                    \array_key_exists($encodedValue, $hashTable)
-                    && $hashTable[$encodedValue] === $count
-                ) {
-                    yield $key => $value;
+                    if (
+                        \array_key_exists($encodedValue, $hashTable)
+                        && $hashTable[$encodedValue] === $count
+                    ) {
+                        yield $key => $value;
+                    }
                 }
-            }
-        }, [$this]);
+            },
+            [$this],
+        );
     }
 
     /**
@@ -361,21 +391,24 @@ final class Collection implements CollectionInterface
      */
     public function intersectKey(iterable ...$others): self
     {
-        return new self(static function (iterable $collection) use ($others): iterable {
-            $hashTable = self::generateIntersectHashTable($others);
-            $count = \count($others);
+        return new self(
+            static function (iterable $collection) use ($others): iterable {
+                $hashTable = self::generateIntersectHashTable($others);
+                $count = \count($others);
 
-            foreach ($collection as $key => $value) {
-                $encodedKey = self::toArrayKey($key);
+                foreach ($collection as $key => $value) {
+                    $encodedKey = self::toArrayKey($key);
 
-                if (
-                    \array_key_exists($encodedKey, $hashTable)
-                    && $hashTable[$encodedKey] === $count
-                ) {
-                    yield $key => $value;
+                    if (
+                        \array_key_exists($encodedKey, $hashTable)
+                        && $hashTable[$encodedKey] === $count
+                    ) {
+                        yield $key => $value;
+                    }
                 }
-            }
-        }, [$this]);
+            },
+            [$this],
+        );
     }
 
     /**
@@ -383,11 +416,14 @@ final class Collection implements CollectionInterface
      */
     public function keys(): self
     {
-        return new self(static function (iterable $collection): iterable {
-            foreach ($collection as $key => $_) {
-                yield $key;
-            }
-        }, [$this]);
+        return new self(
+            static function (iterable $collection): iterable {
+                foreach ($collection as $key => $_) {
+                    yield $key;
+                }
+            },
+            [$this],
+        );
     }
 
     /**
@@ -395,13 +431,14 @@ final class Collection implements CollectionInterface
      */
     public function limit(int $limit = -1, int $offset = 0): self
     {
-        return new self(static function (iterable $collection) use ($limit, $offset): iterable {
-            $iterator = static function () use ($collection): iterable {
-                yield from $collection;
-            };
-
-            yield from new \LimitIterator($iterator(), $offset, $limit);
-        }, [$this]);
+        return new self(
+            static fn(iterable $collection): iterable => yield from new \LimitIterator(
+                (static fn(): iterable => yield from $collection)(),
+                $offset,
+                $limit,
+            ),
+            [$this],
+        );
     }
 
     /**
@@ -411,11 +448,14 @@ final class Collection implements CollectionInterface
      */
     public function map(\Closure $predicate): self
     {
-        return new self(static function (iterable $collection) use ($predicate): iterable {
-            foreach ($collection as $key => $item) {
-                yield $key => $predicate($item);
-            }
-        }, [$this]);
+        return new self(
+            static function (iterable $collection) use ($predicate): iterable {
+                foreach ($collection as $key => $item) {
+                    yield $key => $predicate($item);
+                }
+            },
+            [$this],
+        );
     }
 
     /**
@@ -425,11 +465,14 @@ final class Collection implements CollectionInterface
      */
     public function mapKeys(\Closure $predicate): self
     {
-        return new self(static function (iterable $collection) use ($predicate): iterable {
-            foreach ($collection as $key => $item) {
-                yield $predicate($key) => $item;
-            }
-        }, [$this]);
+        return new self(
+            static function (iterable $collection) use ($predicate): iterable {
+                foreach ($collection as $key => $item) {
+                    yield $predicate($key) => $item;
+                }
+            },
+            [$this],
+        );
     }
 
     /**
@@ -439,11 +482,14 @@ final class Collection implements CollectionInterface
      */
     public function mapWithKey(\Closure $predicate): self
     {
-        return new self(static function (iterable $collection) use ($predicate): iterable {
-            foreach ($collection as $key => $item) {
-                yield $key => $predicate($item, $key);
-            }
-        }, [$this]);
+        return new self(
+            static function (iterable $collection) use ($predicate): iterable {
+                foreach ($collection as $key => $item) {
+                    yield $key => $predicate($item, $key);
+                }
+            },
+            [$this],
+        );
     }
 
     /**
@@ -451,11 +497,14 @@ final class Collection implements CollectionInterface
      */
     public function partition(\Closure $predicate): self
     {
-        return new self(static function (iterable $collection) use ($predicate): iterable {
-            yield $collection->filterWithKey($predicate);
+        return new self(
+            static function (iterable $collection) use ($predicate): iterable {
+                yield $collection->filterWithKey($predicate);
 
-            yield $collection->reject($predicate);
-        }, [$this]);
+                yield $collection->reject($predicate);
+            },
+            [$this],
+        );
     }
 
     public function reduce(\Closure $predicate, mixed $initial = null): mixed
@@ -497,13 +546,16 @@ final class Collection implements CollectionInterface
     {
         $predicate ??= static fn(mixed $item, mixed $key): bool => (bool) $item && (bool) $key;
 
-        return new self(static function (iterable $collection) use ($predicate): iterable {
-            foreach ($collection as $key => $item) {
-                if (! $predicate($item, $key)) {
-                    yield $key => $item;
+        return new self(
+            static function (iterable $collection) use ($predicate): iterable {
+                foreach ($collection as $key => $item) {
+                    if (! $predicate($item, $key)) {
+                        yield $key => $item;
+                    }
                 }
-            }
-        }, [$this]);
+            },
+            [$this],
+        );
     }
 
     /**
@@ -511,27 +563,30 @@ final class Collection implements CollectionInterface
      */
     public function slice(int $start, ?int $length = null): self
     {
-        return new self(static function (iterable $collection) use ($start, $length): iterable {
-            if (0 === $length) {
-                yield from $collection;
+        return new self(
+            static function (iterable $collection) use ($start, $length): iterable {
+                if (0 === $length) {
+                    yield from $collection;
 
-                return;
-            }
-
-            $i = 0;
-
-            foreach ($collection as $key => $item) {
-                if ($i++ < $start) {
-                    continue;
+                    return;
                 }
 
-                yield $key => $item;
+                $i = 0;
 
-                if (null !== $length && $i >= $start + $length) {
-                    break;
+                foreach ($collection as $key => $item) {
+                    if ($i++ < $start) {
+                        continue;
+                    }
+
+                    yield $key => $item;
+
+                    if (null !== $length && $i >= $start + $length) {
+                        break;
+                    }
                 }
-            }
-        }, [$this]);
+            },
+            [$this],
+        );
     }
 
     /**
@@ -547,15 +602,18 @@ final class Collection implements CollectionInterface
      */
     public function tap(\Closure ...$callbacks): self
     {
-        return new self(static function (iterable $collection) use ($callbacks): iterable {
-            foreach ($collection as $key => $item) {
-                foreach ($callbacks as $callback) {
-                    $callback($item, $key);
+        return new self(
+            static function (iterable $collection) use ($callbacks): iterable {
+                foreach ($collection as $key => $item) {
+                    foreach ($callbacks as $callback) {
+                        $callback($item, $key);
+                    }
                 }
-            }
 
-            yield from $collection;
-        }, [$this]);
+                yield from $collection;
+            },
+            [$this],
+        );
     }
 
     /**
@@ -563,11 +621,14 @@ final class Collection implements CollectionInterface
      */
     public function values(): self
     {
-        return new self(static function (iterable $collection): iterable {
-            foreach ($collection as $item) {
-                yield $item;
-            }
-        }, [$this]);
+        return new self(
+            static function (iterable $collection): iterable {
+                foreach ($collection as $item) {
+                    yield $item;
+                }
+            },
+            [$this],
+        );
     }
 
     /**
