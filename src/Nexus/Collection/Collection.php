@@ -281,6 +281,16 @@ final class Collection implements CollectionInterface
         yield from $this->innerIterator->getIterator();
     }
 
+    public function has(mixed $key): bool
+    {
+        return $this
+            ->filterKeys(static fn(mixed $k): bool => $key === $k)
+            ->limit(1)
+            ->getIterator()
+            ->valid()
+        ;
+    }
+
     /**
      * @return self<TKey, T>
      */

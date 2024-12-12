@@ -225,6 +225,17 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertSame(10, $collection->get(5, 10));
     }
 
+    public function testHas(): void
+    {
+        $collection = $this->collection();
+
+        foreach ([0, 1, 2, 3, 4] as $key) {
+            self::assertTrue($collection->has($key));
+        }
+
+        self::assertFalse($collection->has(5));
+    }
+
     public function testIntersect(): void
     {
         self::assertSame(
