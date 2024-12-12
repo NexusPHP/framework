@@ -217,6 +217,14 @@ abstract class AbstractCollectionTestCase extends TestCase
         );
     }
 
+    public function testGet(): void
+    {
+        $collection = $this->collection();
+
+        self::assertSame(3, $collection->get(2, 10));
+        self::assertSame(10, $collection->get(5, 10));
+    }
+
     public function testIntersect(): void
     {
         self::assertSame(

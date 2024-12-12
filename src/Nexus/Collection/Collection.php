@@ -34,8 +34,8 @@ final class Collection implements CollectionInterface
     /**
      * @template S
      *
-     * @param (\Closure(S): iterable<TKey, T>) $callable
-     * @param iterable<int, S>                 $parameter
+     * @param (\Closure(S): \Iterator<TKey, T>) $callable
+     * @param iterable<int, S>                  $parameter
      */
     public function __construct(\Closure $callable, iterable $parameter = [])
     {
@@ -79,7 +79,7 @@ final class Collection implements CollectionInterface
 
             foreach ([$collection, $items] as $iterable) {
                 $iterator->append(
-                    (static fn(): \Generator => yield from $iterable)(),
+                    new \NoRewindIterator((static fn(): \Generator => yield from $iterable)()),
                 );
             }
 
@@ -119,7 +119,7 @@ final class Collection implements CollectionInterface
      */
     public function chunk(int $size): self
     {
-        return new self(static function (iterable $collection) use ($size): iterable {
+        return new self(static function (iterable $collection) use ($size): \Generator {
             $chunk = [];
             $count = 0;
 
@@ -262,6 +262,20 @@ final class Collection implements CollectionInterface
         }, [$this]);
     }
 
+    public function get(mixed $key, mixed $default = null): mixed
+    {
+        return $this
+            ->filterKeys(static fn(mixed $k): bool => $key === $k)
+            ->append($default)
+            ->limit(1)
+            ->getIterator()
+            ->current()
+        ;
+    }
+
+    /**
+     * @return \Generator<TKey, T, mixed, void>
+     */
     public function getIterator(): \Traversable
     {
         yield from $this->innerIterator->getIterator();

@@ -8,12 +8,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/src/Nexus/Collection/Collection.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$callable of class Nexus\\\\Collection\\\\Collection constructor expects Closure\\(\\$this\\)\\: iterable\\<int, non\\-empty\\-array\\>, Closure\\(iterable\\)\\: Generator\\<int, non\\-empty\\-array\\<TKey, T\\>, mixed, void\\> given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/src/Nexus/Collection/Collection.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Nexus\\\\Option\\\\Choice\\:\\:from\\(\\) never returns Nexus\\\\Option\\\\Some\\<T of mixed\\> so it can be removed from the return type\\.$#',
 	'identifier' => 'return.unusedType',
 	'count' => 1,

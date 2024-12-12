@@ -49,7 +49,7 @@ final class ClosureIteratorAggregate implements \IteratorAggregate
         return new self($callable, $parameter);
     }
 
-    public function getIterator(): \Traversable
+    public function getIterator(): \Generator
     {
         yield from ($this->callable)($this->parameter);
     }
