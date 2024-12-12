@@ -65,6 +65,17 @@ final class Collection implements CollectionInterface
         return iterator_to_array($this, $preserveKeys);
     }
 
+    public function any(\Closure $predicate): bool
+    {
+        foreach ($this as $key => $item) {
+            if ($predicate($item, $key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @template U
      *

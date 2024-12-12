@@ -50,6 +50,14 @@ abstract class AbstractCollectionTestCase extends TestCase
         $this->collection(static fn(): iterable => yield new \stdClass() => 5)->all(true);
     }
 
+    public function testAny(): void
+    {
+        $collection = $this->collection();
+
+        self::assertTrue($collection->any(static fn(int $v): bool => $v % 2 === 0));
+        self::assertFalse($collection->any(static fn(int $v): bool => $v > 5));
+    }
+
     public function testAppend(): void
     {
         self::assertSame(
