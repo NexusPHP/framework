@@ -250,6 +250,17 @@ final class Collection implements CollectionInterface
         }, [$this]);
     }
 
+    public function first(\Closure $predicate, mixed $default = null): mixed
+    {
+        return $this
+            ->filterWithKey($predicate)
+            ->append($default)
+            ->limit(1)
+            ->getIterator()
+            ->current()
+        ;
+    }
+
     /**
      * @return self<T, TKey>
      */

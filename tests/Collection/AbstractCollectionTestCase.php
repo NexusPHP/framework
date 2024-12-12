@@ -205,6 +205,22 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertSame(['banana' => 3, 'apple' => 4, 'dates' => 5], $collection->filterWithKey()->all(true));
     }
 
+    public function testFirst(): void
+    {
+        $collection = $this->collection([
+            'a' => 'dog',
+            'b' => 'cat',
+            'c' => 'cow',
+            'd' => 'duck',
+            'e' => 'goose',
+            'f' => 'elephant',
+        ]);
+
+        self::assertSame('goose', $collection->first(static fn(string $v): bool => \strlen($v) > 4));
+        self::assertNull($collection->first(static fn(string $v): bool => str_starts_with($v, 'f')));
+        self::assertSame('cow', $collection->first(static fn(string $v, string $k): bool => $v[0] === $k));
+    }
+
     public function testFlip(): void
     {
         self::assertSame(

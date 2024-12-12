@@ -29,6 +29,7 @@ namespace Nexus\Collection;
  * @extends Operation\Filter<TKey, T>
  * @extends Operation\FilterKeys<TKey, T>
  * @extends Operation\FilterWithKey<TKey, T>
+ * @extends Operation\First<TKey, T>
  * @extends Operation\Flip<TKey, T>
  * @extends Operation\Get<TKey, T>
  * @extends Operation\Has<TKey, T>
@@ -61,6 +62,7 @@ interface CollectionInterface extends
     Operation\Filter,
     Operation\FilterKeys,
     Operation\FilterWithKey,
+    Operation\First,
     Operation\Flip,
     Operation\Get,
     Operation\Has,
