@@ -273,6 +273,16 @@ final class Collection implements CollectionInterface
         }, [$this]);
     }
 
+    /**
+     * @return self<TKey, T>
+     */
+    public function forget(mixed ...$keys): self
+    {
+        return $this->filterKeys(
+            static fn(mixed $key): bool => ! \in_array($key, $keys, true),
+        );
+    }
+
     public function get(mixed $key, mixed $default = null): mixed
     {
         return $this

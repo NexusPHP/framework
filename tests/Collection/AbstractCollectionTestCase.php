@@ -233,6 +233,23 @@ abstract class AbstractCollectionTestCase extends TestCase
         );
     }
 
+    public function testForget(): void
+    {
+        $collection = $this->collection([
+            'a' => 'dog',
+            'b' => 'cat',
+            'c' => 'cow',
+            'd' => 'duck',
+            'e' => 'goose',
+            'f' => 'elephant',
+        ]);
+
+        self::assertSame(
+            ['a' => 'dog', 'e' => 'goose', 'f' => 'elephant'],
+            $collection->forget('b', 'c', 'd')->all(true),
+        );
+    }
+
     public function testGet(): void
     {
         $collection = $this->collection();
