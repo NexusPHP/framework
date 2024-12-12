@@ -68,6 +68,28 @@ final class Collection implements CollectionInterface
     /**
      * @template U
      *
+     * @param U ...$items
+     *
+     * @return self<int|TKey, T|U>
+     */
+    public function append(mixed ...$items): self
+    {
+        return new self(static function (iterable $collection) use ($items): iterable {
+            $iterator = new \AppendIterator();
+
+            foreach ([$collection, $items] as $iterable) {
+                $iterator->append(
+                    (static fn(): \Generator => yield from $iterable)(),
+                );
+            }
+
+            yield from $iterator;
+        }, [$this]);
+    }
+
+    /**
+     * @template U
+     *
      * @return self<T, U>
      */
     public function associate(iterable $values): self

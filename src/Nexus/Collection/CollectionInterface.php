@@ -19,6 +19,7 @@ namespace Nexus\Collection;
  *
  * @extends \IteratorAggregate<TKey, T>
  * @extends Operation\All<TKey, T>
+ * @extends Operation\Append<TKey, T>
  * @extends Operation\Associate<TKey, T>
  * @extends Operation\Chunk<TKey, T>
  * @extends Operation\Cycle<TKey, T>
@@ -48,6 +49,7 @@ interface CollectionInterface extends
     \Countable,
     \IteratorAggregate,
     Operation\All,
+    Operation\Append,
     Operation\Associate,
     Operation\Chunk,
     Operation\Cycle,
