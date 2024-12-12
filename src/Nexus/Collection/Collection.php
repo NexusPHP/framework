@@ -213,6 +213,17 @@ final class Collection implements CollectionInterface
         return $this->slice($length);
     }
 
+    public function every(\Closure $predicate): bool
+    {
+        foreach ($this as $key => $item) {
+            if (! $predicate($item, $key)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * @return self<TKey, T>
      */

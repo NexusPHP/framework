@@ -27,6 +27,7 @@ namespace Nexus\Collection;
  * @extends Operation\Diff<TKey, T>
  * @extends Operation\DiffKey<TKey, T>
  * @extends Operation\Drop<TKey, T>
+ * @extends Operation\Every<TKey, T>
  * @extends Operation\Filter<TKey, T>
  * @extends Operation\FilterKeys<TKey, T>
  * @extends Operation\FilterWithKey<TKey, T>
@@ -63,6 +64,7 @@ interface CollectionInterface extends
     Operation\Diff,
     Operation\DiffKey,
     Operation\Drop,
+    Operation\Every,
     Operation\Filter,
     Operation\FilterKeys,
     Operation\FilterWithKey,

@@ -184,6 +184,14 @@ abstract class AbstractCollectionTestCase extends TestCase
         self::assertSame([], $collection->drop(5)->all(true));
     }
 
+    public function testEvery(): void
+    {
+        $collection = $this->collection();
+
+        self::assertFalse($collection->every(static fn(int $v): bool => $v % 2 === 0));
+        self::assertTrue($collection->every(static fn(int $v): bool => $v <= 5));
+    }
+
     public function testFilter(): void
     {
         $predicate = static fn(int $item): bool => $item > 2;
