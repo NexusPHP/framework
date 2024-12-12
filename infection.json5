@@ -33,7 +33,12 @@
         "BitwiseXor": true,
         "Break_": true,
         "CastArray": true,
-        "CastBool": true,
+        "CastBool": {
+            "ignore": [
+                "Nexus\\Collection\\Collection::filterWithKey",
+                "Nexus\\Collection\\Collection::reject"
+            ]
+        },
         "CastFloat": true,
         "CastInt": {
             "ignore": [
@@ -41,7 +46,11 @@
             ]
         },
         "CastObject": true,
-        "CastString": true,
+        "CastString": {
+            "ignore": [
+                "Nexus\\Collection\\Collection::toArrayKey"
+            ]
+        },
         "CatchBlockRemoval": true,
         "Catch_": true,
         "CloneRemoval": true,
@@ -122,7 +131,11 @@
         "Ternary": true,
         "This": true,
         "Throw_": true,
-        "TrueValue": true,
+        "TrueValue": {
+            "ignore": [
+                "Nexus\\Collection\\Collection::generateDiffHashTable"
+            ]
+        },
         "UnwrapArrayChangeKeyCase": true,
         "UnwrapArrayChunk": true,
         "UnwrapArrayColumn": true,

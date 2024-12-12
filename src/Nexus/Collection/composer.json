@@ -1,0 +1,35 @@
+{
+    "name": "nexusphp/collection",
+    "description": "A lazy and memory-efficient collection library.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "nexus",
+        "collection"
+    ],
+    "authors": [
+        {
+            "name": "John Paul E. Balandan, CPA",
+            "email": "paulbalandan@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/NexusPHP/framework/issues",
+        "source": "https://github.com/NexusPHP/framework"
+    },
+    "require": {
+        "php": "^8.3"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Nexus\\Collection\\": ""
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
+}

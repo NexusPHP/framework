@@ -11,12 +11,18 @@ declare(strict_types=1);
  * the LICENSE file that was distributed with this source code.
  */
 
-use Nexus\Tools\InfectionConfigBuilder;
+namespace Nexus\Collection\Operation;
 
-require __DIR__.'/vendor/autoload.php';
-
-file_put_contents(
-    __DIR__.'/../infection.json5',
-    json_encode(InfectionConfigBuilder::build(), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)."\n",
-);
-printf("\033[42;30m OK \033[0m Done!\n");
+/**
+ * @template TKey
+ * @template T
+ */
+interface Has
+{
+    /**
+     * Checks if the collection has an item with the specified key.
+     *
+     * @param TKey $key
+     */
+    public function has(mixed $key): bool;
+}

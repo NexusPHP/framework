@@ -46,7 +46,9 @@ $finder = Finder::create()
     ])
 ;
 
-$overrides = [];
+$overrides = [
+    'final_public_method_for_abstract_class' => false,
+];
 
 $options = [
     'cacheFile' => 'build/.php-cs-fixer.cache',

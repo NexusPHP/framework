@@ -2,6 +2,12 @@
 
 $ignoreErrors = [];
 $ignoreErrors[] = [
+	'message' => '#^Method Nexus\\\\Collection\\\\Collection\\:\\:all\\(\\) should return array\\<T\\> but returns array\\<TKey, T\\>\\.$#',
+	'identifier' => 'return.type',
+	'count' => 1,
+	'path' => __DIR__ . '/src/Nexus/Collection/Collection.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Nexus\\\\Option\\\\Choice\\:\\:from\\(\\) never returns Nexus\\\\Option\\\\Some\\<T of mixed\\> so it can be removed from the return type\\.$#',
 	'identifier' => 'return.unusedType',
 	'count' => 1,

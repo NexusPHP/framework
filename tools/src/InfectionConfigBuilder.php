@@ -15,6 +15,7 @@ namespace Nexus\Tools;
 
 use Infection\Mutator\ProfileList;
 use Nexus\Clock\SystemClock;
+use Nexus\Collection\Collection;
 
 /**
  * Inspired from https://github.com/kubawerlos/php-cs-fixer-custom-fixers/blob/main/.dev-tools/src/InfectionConfigBuilder.php.
@@ -47,12 +48,25 @@ final class InfectionConfigBuilder
     ];
 
     /**
-     * @var array<string, list<class-string>>
+     * A map of mutators with their ignores, which can be
+     * an FQCN or the method name of a class.
+     *
+     * @var array<string, list<string>>
      */
     public const PER_MUTATOR_IGNORE = [
+        'CastBool' => [
+            Collection::class.'::filterWithKey',
+            Collection::class.'::reject',
+        ],
         'CastInt' => [SystemClock::class],
+        'CastString' => [
+            Collection::class.'::toArrayKey',
+        ],
         'Division' => [SystemClock::class],
         'ModEqual' => [SystemClock::class],
+        'TrueValue' => [
+            Collection::class.'::generateDiffHashTable',
+        ],
     ];
 
     /**
