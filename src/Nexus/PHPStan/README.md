@@ -37,6 +37,7 @@ The following rules will automatically be enabled once the `extension.neon` is a
     * `@phpstan-var` => `@var`
     * `@phpstan-param` => `@param`
     * etc.
+3. Assignments of any type inside `if`, `elseif`, `while` and `do-while` conditions are disallowed.
 
 ## License
 
