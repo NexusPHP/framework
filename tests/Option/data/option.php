@@ -20,8 +20,8 @@ use Nexus\Option\Some;
 
 use function PHPStan\Testing\assertType;
 
-assertType('Nexus\Option\None', Choice::from(null));
-assertType('Nexus\Option\None', new None());
+assertType(None::class, Choice::from(null));
+assertType(None::class, new None());
 assertType('Nexus\Option\Some<null>', Choice::from(null, false));
 assertType('Nexus\Option\Some<int>', new Some(2));
 
@@ -31,7 +31,7 @@ function testOption(Option $option): void
         assertType('Nexus\Option\Some<mixed>', $option);
         assertType('false', $option->isNone());
     } else {
-        assertType('Nexus\Option\None', $option);
+        assertType(None::class, $option);
         assertType('true', $option->isNone());
     }
 }
