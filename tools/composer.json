@@ -4,8 +4,18 @@
         "friendsofphp/php-cs-fixer": "^3.60",
         "infection/infection": "^0.29.6",
         "kubawerlos/php-cs-fixer-custom-fixers": "^3.21",
-        "nexusphp/cs-config": "^3.24"
+        "nexusphp/cs-config": "^3.24",
+        "nexusphp/framework": "1.x-dev"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Nexus\\Tools\\": "src"

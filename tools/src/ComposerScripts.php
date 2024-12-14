@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Nexus\Tools;
 
+use Nexus\Suppression\Silencer;
+
 /**
  * @internal
  */
@@ -66,7 +68,9 @@ final class ComposerScripts
 
     private static function updateVscodeIntelephenseEnvironmentIncludePaths(): void
     {
-        $contents = @file_get_contents(self::VSCODE_SETTINGS_JSON);
+        $contents = (new Silencer())->suppress(
+            static fn(): false|string => file_get_contents(self::VSCODE_SETTINGS_JSON),
+        );
 
         if (false === $contents) {
             echo \sprintf("\033[31mFAIL\033[0m Cannot get the contents of %s as it is probably missing or unreadable.\n", self::VSCODE_SETTINGS_JSON);

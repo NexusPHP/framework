@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Nexus\Tests\AutoReview;
 
+use Nexus\Suppression\Silencer;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -119,7 +120,9 @@ final class ComposerJsonTest extends TestCase
                 ));
             }
 
-            $contents = @file_get_contents($realpath);
+            $contents = (new Silencer())->suppress(
+                static fn(): false|string => file_get_contents($realpath),
+            );
 
             if (false === $contents) {
                 throw new \InvalidArgumentException(\sprintf(
