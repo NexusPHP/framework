@@ -34,7 +34,8 @@
         "nexusphp/clock": "self.version",
         "nexusphp/collection": "self.version",
         "nexusphp/option": "self.version",
-        "nexusphp/phpstan-nexus": "self.version"
+        "nexusphp/phpstan-nexus": "self.version",
+        "nexusphp/suppression": "self.version"
     },
     "provide": {
         "psr/clock-implementation": "1.0"
