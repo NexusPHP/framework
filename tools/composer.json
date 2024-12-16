@@ -9,11 +9,9 @@
     },
     "repositories": [
         {
-            "type": "path",
-            "url": "../",
-            "options": {
-                "symlink": false
-            }
+            "type": "vcs",
+            "url": "https://github.com/NexusPHP/framework",
+            "canonical": true
         }
     ],
     "autoload": {
