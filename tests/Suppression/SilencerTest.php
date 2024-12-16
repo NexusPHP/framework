@@ -27,13 +27,13 @@ final class SilencerTest extends TestCase
 {
     public function testSilencerBox(): void
     {
-        [$result, $message] = (new Silencer())->box(
+        [$result, $message] = Silencer::box(
             static fn(): false|string => file_get_contents('non-existent-file.txt'),
         );
         self::assertFalse($result);
         self::assertSame('Failed to open stream: No such file or directory', $message);
 
-        [$result, $message] = (new Silencer())->box(
+        [$result, $message] = Silencer::box(
             static fn(): false|string => file_get_contents(__FILE__),
         );
         self::assertIsString($result);
@@ -44,7 +44,7 @@ final class SilencerTest extends TestCase
     {
         $prevErrorLevel = error_reporting();
 
-        $result = (new Silencer())->suppress(static function (): int {
+        $result = Silencer::suppress(static function (): int {
             trigger_error('Test', E_USER_WARNING);
 
             return 30;

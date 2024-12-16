@@ -22,7 +22,7 @@ final class Silencer
      *
      * @return array{T, null|string}
      */
-    public function box(\Closure $func): array
+    public static function box(\Closure $func): array
     {
         $message = null;
 
@@ -50,7 +50,7 @@ final class Silencer
      *
      * @return T
      */
-    public function suppress(\Closure $func): mixed
+    public static function suppress(\Closure $func): mixed
     {
         $prevErrorLevel = error_reporting(0);
 

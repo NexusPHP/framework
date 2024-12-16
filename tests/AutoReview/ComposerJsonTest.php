@@ -120,7 +120,7 @@ final class ComposerJsonTest extends TestCase
                 ));
             }
 
-            $contents = (new Silencer())->suppress(
+            $contents = Silencer::suppress(
                 static fn(): false|string => file_get_contents($realpath),
             );
 

@@ -68,7 +68,7 @@ final class ComposerScripts
 
     private static function updateVscodeIntelephenseEnvironmentIncludePaths(): void
     {
-        $contents = (new Silencer())->suppress(
+        $contents = Silencer::suppress(
             static fn(): false|string => file_get_contents(self::VSCODE_SETTINGS_JSON),
         );
 
