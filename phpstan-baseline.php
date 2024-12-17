@@ -8,10 +8,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/src/Nexus/Collection/Collection.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Nexus\\\\Option\\\\Choice\\:\\:from\\(\\) never returns Nexus\\\\Option\\\\Some\\<T of mixed\\> so it can be removed from the return type\\.$#',
+	'message' => '#^Function Nexus\\\\Option\\\\option\\(\\) never returns Nexus\\\\Option\\\\Some\\<T of mixed\\> so it can be removed from the return type\\.$#',
 	'identifier' => 'return.unusedType',
 	'count' => 1,
-	'path' => __DIR__ . '/src/Nexus/Option/Choice.php',
+	'path' => __DIR__ . '/src/Nexus/Option/functions.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Nexus\\\\Tests\\\\AutoReview\\\\ComposerJsonTest\\:\\:getComposer\\(\\) should return array\\<string, mixed\\> but returns mixed\\.$#',

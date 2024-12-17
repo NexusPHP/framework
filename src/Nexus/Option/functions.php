@@ -24,5 +24,9 @@ namespace Nexus\Option;
  */
 function option(mixed $value, mixed $none = null): Option
 {
-    return Choice::from($value, $none);
+    if ($value === $none) {
+        return new None();
+    }
+
+    return new Some($value);
 }

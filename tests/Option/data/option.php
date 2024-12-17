@@ -13,16 +13,16 @@ declare(strict_types=1);
 
 namespace Nexus\Tests\Option;
 
-use Nexus\Option\Choice;
 use Nexus\Option\None;
 use Nexus\Option\Option;
 use Nexus\Option\Some;
 
+use function Nexus\Option\option;
 use function PHPStan\Testing\assertType;
 
-assertType(None::class, Choice::from(null));
+assertType(None::class, option(null));
 assertType(None::class, new None());
-assertType('Nexus\Option\Some<null>', Choice::from(null, false));
+assertType('Nexus\Option\Some<null>', option(null, false));
 assertType('Nexus\Option\Some<int>', new Some(2));
 
 function testOption(Option $option): void
