@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Nexus\Tests\AutoReview;
 
+use Nexus\Collection\Collection;
 use Nexus\Option\None;
 use Nexus\Option\Some;
 use Nexus\Tests\Option\OptionTest;
@@ -146,6 +147,30 @@ final class TestCodeTest extends TestCase
 
             if ($rc->isAbstract() || $rc->isInterface()) {
                 continue;
+            }
+
+            if ($rc->isEnum()) {
+                $publicMethods = Collection::wrap($rc->getMethods(\ReflectionMethod::IS_PUBLIC))
+                    ->map(static fn(\ReflectionMethod $rm): string => $rm->getName())
+                    ->diff(['from', 'tryFrom', 'cases'])
+                    ->all()
+                ;
+
+                if ([] === $publicMethods) {
+                    continue;
+                }
+            }
+
+            if ($rc->isSubclassOf(\Throwable::class)) {
+                $publicMethods = Collection::wrap($rc->getMethods(\ReflectionMethod::IS_PUBLIC))
+                    ->filter(static fn(\ReflectionMethod $rm): bool => $rm->getDeclaringClass()->getName() === $rc->getName())
+                    ->map(static fn(\ReflectionMethod $rm): string => $rm->getName())
+                    ->all()
+                ;
+
+                if ([] === $publicMethods) {
+                    continue;
+                }
             }
 
             yield $class => [$class];
