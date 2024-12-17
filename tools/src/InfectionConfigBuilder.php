@@ -16,6 +16,7 @@ namespace Nexus\Tools;
 use Infection\Mutator\ProfileList;
 use Nexus\Clock\SystemClock;
 use Nexus\Collection\Collection;
+use Nexus\Password\Hash\SodiumHash;
 
 /**
  * Inspired from https://github.com/kubawerlos/php-cs-fixer-custom-fixers/blob/main/.dev-tools/src/InfectionConfigBuilder.php.
@@ -63,6 +64,7 @@ final class InfectionConfigBuilder
             Collection::class.'::toArrayKey',
         ],
         'Division' => [SystemClock::class],
+        'LogicalAnd' => [SodiumHash::class.'::valid'],
         'ModEqual' => [SystemClock::class],
         'TrueValue' => [
             Collection::class.'::generateDiffHashTable',

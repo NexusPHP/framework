@@ -18,4 +18,5 @@ enum Algorithm: string
     case Bcrypt = PASSWORD_BCRYPT;
     case Argon2i = PASSWORD_ARGON2I;
     case Argon2id = PASSWORD_ARGON2ID;
+    case Sodium = 'sodium';
 }

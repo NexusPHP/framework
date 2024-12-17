@@ -23,9 +23,11 @@ interface HashInterface
      *
      * @param array{
      *  cost?: int<4, 31>,
+     *  opslimit?: int,
+     *  memlimit?: int,
      *  memory_cost?: int,
-     *  time_cost?: int,
      *  threads?: int,
+     *  time_cost?: int,
      * } $options
      *
      * @throws HashException
