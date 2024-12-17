@@ -17,7 +17,7 @@ use Nexus\Password\HashInterface;
 
 abstract class AbstractHash implements HashInterface
 {
-    public function isValidPassword(string $password): bool
+    public function isValidPassword(#[\SensitiveParameter] string $password): bool
     {
         if ('' === $password || str_contains($password, "\x00")) {
             return false;

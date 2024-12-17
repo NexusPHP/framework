@@ -53,7 +53,7 @@ final class BcryptHash extends AbstractHash
         $this->cost = $cost;
     }
 
-    public function hash(string $password, array $options = []): string
+    public function hash(#[\SensitiveParameter] string $password, array $options = []): string
     {
         if (
             ! $this->isValidPassword($password)

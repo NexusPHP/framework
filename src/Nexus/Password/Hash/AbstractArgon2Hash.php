@@ -68,7 +68,7 @@ abstract class AbstractArgon2Hash extends AbstractHash
         $this->threads = $threads;
     }
 
-    public function hash(string $password, array $options = []): string
+    public function hash(#[\SensitiveParameter] string $password, array $options = []): string
     {
         if (! $this->isValidPassword($password)) {
             throw new HashException('Invalid password provided.');
