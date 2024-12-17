@@ -125,6 +125,6 @@ final class BcryptHashTest extends TestCase
 
         $hash = $hasher->hash($password);
         self::assertFalse($hasher->needsRehash($hash));
-        self::assertTrue((new BcryptHash(Algorithm::Bcrypt, ['cost' => 30]))->needsRehash($hash));
+        self::assertTrue($hasher->needsRehash($hash, ['cost' => 31]));
     }
 }
