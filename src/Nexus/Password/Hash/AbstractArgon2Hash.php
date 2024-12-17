@@ -41,7 +41,7 @@ abstract class AbstractArgon2Hash extends AbstractHash
 
         if ($memoryCost < PASSWORD_ARGON2_DEFAULT_MEMORY_COST) {
             throw new HashException(\sprintf(
-                'Memory cost should be %s bytes or greater, %s bytes given.',
+                'Memory cost should be %sKiB or greater, %sKiB given.',
                 number_format(PASSWORD_ARGON2_DEFAULT_MEMORY_COST),
                 number_format($memoryCost),
             ));

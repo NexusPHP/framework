@@ -27,7 +27,7 @@ abstract class AbstractArgon2HashTestCase extends TestCase
     {
         $this->expectException(HashException::class);
         $this->expectExceptionMessage(\sprintf(
-            'Memory cost should be %s bytes or greater, 10,240 bytes given.',
+            'Memory cost should be %sKiB or greater, 10,240KiB given.',
             number_format(PASSWORD_ARGON2_DEFAULT_MEMORY_COST),
         ));
 
