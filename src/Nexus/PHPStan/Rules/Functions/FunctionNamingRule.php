@@ -29,9 +29,6 @@ final class FunctionNamingRule implements Rule
         return Node\Stmt\Function_::class;
     }
 
-    /**
-     * @param Node\Stmt\Function_ $node
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         if (null === $node->namespacedName) {

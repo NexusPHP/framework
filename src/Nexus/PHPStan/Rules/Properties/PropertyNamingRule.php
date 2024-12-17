@@ -31,9 +31,6 @@ final class PropertyNamingRule implements Rule
         return ClassPropertyNode::class;
     }
 
-    /**
-     * @param ClassPropertyNode $node
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         $classReflection = $node->getClassReflection();

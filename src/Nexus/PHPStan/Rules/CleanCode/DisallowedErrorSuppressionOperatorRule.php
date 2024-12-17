@@ -29,9 +29,6 @@ final class DisallowedErrorSuppressionOperatorRule implements Rule
         return Node\Expr\ErrorSuppress::class;
     }
 
-    /**
-     * @param Node\Expr\ErrorSuppress $node
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         if (

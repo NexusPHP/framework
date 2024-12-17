@@ -32,9 +32,6 @@ final class ClassConstantNamingRule implements Rule
         return Node\Stmt\ClassConst::class;
     }
 
-    /**
-     * @param Node\Stmt\ClassConst $node
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         if (! $scope->isInClass()) {

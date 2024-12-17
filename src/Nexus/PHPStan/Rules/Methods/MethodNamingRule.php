@@ -29,9 +29,6 @@ final class MethodNamingRule implements Rule
         return InClassMethodNode::class;
     }
 
-    /**
-     * @param InClassMethodNode $node
-     */
     public function processNode(Node $node, Scope $scope): array
     {
         $method = $node->getOriginalNode();
