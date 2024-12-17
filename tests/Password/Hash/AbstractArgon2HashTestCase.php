@@ -18,6 +18,9 @@ use Nexus\Password\HashException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 abstract class AbstractArgon2HashTestCase extends TestCase
 {
     public function testInvalidMemoryCost(): void
@@ -111,7 +114,7 @@ abstract class AbstractArgon2HashTestCase extends TestCase
 
     public function testIsValidHash(): void
     {
-        $this->assertTrue($this->argonHash()->valid());
+        self::assertTrue($this->argonHash()->valid());
     }
 
     /**
