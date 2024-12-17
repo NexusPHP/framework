@@ -26,20 +26,17 @@ abstract class AbstractArgon2HashTestCase extends TestCase
     public function testInvalidMemoryCost(): void
     {
         $this->expectException(HashException::class);
-        $this->expectExceptionMessage(\sprintf(
-            'Memory cost should be %sKiB or greater, 10,240KiB given.',
-            number_format(PASSWORD_ARGON2_DEFAULT_MEMORY_COST),
-        ));
+        $this->expectExceptionMessage('Memory cost should be 7KiB or greater, 5KiB given.');
 
-        $this->argonHash(['memory_cost' => 10 * 1024]);
+        $this->argonHash(['memory_cost' => 5 * 1024]);
     }
 
     public function testInvalidTimeCost(): void
     {
         $this->expectException(HashException::class);
-        $this->expectExceptionMessage('Time cost should be 4 or greater, 3 given.');
+        $this->expectExceptionMessage('Time cost should be 1 or greater, 0 given.');
 
-        $this->argonHash(['time_cost' => 3]);
+        $this->argonHash(['time_cost' => 0]);
     }
 
     public function testInvalidThreads(): void

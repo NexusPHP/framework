@@ -18,6 +18,10 @@ use Nexus\Password\HashException;
 
 abstract class AbstractArgon2Hash extends AbstractHash
 {
+    private const MINIMUM_MEMORY_COST = 7 * 1024;
+    private const MINIMUM_TIME_COST = 1;
+    private const MINIMUM_THREADS = 1;
+
     private int $memoryCost;
     private int $timeCost;
     private int $threads;
@@ -39,26 +43,26 @@ abstract class AbstractArgon2Hash extends AbstractHash
         $timeCost = $options['time_cost'] ?? PASSWORD_ARGON2_DEFAULT_TIME_COST;
         $threads = $options['threads'] ?? PASSWORD_ARGON2_DEFAULT_THREADS;
 
-        if ($memoryCost < PASSWORD_ARGON2_DEFAULT_MEMORY_COST) {
+        if ($memoryCost < self::MINIMUM_MEMORY_COST) {
             throw new HashException(\sprintf(
                 'Memory cost should be %sKiB or greater, %sKiB given.',
-                number_format(PASSWORD_ARGON2_DEFAULT_MEMORY_COST),
-                number_format($memoryCost),
+                number_format(self::MINIMUM_MEMORY_COST / 1024),
+                number_format($memoryCost / 1024),
             ));
         }
 
-        if ($timeCost < PASSWORD_ARGON2_DEFAULT_TIME_COST) {
+        if ($timeCost < self::MINIMUM_TIME_COST) {
             throw new HashException(\sprintf(
                 'Time cost should be %d or greater, %d given.',
-                PASSWORD_ARGON2_DEFAULT_TIME_COST,
+                self::MINIMUM_TIME_COST,
                 $timeCost,
             ));
         }
 
-        if ($threads < PASSWORD_ARGON2_DEFAULT_THREADS) {
+        if ($threads < self::MINIMUM_THREADS) {
             throw new HashException(\sprintf(
                 'Number of threads should be %d or greater, %d given.',
-                PASSWORD_ARGON2_DEFAULT_THREADS,
+                self::MINIMUM_THREADS,
                 $threads,
             ));
         }
