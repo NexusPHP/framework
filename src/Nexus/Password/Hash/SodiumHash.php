@@ -27,6 +27,8 @@ final class SodiumHash extends AbstractHash
      * - `SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE`
      * - `SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE`
      * - `SODIUM_CRYPTO_PWHASH_OPSLIMIT_SENSITIVE`
+     *
+     * @var int<SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE, max>
      */
     private int $opslimit;
 
@@ -37,6 +39,8 @@ final class SodiumHash extends AbstractHash
      * - `SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE`
      * - `SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE`
      * - `SODIUM_CRYPTO_PWHASH_MEMLIMIT_SENSITIVE`
+     *
+     * @var int<SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE, max>
      */
     private int $memlimit;
 

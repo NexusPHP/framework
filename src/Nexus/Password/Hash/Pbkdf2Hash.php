@@ -34,12 +34,12 @@ final class Pbkdf2Hash extends AbstractHash implements SaltedHashInterface
     public readonly Algorithm $algorithm;
 
     /**
-     * @var int<1000, max>
+     * @var int<self::MINIMUM_ITERATIONS, max>
      */
     private int $iterations;
 
     /**
-     * @var int<0, max>
+     * @var int<self::MINIMUM_LENGTH, max>
      */
     private int $length;
 
@@ -136,7 +136,10 @@ final class Pbkdf2Hash extends AbstractHash implements SaltedHashInterface
      *
      * @param array{iterations?: int, length?: int} $options
      *
-     * @return array{iterations: int<1000, max>, length: int<0, max>}
+     * @return array{
+     *  iterations: int<self::MINIMUM_ITERATIONS, max>,
+     *  length: int<self::MINIMUM_LENGTH, max>
+     * }
      *
      * @throws HashException
      */

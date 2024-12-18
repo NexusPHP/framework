@@ -15,8 +15,8 @@ namespace Nexus\Password;
 
 interface HashInterface
 {
-    public const MINIMUM_PASSWORD_LENGTH = 8;
-    public const MAXIMUM_PASSWORD_LENGTH = 4096;
+    public const int MINIMUM_PASSWORD_LENGTH = 8;
+    public const int MAXIMUM_PASSWORD_LENGTH = 4096;
 
     /**
      * Creates a new password hash using a strong one-way hashing algorithm.

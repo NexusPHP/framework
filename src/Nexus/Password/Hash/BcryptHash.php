@@ -18,10 +18,10 @@ use Nexus\Password\HashException;
 
 final class BcryptHash extends AbstractHash
 {
-    public const DEFAULT_COST = 12;
-    public const MINIMUM_COST = 4;
-    public const MAXIMUM_COST = 31;
-    private const MAXIMUM_BCRYPT_PASSWORD_LENGTH = 72;
+    public const int DEFAULT_COST = 12;
+    public const int MINIMUM_COST = 4;
+    public const int MAXIMUM_COST = 31;
+    private const int MAXIMUM_BCRYPT_PASSWORD_LENGTH = 72;
 
     /**
      * @var int<self::MINIMUM_COST, self::MAXIMUM_COST>

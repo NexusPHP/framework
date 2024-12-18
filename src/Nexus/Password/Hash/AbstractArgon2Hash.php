@@ -18,12 +18,23 @@ use Nexus\Password\HashException;
 
 abstract class AbstractArgon2Hash extends AbstractHash
 {
-    private const MINIMUM_MEMORY_COST = 7 * 1024;
-    private const MINIMUM_TIME_COST = 1;
-    private const MINIMUM_THREADS = 1;
+    private const int MINIMUM_MEMORY_COST = 7 * 1024;
+    private const int MINIMUM_TIME_COST = 1;
+    private const int MINIMUM_THREADS = 1;
 
+    /**
+     * @var int<self::MINIMUM_MEMORY_COST, max>
+     */
     private int $memoryCost;
+
+    /**
+     * @var int<self::MINIMUM_TIME_COST, max>
+     */
     private int $timeCost;
+
+    /**
+     * @var int<self::MINIMUM_THREADS, max>
+     */
     private int $threads;
 
     /**
