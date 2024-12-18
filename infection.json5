@@ -85,7 +85,11 @@
         "InstanceOf_": true,
         "LessThanNegotiation": true,
         "LessThanOrEqualToNegotiation": true,
-        "LogicalAnd": true,
+        "LogicalAnd": {
+            "ignore": [
+                "Nexus\\Password\\Hash\\SodiumHash::valid"
+            ]
+        },
         "LogicalAndAllSubExprNegation": true,
         "LogicalAndNegation": true,
         "LogicalAndSingleSubExprNegation": true,
