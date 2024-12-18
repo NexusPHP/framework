@@ -15,8 +15,11 @@ namespace Nexus\Password;
 
 enum Algorithm: string
 {
-    case Bcrypt = PASSWORD_BCRYPT;
     case Argon2i = PASSWORD_ARGON2I;
     case Argon2id = PASSWORD_ARGON2ID;
+    case Bcrypt = PASSWORD_BCRYPT;
+    case Pbkdf2HmacSha1 = 'sha1';
+    case Pbkdf2HmacSha256 = 'sha256';
+    case Pbkdf2HmacSha512 = 'sha512';
     case Sodium = 'sodium';
 }

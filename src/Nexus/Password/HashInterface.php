@@ -22,7 +22,9 @@ interface HashInterface
      * Creates a new password hash using a strong one-way hashing algorithm.
      *
      * @param array{
-     *  cost?: int<4, 31>,
+     *  cost?: int,
+     *  iterations?: int,
+     *  length?: int,
      *  opslimit?: int,
      *  memlimit?: int,
      *  memory_cost?: int,
@@ -38,10 +40,14 @@ interface HashInterface
      * Checks if the given hash matches the given options.
      *
      * @param array{
-     *  cost?: int<4, 31>,
+     *  cost?: int,
+     *  iterations?: int,
+     *  length?: int,
+     *  opslimit?: int,
+     *  memlimit?: int,
      *  memory_cost?: int,
-     *  time_cost?: int,
      *  threads?: int,
+     *  time_cost?: int,
      * } $options
      */
     public function needsRehash(string $hash, array $options = []): bool;
