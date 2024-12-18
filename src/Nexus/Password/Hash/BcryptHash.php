@@ -44,18 +44,7 @@ final class BcryptHash extends AbstractHash
             ));
         }
 
-        $cost = $options['cost'] ?? self::DEFAULT_COST;
-
-        if (self::MINIMUM_COST > $cost || $cost > self::MAXIMUM_COST) {
-            throw new HashException(\sprintf(
-                'Algorithmic cost is expected to be between %d and %d, %d given.',
-                self::MINIMUM_COST,
-                self::MAXIMUM_COST,
-                $cost,
-            ));
-        }
-
-        $this->cost = $cost;
+        ['cost' => $this->cost] = $this->validatedCost($options, self::DEFAULT_COST);
     }
 
     /**
@@ -70,7 +59,11 @@ final class BcryptHash extends AbstractHash
             throw new HashException('Invalid password provided.');
         }
 
-        return password_hash($password, $this->algorithm->value, $this->cost($options));
+        return password_hash(
+            $password,
+            $this->algorithm->value,
+            $this->validatedCost($options, $this->cost),
+        );
     }
 
     /**
@@ -78,7 +71,11 @@ final class BcryptHash extends AbstractHash
      */
     public function needsRehash(string $hash, array $options = []): bool
     {
-        return password_needs_rehash($hash, $this->algorithm->value, $this->cost($options));
+        return password_needs_rehash(
+            $hash,
+            $this->algorithm->value,
+            $this->validatedCost($options, $this->cost),
+        );
     }
 
     public function verify(string $password, string $hash): bool
@@ -106,10 +103,23 @@ final class BcryptHash extends AbstractHash
     /**
      * @param array{cost?: int} $options
      *
-     * @return array{cost: int}
+     * @return array{cost: int<self::MINIMUM_COST, self::MAXIMUM_COST>}
+     *
+     * @throws HashException
      */
-    private function cost(array $options): array
+    private function validatedCost(array $options, int $cost): array
     {
-        return ['cost' => $options['cost'] ?? $this->cost];
+        $cost = $options['cost'] ?? $cost;
+
+        if (self::MINIMUM_COST > $cost || $cost > self::MAXIMUM_COST) {
+            throw new HashException(\sprintf(
+                'Algorithmic cost is expected to be between %d and %d, %d given.',
+                self::MINIMUM_COST,
+                self::MAXIMUM_COST,
+                $cost,
+            ));
+        }
+
+        return compact('cost');
     }
 }

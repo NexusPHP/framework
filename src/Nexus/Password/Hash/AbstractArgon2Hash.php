@@ -39,9 +39,89 @@ abstract class AbstractArgon2Hash extends AbstractHash
         public readonly Algorithm $algorithm,
         array $options = [],
     ) {
-        $memoryCost = $options['memory_cost'] ?? PASSWORD_ARGON2_DEFAULT_MEMORY_COST;
-        $timeCost = $options['time_cost'] ?? PASSWORD_ARGON2_DEFAULT_TIME_COST;
-        $threads = $options['threads'] ?? PASSWORD_ARGON2_DEFAULT_THREADS;
+        ['memory_cost' => $this->memoryCost, 'time_cost' => $this->timeCost, 'threads' => $this->threads] = $this->validatedOptions(
+            $options,
+            PASSWORD_ARGON2_DEFAULT_MEMORY_COST,
+            PASSWORD_ARGON2_DEFAULT_TIME_COST,
+            PASSWORD_ARGON2_DEFAULT_THREADS,
+        );
+    }
+
+    /**
+     * @param array{
+     *  memory_cost?: int,
+     *  threads?: int,
+     *  time_cost?: int,
+     * } $options
+     */
+    public function hash(#[\SensitiveParameter] string $password, array $options = []): string
+    {
+        if (! $this->isValidPassword($password)) {
+            throw new HashException('Invalid password provided.');
+        }
+
+        return password_hash(
+            $password,
+            $this->algorithm->value,
+            $this->validatedOptions(
+                $options,
+                $this->memoryCost,
+                $this->timeCost,
+                $this->threads,
+            ),
+        );
+    }
+
+    /**
+     * @param array{
+     *  memory_cost?: int,
+     *  threads?: int,
+     *  time_cost?: int,
+     * } $options
+     */
+    public function needsRehash(string $hash, array $options = []): bool
+    {
+        return password_needs_rehash(
+            $hash,
+            $this->algorithm->value,
+            $this->validatedOptions(
+                $options,
+                $this->memoryCost,
+                $this->timeCost,
+                $this->threads,
+            ),
+        );
+    }
+
+    public function verify(string $password, string $hash): bool
+    {
+        if (! $this->isValidPassword($password)) {
+            return false;
+        }
+
+        return password_verify($password, $hash);
+    }
+
+    /**
+     * @param array{
+     *  memory_cost?: int,
+     *  time_cost?: int,
+     *  threads?: int,
+     * } $options
+     *
+     * @return array{
+     *  memory_cost: int<self::MINIMUM_MEMORY_COST, max>,
+     *  time_cost: int<self::MINIMUM_TIME_COST, max>,
+     *  threads: int<self::MINIMUM_THREADS, max>,
+     * }
+     *
+     * @throws HashException
+     */
+    private function validatedOptions(array $options, int $memoryCost, int $timeCost, int $threads): array
+    {
+        $memoryCost = $options['memory_cost'] ?? $memoryCost;
+        $timeCost = $options['time_cost'] ?? $timeCost;
+        $threads = $options['threads'] ?? $threads;
 
         if ($memoryCost < self::MINIMUM_MEMORY_COST) {
             throw new HashException(\sprintf(
@@ -67,67 +147,10 @@ abstract class AbstractArgon2Hash extends AbstractHash
             ));
         }
 
-        $this->memoryCost = $memoryCost;
-        $this->timeCost = $timeCost;
-        $this->threads = $threads;
-    }
-
-    /**
-     * @param array{
-     *  memory_cost?: int,
-     *  threads?: int,
-     *  time_cost?: int,
-     * } $options
-     */
-    public function hash(#[\SensitiveParameter] string $password, array $options = []): string
-    {
-        if (! $this->isValidPassword($password)) {
-            throw new HashException('Invalid password provided.');
-        }
-
-        return password_hash($password, $this->algorithm->value, $this->options($options));
-    }
-
-    /**
-     * @param array{
-     *  memory_cost?: int,
-     *  threads?: int,
-     *  time_cost?: int,
-     * } $options
-     */
-    public function needsRehash(string $hash, array $options = []): bool
-    {
-        return password_needs_rehash($hash, $this->algorithm->value, $this->options($options));
-    }
-
-    public function verify(string $password, string $hash): bool
-    {
-        if (! $this->isValidPassword($password)) {
-            return false;
-        }
-
-        return password_verify($password, $hash);
-    }
-
-    /**
-     * @param array{
-     *  memory_cost?: int,
-     *  time_cost?: int,
-     *  threads?: int,
-     * } $options
-     *
-     * @return array{
-     *  memory_cost: int,
-     *  time_cost: int,
-     *  threads: int,
-     * }
-     */
-    private function options(array $options): array
-    {
         return [
-            'memory_cost' => $options['memory_cost'] ?? $this->memoryCost,
-            'time_cost' => $options['time_cost'] ?? $this->timeCost,
-            'threads' => $options['threads'] ?? $this->threads,
+            'memory_cost' => $memoryCost,
+            'time_cost' => $timeCost,
+            'threads' => $threads,
         ];
     }
 }

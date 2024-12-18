@@ -54,27 +54,11 @@ final class SodiumHash extends AbstractHash
             ));
         }
 
-        $opslimit = $options['opslimit'] ?? SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE;
-        $memlimit = $options['memlimit'] ?? SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE;
-
-        if ($opslimit < SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE) {
-            throw new HashException(\sprintf(
-                'Operations limit should be %d or greater, %d given.',
-                SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
-                $opslimit,
-            ));
-        }
-
-        if ($memlimit < SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE) {
-            throw new HashException(\sprintf(
-                'Memory limit should be %sMiB or greater (expressed in bytes), %sMiB given.',
-                number_format(SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE / 1024 ** 2),
-                number_format($memlimit / 1024 ** 2),
-            ));
-        }
-
-        $this->opslimit = $opslimit;
-        $this->memlimit = $memlimit;
+        ['opslimit' => $this->opslimit, 'memlimit' => $this->memlimit] = $this->validatedOptions(
+            $options,
+            SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE,
+            SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE,
+        );
     }
 
     /**
@@ -86,7 +70,13 @@ final class SodiumHash extends AbstractHash
             throw new HashException('Invalid password provided.');
         }
 
-        return sodium_crypto_pwhash_str($password, ...$this->options($options));
+        ['opslimit' => $opslimit, 'memlimit' => $memlimit] = $this->validatedOptions(
+            $options,
+            $this->opslimit,
+            $this->memlimit,
+        );
+
+        return sodium_crypto_pwhash_str($password, $opslimit, $memlimit);
     }
 
     /**
@@ -94,7 +84,13 @@ final class SodiumHash extends AbstractHash
      */
     public function needsRehash(string $hash, array $options = []): bool
     {
-        return sodium_crypto_pwhash_str_needs_rehash($hash, ...$this->options($options));
+        ['opslimit' => $opslimit, 'memlimit' => $memlimit] = $this->validatedOptions(
+            $options,
+            $this->opslimit,
+            $this->memlimit,
+        );
+
+        return sodium_crypto_pwhash_str_needs_rehash($hash, $opslimit, $memlimit);
     }
 
     public function verify(#[\SensitiveParameter] string $password, string $hash): bool
@@ -119,13 +115,34 @@ final class SodiumHash extends AbstractHash
     /**
      * @param array{opslimit?: int, memlimit?: int} $options
      *
-     * @return array{opslimit: int, memlimit: int}
+     * @return array{
+     *  opslimit: int<SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE, max>,
+     *  memlimit: int<SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE, max>,
+     * }
+     *
+     * @throws HashException
      */
-    private function options(array $options): array
+    private function validatedOptions(array $options, int $opslimit, int $memlimit): array
     {
-        return [
-            'opslimit' => $options['opslimit'] ?? $this->opslimit,
-            'memlimit' => $options['memlimit'] ?? $this->memlimit,
-        ];
+        $opslimit = $options['opslimit'] ?? $opslimit;
+        $memlimit = $options['memlimit'] ?? $memlimit;
+
+        if ($opslimit < SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE) {
+            throw new HashException(\sprintf(
+                'Operations limit should be %d or greater, %d given.',
+                SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+                $opslimit,
+            ));
+        }
+
+        if ($memlimit < SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE) {
+            throw new HashException(\sprintf(
+                'Memory limit should be %sMiB or greater (expressed in bytes), %sMiB given.',
+                number_format(SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE / 1024 ** 2),
+                number_format($memlimit / 1024 ** 2),
+            ));
+        }
+
+        return compact('opslimit', 'memlimit');
     }
 }
