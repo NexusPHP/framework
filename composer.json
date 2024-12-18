@@ -49,15 +49,15 @@
         },
         "files": [
             "src/Nexus/Option/functions.php"
-        ],
-        "exclude-from-classmap": [
-            "tests/PHPStan/**/data/**"
         ]
     },
     "autoload-dev": {
         "psr-4": {
             "Nexus\\Tests\\": "tests/"
-        }
+        },
+        "exclude-from-classmap": [
+            "tests/PHPStan/**/data/**"
+        ]
     },
     "config": {
         "allow-plugins": {
