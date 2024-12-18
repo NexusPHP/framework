@@ -20,6 +20,8 @@
     "minMsi": 100,
     "minCoveredMsi": 100,
     "mutators": {
+        "ArrayAll": true,
+        "ArrayAny": true,
         "ArrayItem": true,
         "ArrayItemRemoval": true,
         "ArrayOneItem": true,
