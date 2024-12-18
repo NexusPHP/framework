@@ -29,9 +29,7 @@ final class BcryptHash extends AbstractHash
     private int $cost;
 
     /**
-     * @param array{
-     *  cost?: int,
-     * } $options
+     * @param array{cost?: int} $options
      *
      * @throws HashException
      */
@@ -60,6 +58,9 @@ final class BcryptHash extends AbstractHash
         $this->cost = $cost;
     }
 
+    /**
+     * @param array{cost?: int} $options
+     */
     public function hash(#[\SensitiveParameter] string $password, array $options = []): string
     {
         if (
@@ -72,6 +73,9 @@ final class BcryptHash extends AbstractHash
         return password_hash($password, $this->algorithm->value, $this->cost($options));
     }
 
+    /**
+     * @param array{cost?: int} $options
+     */
     public function needsRehash(string $hash, array $options = []): bool
     {
         return password_needs_rehash($hash, $this->algorithm->value, $this->cost($options));

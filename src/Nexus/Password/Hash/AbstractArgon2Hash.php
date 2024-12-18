@@ -72,6 +72,13 @@ abstract class AbstractArgon2Hash extends AbstractHash
         $this->threads = $threads;
     }
 
+    /**
+     * @param array{
+     *  memory_cost?: int,
+     *  threads?: int,
+     *  time_cost?: int,
+     * } $options
+     */
     public function hash(#[\SensitiveParameter] string $password, array $options = []): string
     {
         if (! $this->isValidPassword($password)) {
@@ -81,6 +88,13 @@ abstract class AbstractArgon2Hash extends AbstractHash
         return password_hash($password, $this->algorithm->value, $this->options($options));
     }
 
+    /**
+     * @param array{
+     *  memory_cost?: int,
+     *  threads?: int,
+     *  time_cost?: int,
+     * } $options
+     */
     public function needsRehash(string $hash, array $options = []): bool
     {
         return password_needs_rehash($hash, $this->algorithm->value, $this->options($options));

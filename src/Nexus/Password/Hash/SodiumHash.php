@@ -77,6 +77,9 @@ final class SodiumHash extends AbstractHash
         $this->memlimit = $memlimit;
     }
 
+    /**
+     * @param array{opslimit?: int, memlimit?: int} $options
+     */
     public function hash(#[\SensitiveParameter] string $password, array $options = []): string
     {
         if (! $this->isValidPassword($password)) {
@@ -86,6 +89,9 @@ final class SodiumHash extends AbstractHash
         return sodium_crypto_pwhash_str($password, ...$this->options($options));
     }
 
+    /**
+     * @param array{opslimit?: int, memlimit?: int} $options
+     */
     public function needsRehash(string $hash, array $options = []): bool
     {
         return sodium_crypto_pwhash_str_needs_rehash($hash, ...$this->options($options));
