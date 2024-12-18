@@ -15,6 +15,7 @@ namespace Nexus\Tests\Password\Hash;
 
 use Nexus\Password\Algorithm;
 use Nexus\Password\Hash\AbstractHash;
+use Nexus\Password\Hash\Argon2iHash;
 use Nexus\Password\Hash\BcryptHash;
 use Nexus\Password\HashException;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -58,6 +59,14 @@ final class BcryptHashTest extends TestCase
             new BcryptHash(Algorithm::Bcrypt, compact('cost'));
             $this->addToAssertionCount(1);
         }
+    }
+
+    public function testInvalidAlgorithmOnBcrypt(): void
+    {
+        $this->expectException(HashException::class);
+        $this->expectExceptionMessage('Algorithm expected to be Algorithm::Bcrypt, Algorithm::Argon2i given.');
+
+        new BcryptHash(Algorithm::Argon2i);
     }
 
     public function testBasicPasswordHashing(): void
@@ -114,7 +123,7 @@ final class BcryptHashTest extends TestCase
         self::assertFalse($hasher->verify($pass4, $hash));
         self::assertFalse($hasher->verify(
             $pass3,
-            (new BcryptHash(Algorithm::Argon2i))->hash($pass3),
+            (new Argon2iHash(Algorithm::Argon2i))->hash($pass3),
         ));
     }
 

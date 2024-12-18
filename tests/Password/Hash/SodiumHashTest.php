@@ -46,10 +46,18 @@ final class SodiumHashTest extends TestCase
         new SodiumHash(Algorithm::Sodium, ['memlimit' => 10 * 1024 ** 2]);
     }
 
+    public function testInvalidAlgorithm(): void
+    {
+        $this->expectException(HashException::class);
+        $this->expectExceptionMessage('Algorithm expected to be Algorithm::Sodium, Algorithm::Argon2id given.');
+
+        new SodiumHash(Algorithm::Argon2id);
+    }
+
     public function testBasicPasswordHashing(): void
     {
         $password = 'my-awesome-password';
-        $hasher = new SodiumHash(Algorithm::Bcrypt);
+        $hasher = new SodiumHash(Algorithm::Sodium);
 
         self::assertTrue($hasher->valid());
 

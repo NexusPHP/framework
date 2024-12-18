@@ -47,6 +47,13 @@ final class SodiumHash extends AbstractHash
         public readonly Algorithm $algorithm,
         array $options = [],
     ) {
+        if (Algorithm::Sodium !== $algorithm) {
+            throw new HashException(\sprintf(
+                'Algorithm expected to be Algorithm::Sodium, Algorithm::%s given.',
+                $algorithm->name,
+            ));
+        }
+
         $opslimit = $options['opslimit'] ?? SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE;
         $memlimit = $options['memlimit'] ?? SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE;
 

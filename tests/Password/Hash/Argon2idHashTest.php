@@ -17,6 +17,7 @@ use Nexus\Password\Algorithm;
 use Nexus\Password\Hash\AbstractArgon2Hash;
 use Nexus\Password\Hash\AbstractHash;
 use Nexus\Password\Hash\Argon2idHash;
+use Nexus\Password\HashException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
@@ -29,8 +30,16 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('unit-test')]
 final class Argon2idHashTest extends AbstractArgon2HashTestCase
 {
+    public function testInvalidAlgorithm(): void
+    {
+        $this->expectException(HashException::class);
+        $this->expectExceptionMessage('Algorithm expected to be Algorithm::Argon2id, Algorithm::Argon2i given.');
+
+        new Argon2idHash(Algorithm::Argon2i);
+    }
+
     protected function argonHash(array $options = []): AbstractArgon2Hash
     {
-        return new Argon2idHash(Algorithm::Argon2i, $options);
+        return new Argon2idHash(Algorithm::Argon2id, $options);
     }
 }

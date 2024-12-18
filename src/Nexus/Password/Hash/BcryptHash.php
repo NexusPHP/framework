@@ -39,6 +39,13 @@ final class BcryptHash extends AbstractHash
         public readonly Algorithm $algorithm,
         array $options = [],
     ) {
+        if (Algorithm::Bcrypt !== $algorithm) {
+            throw new HashException(\sprintf(
+                'Algorithm expected to be Algorithm::Bcrypt, Algorithm::%s given.',
+                $algorithm->name,
+            ));
+        }
+
         $cost = $options['cost'] ?? self::DEFAULT_COST;
 
         if (self::MINIMUM_COST > $cost || $cost > self::MAXIMUM_COST) {
