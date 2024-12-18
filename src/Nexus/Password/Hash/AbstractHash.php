@@ -15,7 +15,7 @@ namespace Nexus\Password\Hash;
 
 use Nexus\Password\HashInterface;
 
-abstract class AbstractHash implements HashInterface
+abstract readonly class AbstractHash implements HashInterface
 {
     public function isValidPassword(#[\SensitiveParameter] string $password): bool
     {

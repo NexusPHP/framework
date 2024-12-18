@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Nexus\Password;
 
-final class Password
+final readonly class Password
 {
     /**
      * Creates a password hash driver.

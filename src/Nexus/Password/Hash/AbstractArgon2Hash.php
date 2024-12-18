@@ -16,7 +16,7 @@ namespace Nexus\Password\Hash;
 use Nexus\Password\Algorithm;
 use Nexus\Password\HashException;
 
-abstract class AbstractArgon2Hash extends AbstractHash
+abstract readonly class AbstractArgon2Hash extends AbstractHash
 {
     private const int MINIMUM_MEMORY_COST = 7 * 1024;
     private const int MINIMUM_TIME_COST = 1;
@@ -47,7 +47,7 @@ abstract class AbstractArgon2Hash extends AbstractHash
      * @throws HashException
      */
     public function __construct(
-        public readonly Algorithm $algorithm,
+        public Algorithm $algorithm,
         array $options = [],
     ) {
         ['memory_cost' => $this->memoryCost, 'time_cost' => $this->timeCost, 'threads' => $this->threads] = $this->validatedOptions(

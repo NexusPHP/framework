@@ -16,7 +16,7 @@ namespace Nexus\Password\Hash;
 use Nexus\Password\Algorithm;
 use Nexus\Password\HashException;
 
-final class Argon2idHash extends AbstractArgon2Hash
+final readonly class Argon2idHash extends AbstractArgon2Hash
 {
     /**
      * @param array{

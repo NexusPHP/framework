@@ -18,6 +18,7 @@ use Nexus\Password\Hash\AbstractHash;
 use Nexus\Password\Hash\SodiumHash;
 use Nexus\Password\HashException;
 use Nexus\Password\Password;
+use Nexus\PHPUnit\Tachycardia\Attribute\TimeLimit;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -84,6 +85,7 @@ final class SodiumHashTest extends TestCase
         self::assertTrue($hasher->needsRehash($hash, ['memlimit' => 64 * 1024 ** 2]));
     }
 
+    #[TimeLimit(1.5)]
     public function testInvalidPasswordForVerify(): void
     {
         $pass1 = "abcd\0e";

@@ -17,7 +17,7 @@ use Nexus\Password\Algorithm;
 use Nexus\Password\HashException;
 use Nexus\Password\SaltedHashInterface;
 
-final class Pbkdf2Hash extends AbstractHash implements SaltedHashInterface
+final readonly class Pbkdf2Hash extends AbstractHash implements SaltedHashInterface
 {
     private const array ALLOWED_ALGORITHMS = [
         Algorithm::Pbkdf2HmacSha1,
@@ -31,7 +31,7 @@ final class Pbkdf2Hash extends AbstractHash implements SaltedHashInterface
     /**
      * @var Algorithm::Pbkdf2HmacSha1|Algorithm::Pbkdf2HmacSha256|Algorithm::Pbkdf2HmacSha512
      */
-    public readonly Algorithm $algorithm;
+    public Algorithm $algorithm;
 
     /**
      * @var int<self::MINIMUM_ITERATIONS, max>

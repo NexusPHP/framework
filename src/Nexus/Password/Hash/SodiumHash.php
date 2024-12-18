@@ -16,7 +16,7 @@ namespace Nexus\Password\Hash;
 use Nexus\Password\Algorithm;
 use Nexus\Password\HashException;
 
-final class SodiumHash extends AbstractHash
+final readonly class SodiumHash extends AbstractHash
 {
     /**
      * Represents a maximum amount of computations to perform.
@@ -48,7 +48,7 @@ final class SodiumHash extends AbstractHash
      * @param array{opslimit?: int, memlimit?: int} $options
      */
     public function __construct(
-        public readonly Algorithm $algorithm,
+        public Algorithm $algorithm,
         array $options = [],
     ) {
         if (Algorithm::Sodium !== $algorithm) {

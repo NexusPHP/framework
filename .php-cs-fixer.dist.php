@@ -23,7 +23,6 @@ use PhpCsFixerCustomFixers\Fixer\NoUselessParenthesisFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocTypesCommaSpacesFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpUnitAssertArgumentsOrderFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpUnitNoUselessReturnFixer;
-use PhpCsFixerCustomFixers\Fixer\PromotedConstructorPropertyFixer;
 use PhpCsFixerCustomFixers\Fixers;
 
 $finder = Finder::create()
@@ -66,7 +65,6 @@ $options = [
         PhpUnitAssertArgumentsOrderFixer::name() => true,
         PhpUnitNoUselessReturnFixer::name() => true,
         PhpdocTypesCommaSpacesFixer::name() => true,
-        PromotedConstructorPropertyFixer::name() => ['promote_only_existing_properties' => false],
     ],
 ];
 

@@ -16,7 +16,7 @@ namespace Nexus\Password\Hash;
 use Nexus\Password\Algorithm;
 use Nexus\Password\HashException;
 
-final class BcryptHash extends AbstractHash
+final readonly class BcryptHash extends AbstractHash
 {
     public const int DEFAULT_COST = 12;
     public const int MINIMUM_COST = 4;
@@ -34,7 +34,7 @@ final class BcryptHash extends AbstractHash
      * @throws HashException
      */
     public function __construct(
-        public readonly Algorithm $algorithm,
+        public Algorithm $algorithm,
         array $options = [],
     ) {
         if (Algorithm::Bcrypt !== $algorithm) {
