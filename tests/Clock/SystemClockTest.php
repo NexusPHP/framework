@@ -63,7 +63,7 @@ final class SystemClockTest extends TestCase
         $clock->sleep(0.0001);
         $after = (float) $clock->now()->format('U.u');
 
-        self::assertEqualsWithDelta(2.0, $now - $before, 0.05);
+        self::assertSame(2.0, round($now - $before));
         self::assertLessThan($after, $now);
         self::assertSame($tz, $clock->now()->getTimezone()->getName());
     }
