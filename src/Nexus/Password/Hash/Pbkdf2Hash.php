@@ -44,12 +44,6 @@ final readonly class Pbkdf2Hash extends AbstractHash implements SaltedHashInterf
     private int $length;
 
     /**
-     * Used on `::verify()` to return early if provided hash's length
-     * does not match this hasher's instance's supposed hash length.
-     */
-    private int $hashLength;
-
-    /**
      * @param array{
      *  iterations?: int,
      *  length?: int,
@@ -79,8 +73,6 @@ final readonly class Pbkdf2Hash extends AbstractHash implements SaltedHashInterf
             $this->defaultIterations(),
             self::DEFAULT_LENGTH,
         );
-
-        $this->hashLength = \strlen($this->hash('password', salt: random_bytes(16)));
     }
 
     /**
@@ -101,7 +93,19 @@ final readonly class Pbkdf2Hash extends AbstractHash implements SaltedHashInterf
             $this->length,
         );
 
-        return hash_pbkdf2($this->algorithm->value, $password, $salt, $iterations, $length);
+        return \sprintf(
+            '$%s$i=%d,l=%d$%s$%s',
+            $this->algorithm->value,
+            $iterations,
+            $length,
+            base64_encode($salt),
+            base64_encode($this->pbkdf2(
+                $password,
+                $salt,
+                $iterations,
+                $length,
+            )),
+        );
     }
 
     public function needsRehash(string $hash, array $options = []): bool
@@ -115,20 +119,70 @@ final readonly class Pbkdf2Hash extends AbstractHash implements SaltedHashInterf
             return false;
         }
 
-        if (\strlen($hash) !== $this->hashLength) {
+        if (preg_match('/^\$([^\$]+)\$([^\$]+)\$([^\$]+)\$([^\$]+)$/', $hash, $parts) !== 1) {
             return false;
         }
 
-        if (str_contains($hash, '$')) {
+        array_shift($parts);
+
+        if (Algorithm::tryFrom($parts[0]) === null) {
             return false;
         }
 
-        return hash_equals($hash, $this->hash($password, salt: $salt));
+        if (preg_match('/i=(\-?\d+),l=(\-?\d+)/', $parts[1], $matches) !== 1) {
+            return false;
+        }
+
+        try {
+            ['iterations' => $iterations,'length' => $length] = $this->validatedOptions(
+                [],
+                (int) $matches[1],
+                (int) $matches[2],
+            );
+        } catch (HashException) {
+            return false;
+        }
+
+        if (base64_decode($parts[2], true) === false) {
+            return false;
+        }
+
+        $rawHash = base64_decode($parts[3], true);
+
+        if (false === $rawHash) {
+            return false;
+        }
+
+        return hash_equals(
+            $rawHash,
+            $this->pbkdf2(
+                $password,
+                $salt,
+                $iterations,
+                $length,
+            ),
+        );
     }
 
     public function valid(): bool
     {
         return \function_exists('hash_pbkdf2');
+    }
+
+    /**
+     * @param int<1, max> $iterations
+     * @param int<0, max> $length
+     */
+    private function pbkdf2(string $password, string $salt, int $iterations, int $length): string
+    {
+        return hash_pbkdf2(
+            $this->algorithm->value,
+            $password,
+            $salt,
+            $iterations,
+            $length,
+            true,
+        );
     }
 
     /**

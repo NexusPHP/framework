@@ -17,7 +17,6 @@ use Nexus\Password\Algorithm;
 use Nexus\Password\Hash\AbstractHash;
 use Nexus\Password\Hash\Pbkdf2Hash;
 use Nexus\Password\HashException;
-use Nexus\Password\Password;
 use Nexus\PHPUnit\Tachycardia\Attribute\TimeLimit;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -77,32 +76,6 @@ final class Pbkdf2HashTest extends TestCase
         yield 'sha512' => [Algorithm::Pbkdf2HmacSha512, 210_000];
     }
 
-    #[DataProvider('provideLengthProvidedCorrespondsToHashLengthCases')]
-    public function testLengthProvidedCorrespondsToHashLength(int $result, int $length, string $algo): void
-    {
-        $algorithm = Algorithm::from($algo);
-        $hasher = new Pbkdf2Hash($algorithm, compact('length'));
-        $hash = $hasher->hash('password');
-
-        self::assertSame($result, \strlen($hash));
-    }
-
-    /**
-     * @return iterable<string, array{int, int, string}>
-     */
-    public static function provideLengthProvidedCorrespondsToHashLengthCases(): iterable
-    {
-        yield 'sha1 0' => [40, 0, 'sha1'];
-
-        yield 'sha256 0' => [64, 0, 'sha256'];
-
-        yield 'sha512 0' => [128, 0, 'sha512'];
-
-        foreach (['sha1', 'sha256', 'sha512'] as $algo) {
-            yield $algo.' 30' => [30, 30, $algo];
-        }
-    }
-
     #[TimeLimit(3.0)]
     public function testBasicPasswordHashing(): void
     {
@@ -114,7 +87,6 @@ final class Pbkdf2HashTest extends TestCase
 
         $hash = $hasher->hash($password, salt: $salt);
         self::assertFalse($hasher->needsRehash($hash));
-        self::assertTrue($hasher->verify($password, $hash, $salt));
     }
 
     public function testInvalidPasswordForHash(): void
@@ -125,26 +97,57 @@ final class Pbkdf2HashTest extends TestCase
         (new Pbkdf2Hash(Algorithm::Pbkdf2HmacSha256))->hash('aa');
     }
 
+    #[DataProvider('providePasswordVerifyCases')]
     #[TimeLimit(3.0)]
-    public function testPasswordVerify(): void
+    public function testPasswordVerify(bool $result, ?string $password, string $hash): void
     {
-        $pass1 = "abcd\0e";
-        $pass2 = 'password';
-        $pass3 = 'pass';
-        $salt = random_bytes(16);
+        $password ??= 'password';
         $hasher = new Pbkdf2Hash(Algorithm::Pbkdf2HmacSha256);
 
-        $hash = $hasher->hash($pass2, salt: $salt);
-        self::assertFalse($hasher->verify($pass1, $hash, $salt));
-        self::assertTrue($hasher->verify($pass2, $hash, $salt));
-        self::assertFalse($hasher->verify($pass3, $hash, $salt));
-        self::assertFalse($hasher->verify(
-            $pass2,
-            substr(Password::fromAlgorithm(Algorithm::Argon2i)->hash($pass2), 0, 40),
-        ));
-        self::assertFalse($hasher->verify(
-            $pass2,
-            (new Pbkdf2Hash(Algorithm::Pbkdf2HmacSha256, ['length' => 0]))->hash($pass2, salt: $salt),
-        ));
+        self::assertSame($result, $hasher->verify($password, $hash, 'salt'));
+    }
+
+    /**
+     * @return iterable<string, array{bool, null|string, string}>
+     */
+    public static function providePasswordVerifyCases(): iterable
+    {
+        $hash = (new Pbkdf2Hash(Algorithm::Pbkdf2HmacSha256))->hash('password', [], 'salt');
+
+        yield 'empty' => [false, '', $hash];
+
+        yield 'nul' => [false, "pass\0word", $hash];
+
+        yield 'short' => [false, 'pass', $hash];
+
+        yield 'not hash' => [false, null, 'hash'];
+
+        yield 'truncated' => [false, null, substr($hash, 7)];
+
+        yield 'not hash hmac' => [false, null, str_replace('sha256', 'ghost', $hash)];
+
+        yield 'alternated options' => [false, null, preg_replace(
+            '/(i=\d+),(l=\d+)/',
+            '$2,$1',
+            $hash,
+        ) ?? $hash];
+
+        yield 'invalid iterations' => [false, null, str_replace('i=600000', 'i=900', $hash)];
+
+        yield 'invalid length' => [false, null, str_replace('l=40', 'l=-1', $hash)];
+
+        yield 'invalid base 64 salt' => [false, null, preg_replace(
+            '/^\$([^\$]+)\$([^\$]+)\$([^\$]+)\$([^\$]+)$/',
+            '\$$1\$$2\$$3=\$$4',
+            $hash,
+        ) ?? $hash];
+
+        yield 'invalid base 64 hash' => [false, null, preg_replace(
+            '/^\$([^\$]+)\$([^\$]+)\$([^\$]+)\$([^\$]+)$/',
+            '\$$1\$$2\$$3\$$4=',
+            $hash,
+        ) ?? $hash];
+
+        yield 'valid hash' => [true, null, $hash];
     }
 }
