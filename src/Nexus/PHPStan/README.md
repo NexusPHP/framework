@@ -32,6 +32,7 @@ The following rules will automatically be enabled once the `extension.neon` is a
     * Class properties - camelCase format with no underscores
     * Class methods - camelCase format with no underscores, except for magic methods where double
         underscores are allowed
+    * Enum cases - PascalCase format
     * Functions - lower_snake_case format
 2. `@phpstan-`-prefixed PHPDoc tags should be avoided where possible:
     * `@phpstan-var` => `@var`

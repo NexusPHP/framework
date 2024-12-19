@@ -2,6 +2,7 @@ rules:
   - Nexus\PHPStan\Rules\CleanCode\AssignExprInCondRule
   - Nexus\PHPStan\Rules\CleanCode\DisallowedErrorSuppressionOperatorRule
   - Nexus\PHPStan\Rules\Constants\ClassConstantNamingRule
+  - Nexus\PHPStan\Rules\Enums\EnumCaseNamingRule
   - Nexus\PHPStan\Rules\Functions\FunctionNamingRule
   - Nexus\PHPStan\Rules\Methods\MethodNamingRule
   - Nexus\PHPStan\Rules\PhpDoc\DisallowedPhpstanDocTagRule
