@@ -15,7 +15,6 @@ namespace Nexus\Tests\Password\Hash;
 
 use Nexus\Password\Algorithm;
 use Nexus\Password\Hash\AbstractHash;
-use Nexus\Password\Hash\Argon2iHash;
 use Nexus\Password\Hash\BcryptHash;
 use Nexus\Password\HashException;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -108,23 +107,33 @@ final class BcryptHashTest extends TestCase
         self::assertTrue($hasher->verify($password, $hash));
     }
 
-    public function testInvalidPasswordForVerify(): void
+    #[DataProvider('provideInvalidPasswordForVerifyCases')]
+    public function testInvalidPasswordForVerify(bool $result, ?string $password, string $hash): void
     {
-        $pass1 = "abcd\0e";
-        $pass2 = str_repeat('a', 75);
-        $pass3 = 'password';
-        $pass4 = 'pass';
+        $password ??= 'password';
         $hasher = new BcryptHash(Algorithm::Bcrypt);
 
-        $hash = $hasher->hash($pass3);
-        self::assertFalse($hasher->verify($pass1, $hash));
-        self::assertFalse($hasher->verify($pass2, $hash));
-        self::assertTrue($hasher->verify($pass3, $hash));
-        self::assertFalse($hasher->verify($pass4, $hash));
-        self::assertFalse($hasher->verify(
-            $pass3,
-            (new Argon2iHash(Algorithm::Argon2i))->hash($pass3),
-        ));
+        self::assertSame($result, $hasher->verify($password, $hash));
+    }
+
+    /**
+     * @return iterable<string, array{bool, null|string, string}>
+     */
+    public static function provideInvalidPasswordForVerifyCases(): iterable
+    {
+        $hash = (new BcryptHash(Algorithm::Bcrypt))->hash('password');
+
+        yield 'empty' => [false, '', $hash];
+
+        yield 'nul' => [false, "pass\0word", $hash];
+
+        yield 'short' => [false, 'aa', $hash];
+
+        yield 'bcrypt max' => [false, str_repeat('a', 75), $hash];
+
+        yield 'corrupted' => [false, null, str_replace('$2y', '$3y', $hash)];
+
+        yield 'valid hash' => [true, null, $hash];
     }
 
     public function testPasswordNeedsRehash(): void

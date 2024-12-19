@@ -17,9 +17,8 @@ use Nexus\Password\Algorithm;
 use Nexus\Password\Hash\AbstractHash;
 use Nexus\Password\Hash\SodiumHash;
 use Nexus\Password\HashException;
-use Nexus\Password\Password;
-use Nexus\PHPUnit\Tachycardia\Attribute\TimeLimit;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
@@ -64,7 +63,6 @@ final class SodiumHashTest extends TestCase
 
         $hash = $hasher->hash($password);
         self::assertFalse($hasher->needsRehash($hash));
-        self::assertTrue($hasher->verify($password, $hash));
     }
 
     public function testInvalidPasswordForHash(): void
@@ -85,21 +83,30 @@ final class SodiumHashTest extends TestCase
         self::assertTrue($hasher->needsRehash($hash, ['memlimit' => 64 * 1024 ** 2]));
     }
 
-    #[TimeLimit(1.5)]
-    public function testInvalidPasswordForVerify(): void
+    #[DataProvider('provideInvalidPasswordForVerifyCases')]
+    public function testInvalidPasswordForVerify(bool $result, ?string $password, string $hash): void
     {
-        $pass1 = "abcd\0e";
-        $pass2 = 'password';
-        $pass3 = 'pass';
+        $password ??= 'password';
         $hasher = new SodiumHash(Algorithm::Sodium);
 
-        $hash = $hasher->hash($pass2);
-        self::assertFalse($hasher->verify($pass1, $hash));
-        self::assertTrue($hasher->verify($pass2, $hash));
-        self::assertFalse($hasher->verify($pass3, $hash));
-        self::assertFalse($hasher->verify(
-            $pass2,
-            Password::fromAlgorithm(Algorithm::Bcrypt)->hash($pass2),
-        ));
+        self::assertSame($result, $hasher->verify($password, $hash));
+    }
+
+    /**
+     * @return iterable<string, array{bool, null|string, string}>
+     */
+    public static function provideInvalidPasswordForVerifyCases(): iterable
+    {
+        $hash = (new SodiumHash(Algorithm::Sodium))->hash('password');
+
+        yield 'empty' => [false, '', $hash];
+
+        yield 'nul' => [false, "pass\0word", $hash];
+
+        yield 'short' => [false, 'aa', $hash];
+
+        yield 'corrupted' => [false, null, str_replace(SODIUM_CRYPTO_PWHASH_STRPREFIX, '$2y$', $hash)];
+
+        yield 'valid hash' => [true, null, $hash];
     }
 }
