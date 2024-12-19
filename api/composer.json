@@ -1,0 +1,11 @@
+{
+    "require": {
+        "php": "^8.3",
+        "apigen/apigen": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nexus\\Api\\": "src/"
+        }
+    }
+}

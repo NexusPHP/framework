@@ -1,0 +1,83 @@
+name: Deploy Nexus API
+
+on:
+  push:
+    branches:
+      - '1.x'
+    paths:
+      - src
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    if: github.repository == 'NexusPHP/framework'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup global variables
+        id: globals
+        run: |
+          echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.globals.outputs.COMPOSER_CACHE_DIR }}
+          key: ${{ github.workflow }}-PHP_8.3-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            ${{ github.workflow }}-PHP_8.3-
+
+      - name: Install dependencies
+        run: |
+          echo ::group::composer update --ansi
+          composer update --ansi
+          echo ::endgroup::
+
+          echo ::group::composer update --ansi --working-dir api
+          composer update --ansi --working-dir api
+          echo ::endgroup::
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Generate Nexus API
+        run: api/vendor/bin/apigen src --ansi --output api/docs --title Nexus --config api/apigen.neon
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: api/docs
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-22.04
+    needs: build
+
+    steps:
+      - name: Deploy Nexus API
+        id: deployment
+        uses: actions/deploy-pages@v4

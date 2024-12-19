@@ -29,6 +29,7 @@ $finder = Finder::create()
     ->files()
     ->in([
         __DIR__.'/.github',
+        __DIR__.'/api',
         __DIR__.'/bin',
         __DIR__.'/src',
         __DIR__.'/tests',

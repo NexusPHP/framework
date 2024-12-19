@@ -1,0 +1,13 @@
+parameters:
+  title: Nexus
+
+services:
+  analyzer.filter:
+    factory: Nexus\Api\AnalyserFilter
+    arguments:
+      excludeProtected: %excludeProtected%
+      excludePrivate: %excludePrivate%
+      excludeTagged: %excludeTagged%
+
+  renderer.filter:
+    factory: Nexus\Api\RendererFilter
