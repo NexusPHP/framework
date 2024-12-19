@@ -140,7 +140,11 @@ final class Pbkdf2HashTest extends TestCase
         self::assertFalse($hasher->verify($pass3, $hash, $salt));
         self::assertFalse($hasher->verify(
             $pass2,
-            Password::fromAlgorithm(Algorithm::Argon2i)->hash($pass2),
+            substr(Password::fromAlgorithm(Algorithm::Argon2i)->hash($pass2), 0, 40),
+        ));
+        self::assertFalse($hasher->verify(
+            $pass2,
+            (new Pbkdf2Hash(Algorithm::Pbkdf2HmacSha256, ['length' => 0]))->hash($pass2, salt: $salt),
         ));
     }
 }

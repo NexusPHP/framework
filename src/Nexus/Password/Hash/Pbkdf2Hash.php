@@ -44,6 +44,12 @@ final readonly class Pbkdf2Hash extends AbstractHash implements SaltedHashInterf
     private int $length;
 
     /**
+     * Used on `::verify()` to return early if provided hash's length
+     * does not match this hasher's instance's supposed hash length.
+     */
+    private int $hashLength;
+
+    /**
      * @param array{
      *  iterations?: int,
      *  length?: int,
@@ -73,6 +79,8 @@ final readonly class Pbkdf2Hash extends AbstractHash implements SaltedHashInterf
             $this->defaultIterations(),
             self::DEFAULT_LENGTH,
         );
+
+        $this->hashLength = \strlen($this->hash('password', salt: random_bytes(16)));
     }
 
     /**
@@ -104,6 +112,10 @@ final readonly class Pbkdf2Hash extends AbstractHash implements SaltedHashInterf
     public function verify(string $password, string $hash, string $salt = ''): bool
     {
         if (! $this->isValidPassword($password)) {
+            return false;
+        }
+
+        if (\strlen($hash) !== $this->hashLength) {
             return false;
         }
 
