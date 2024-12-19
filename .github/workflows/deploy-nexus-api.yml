@@ -1,12 +1,13 @@
 name: Deploy Nexus API
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - '1.x'
+      - 1.x
     paths:
-      - src
-  workflow_dispatch:
+      - src/
+      - .github/workflows/deploy-nexus-api.yml
 
 permissions:
   contents: read
