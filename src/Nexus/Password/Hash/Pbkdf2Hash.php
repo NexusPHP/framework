@@ -93,7 +93,7 @@ final readonly class Pbkdf2Hash extends AbstractHash implements SaltedHashInterf
             $this->length,
         );
 
-        return bin2hex(hash_pbkdf2($this->algorithm->value, $password, $salt, $iterations, $length, true));
+        return hash_pbkdf2($this->algorithm->value, $password, $salt, $iterations, $length);
     }
 
     public function needsRehash(string $hash, array $options = []): bool

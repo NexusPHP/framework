@@ -77,6 +77,32 @@ final class Pbkdf2HashTest extends TestCase
         yield 'sha512' => [Algorithm::Pbkdf2HmacSha512, 210_000];
     }
 
+    #[DataProvider('provideLengthProvidedCorrespondsToHashLengthCases')]
+    public function testLengthProvidedCorrespondsToHashLength(int $result, int $length, string $algo): void
+    {
+        $algorithm = Algorithm::from($algo);
+        $hasher = new Pbkdf2Hash($algorithm, compact('length'));
+        $hash = $hasher->hash('password');
+
+        self::assertSame($result, \strlen($hash));
+    }
+
+    /**
+     * @return iterable<string, array{int, int, string}>
+     */
+    public static function provideLengthProvidedCorrespondsToHashLengthCases(): iterable
+    {
+        yield 'sha1 0' => [40, 0, 'sha1'];
+
+        yield 'sha256 0' => [64, 0, 'sha256'];
+
+        yield 'sha512 0' => [128, 0, 'sha512'];
+
+        foreach (['sha1', 'sha256', 'sha512'] as $algo) {
+            yield $algo.' 30' => [30, 30, $algo];
+        }
+    }
+
     #[TimeLimit(3.0)]
     public function testBasicPasswordHashing(): void
     {
