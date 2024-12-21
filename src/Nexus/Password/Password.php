@@ -18,6 +18,7 @@ final readonly class Password
     /**
      * Creates a password hash driver.
      *
+     * @param non-empty-string $algo
      * @param array{
      *  cost?: int,
      *  iterations?: int,
@@ -31,8 +32,10 @@ final readonly class Password
      *
      * @throws HashException
      */
-    public static function fromAlgorithm(Algorithm $algorithm, array $options = []): HashInterface
+    public static function fromAlgorithm(string $algo, array $options = []): HashInterface
     {
+        $algorithm = Algorithm::tryFrom($algo);
+
         return match ($algorithm) {
             Algorithm::Argon2i => new Hash\Argon2iHash($algorithm, $options),
             Algorithm::Argon2id => new Hash\Argon2idHash($algorithm, $options),
@@ -40,7 +43,8 @@ final readonly class Password
             Algorithm::Pbkdf2HmacSha1,
             Algorithm::Pbkdf2HmacSha256,
             Algorithm::Pbkdf2HmacSha512 => new Hash\Pbkdf2Hash($algorithm, $options),
-            default => new Hash\SodiumHash($algorithm, $options),
+            Algorithm::Sodium => new Hash\SodiumHash($algorithm, $options),
+            default => throw new HashException(\sprintf('Unsupported "%s" algorithm.', $algo)),
         };
     }
 }
