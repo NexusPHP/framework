@@ -6,8 +6,7 @@ on:
     branches:
       - 1.x
     paths:
-      - src/
-      - .github/workflows/deploy-nexus-api.yml
+      - src/**
 
 permissions:
   contents: read
