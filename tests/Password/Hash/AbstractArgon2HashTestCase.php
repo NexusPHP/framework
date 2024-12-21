@@ -28,7 +28,7 @@ abstract class AbstractArgon2HashTestCase extends TestCase
         $this->expectException(HashException::class);
         $this->expectExceptionMessage('Memory cost should be 7KiB or greater, 5KiB given.');
 
-        $this->argonHash(['memory_cost' => 5 * 1024]);
+        static::argonHash(['memory_cost' => 5 * 1024]);
     }
 
     public function testInvalidTimeCost(): void
@@ -36,7 +36,7 @@ abstract class AbstractArgon2HashTestCase extends TestCase
         $this->expectException(HashException::class);
         $this->expectExceptionMessage('Time cost should be 1 or greater, 0 given.');
 
-        $this->argonHash(['time_cost' => 0]);
+        static::argonHash(['time_cost' => 0]);
     }
 
     public function testInvalidThreads(): void
@@ -44,13 +44,13 @@ abstract class AbstractArgon2HashTestCase extends TestCase
         $this->expectException(HashException::class);
         $this->expectExceptionMessage('Number of threads should be 1 or greater, 0 given.');
 
-        $this->argonHash(['threads' => 0]);
+        static::argonHash(['threads' => 0]);
     }
 
     public function testBasicPasswordHashing(): void
     {
         $password = 'my-awesome-password';
-        $hasher = $this->argonHash();
+        $hasher = static::argonHash();
 
         $hash = $hasher->hash($password);
         self::assertTrue($hasher->verify($password, $hash));
@@ -67,7 +67,7 @@ abstract class AbstractArgon2HashTestCase extends TestCase
     public function testPasswordNeedsRehash(array $option): void
     {
         $password = 'myPassword';
-        $hasher = $this->argonHash();
+        $hasher = static::argonHash();
 
         $hash = $hasher->hash($password);
         self::assertFalse($hasher->needsRehash($hash));
@@ -86,32 +86,59 @@ abstract class AbstractArgon2HashTestCase extends TestCase
         yield 'threads' => [['threads' => 3]];
     }
 
-    public function testInvalidPasswordPassedToHash(): void
+    #[DataProvider('provideInvalidPasswordForHashCases')]
+    public function testInvalidPasswordPassedToHash(string $password): void
     {
         $this->expectException(HashException::class);
         $this->expectExceptionMessage('Invalid password provided.');
 
-        $this->argonHash()->hash("pass\0word");
+        static::argonHash()->hash($password);
     }
 
-    public function testInvalidPasswordForVerify(): void
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideInvalidPasswordForHashCases(): iterable
     {
-        $pass1 = "abcd\0e";
-        $pass2 = str_repeat('a', 4098);
-        $pass3 = 'password';
-        $pass4 = 'pass';
-        $hasher = $this->argonHash();
+        yield 'empty' => [''];
 
-        $hash = $hasher->hash($pass3);
-        self::assertFalse($hasher->verify($pass1, $hash));
-        self::assertFalse($hasher->verify($pass2, $hash));
-        self::assertTrue($hasher->verify($pass3, $hash));
-        self::assertFalse($hasher->verify($pass4, $hash));
+        yield 'nul' => ["pass\0word"];
+
+        yield 'short' => ['pass'];
+
+        yield 'very long' => [str_repeat('a', 4098)];
+    }
+
+    #[DataProvider('provideInvalidPasswordForVerifyCases')]
+    public function testInvalidPasswordForVerify(bool $result, ?string $password, string $hash): void
+    {
+        $password ??= 'password';
+        $hasher = static::argonHash();
+
+        self::assertSame($result, $hasher->verify($password, $hash));
+    }
+
+    /**
+     * @return iterable<string, array{bool, null|string, string}>
+     */
+    public static function provideInvalidPasswordForVerifyCases(): iterable
+    {
+        $hash = static::argonHash()->hash('password');
+
+        yield 'empty' => [false, '', $hash];
+
+        yield 'nul' => [false, "pass\0word", $hash];
+
+        yield 'short' => [false, 'aa', $hash];
+
+        yield 'very long' => [false, str_repeat('a', 4098), $hash];
+
+        yield 'valid hash' => [true, null, $hash];
     }
 
     public function testIsValidHash(): void
     {
-        self::assertTrue($this->argonHash()->valid());
+        self::assertTrue(static::argonHash()->valid());
     }
 
     /**
@@ -121,5 +148,5 @@ abstract class AbstractArgon2HashTestCase extends TestCase
      *  threads?: int,
      * } $options
      */
-    abstract protected function argonHash(array $options = []): AbstractArgon2Hash;
+    abstract protected static function argonHash(array $options = []): AbstractArgon2Hash;
 }

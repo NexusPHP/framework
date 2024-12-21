@@ -38,7 +38,7 @@ final class Argon2iHashTest extends AbstractArgon2HashTestCase
         new Argon2iHash(Algorithm::Argon2id);
     }
 
-    protected function argonHash(array $options = []): AbstractArgon2Hash
+    protected static function argonHash(array $options = []): AbstractArgon2Hash
     {
         return new Argon2iHash(Algorithm::Argon2i, $options);
     }

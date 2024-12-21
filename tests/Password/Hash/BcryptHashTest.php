@@ -93,9 +93,15 @@ final class BcryptHashTest extends TestCase
      */
     public static function provideInvalidPasswordPassedToBcryptCases(): iterable
     {
-        yield 'invalid' => ["pass\0word"];
+        yield 'empty' => [''];
+
+        yield 'nul' => ["pass\0word"];
+
+        yield 'short' => ['pass'];
 
         yield 'long' => [str_repeat('a', 75)];
+
+        yield 'very long' => [str_repeat('a', 4098)];
     }
 
     public function testLongPasswordNearingMaxWorks(): void
@@ -130,6 +136,8 @@ final class BcryptHashTest extends TestCase
         yield 'short' => [false, 'aa', $hash];
 
         yield 'bcrypt max' => [false, str_repeat('a', 75), $hash];
+
+        yield 'very long' => [false, str_repeat('a', 4098), $hash];
 
         yield 'corrupted' => [false, null, str_replace('$2y', '$3y', $hash)];
 

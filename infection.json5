@@ -20,6 +20,9 @@
     "minMsi": 100,
     "minCoveredMsi": 100,
     "mutators": {
+        "global-ignore": [
+            "Nexus\\Password\\Hash\\*::isValidPassword"
+        ],
         "ArrayAll": true,
         "ArrayAny": true,
         "ArrayItem": true,

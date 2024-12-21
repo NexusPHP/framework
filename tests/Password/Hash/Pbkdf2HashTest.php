@@ -89,12 +89,27 @@ final class Pbkdf2HashTest extends TestCase
         self::assertFalse($hasher->needsRehash($hash));
     }
 
-    public function testInvalidPasswordForHash(): void
+    #[DataProvider('provideInvalidPasswordForHashCases')]
+    public function testInvalidPasswordForHash(string $password): void
     {
         $this->expectException(HashException::class);
         $this->expectExceptionMessage('Invalid password provided.');
 
-        (new Pbkdf2Hash(Algorithm::Pbkdf2HmacSha256))->hash('aa');
+        (new Pbkdf2Hash(Algorithm::Pbkdf2HmacSha256))->hash($password);
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideInvalidPasswordForHashCases(): iterable
+    {
+        yield 'empty' => [''];
+
+        yield 'nul' => ["pass\0word"];
+
+        yield 'short' => ['pass'];
+
+        yield 'very long' => [str_repeat('a', 4098)];
     }
 
     #[DataProvider('providePasswordVerifyCases')]
@@ -119,6 +134,8 @@ final class Pbkdf2HashTest extends TestCase
         yield 'nul' => [false, "pass\0word", $hash];
 
         yield 'short' => [false, 'pass', $hash];
+
+        yield 'very long' => [false, str_repeat('a', 4098), $hash];
 
         yield 'not hash' => [false, null, 'hash'];
 

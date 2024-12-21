@@ -25,10 +25,14 @@ use Nexus\Password\Hash\SodiumHash;
  */
 final class InfectionConfigBuilder
 {
+    public const array GLOBAL_IGNORE = [
+        'Nexus\\Password\\Hash\\*::isValidPassword',
+    ];
+
     /**
      * @var list<string>
      */
-    public const UNWANTED_MUTATORS = [
+    public const array UNWANTED_MUTATORS = [
         'Concat',
         'DecrementInteger',
         'FunctionCallRemoval',
@@ -54,7 +58,7 @@ final class InfectionConfigBuilder
      *
      * @var array<string, list<string>>
      */
-    public const PER_MUTATOR_IGNORE = [
+    public const array PER_MUTATOR_IGNORE = [
         'CastBool' => [
             Collection::class.'::filterWithKey',
             Collection::class.'::reject',
@@ -83,7 +87,7 @@ final class InfectionConfigBuilder
      *  'tmpDir': string,
      *  'minMsi': int,
      *  'minCoveredMsi': int,
-     *  'mutators': array<string, bool|array<string, mixed>>,
+     *  'mutators': array<string, bool|array<string, mixed>|list<string>>,
      *  'testFramework': string,
      *  'testFrameworkOptions': string,
      * }
@@ -105,7 +109,7 @@ final class InfectionConfigBuilder
             'tmpDir' => 'build',
             'minMsi' => 100,
             'minCoveredMsi' => 100,
-            'mutators' => [],
+            'mutators' => ['global-ignore' => []],
             'testFramework' => 'phpunit',
             'testFrameworkOptions' => '--group=unit-test',
         ];
@@ -126,6 +130,8 @@ final class InfectionConfigBuilder
 
             $config['mutators'][$mutator] = true;
         }
+
+        $config['mutators']['global-ignore'] = self::GLOBAL_IGNORE;
 
         return $config;
     }

@@ -65,12 +65,27 @@ final class SodiumHashTest extends TestCase
         self::assertFalse($hasher->needsRehash($hash));
     }
 
-    public function testInvalidPasswordForHash(): void
+    #[DataProvider('provideInvalidPasswordForHashCases')]
+    public function testInvalidPasswordForHash(string $password): void
     {
         $this->expectException(HashException::class);
         $this->expectExceptionMessage('Invalid password provided.');
 
-        (new SodiumHash(Algorithm::Sodium))->hash('aa');
+        (new SodiumHash(Algorithm::Sodium))->hash($password);
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideInvalidPasswordForHashCases(): iterable
+    {
+        yield 'empty' => [''];
+
+        yield 'nul' => ["pass\0word"];
+
+        yield 'short' => ['pass'];
+
+        yield 'very long' => [str_repeat('a', 4098)];
     }
 
     public function testNeedsRehashing(): void
@@ -104,6 +119,8 @@ final class SodiumHashTest extends TestCase
         yield 'nul' => [false, "pass\0word", $hash];
 
         yield 'short' => [false, 'aa', $hash];
+
+        yield 'very long' => [false, str_repeat('a', 4098), $hash];
 
         yield 'corrupted' => [false, null, str_replace(SODIUM_CRYPTO_PWHASH_STRPREFIX, '$2y$', $hash)];
 
