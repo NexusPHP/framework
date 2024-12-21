@@ -19,7 +19,11 @@ abstract readonly class AbstractHash implements HashInterface
 {
     public function isValidPassword(#[\SensitiveParameter] string $password): bool
     {
-        if ('' === $password || str_contains($password, "\x00")) {
+        if ('' === $password) {
+            return false;
+        }
+
+        if (str_contains($password, "\x00")) {
             return false;
         }
 

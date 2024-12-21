@@ -52,10 +52,11 @@ final readonly class BcryptHash extends AbstractHash
      */
     public function hash(#[\SensitiveParameter] string $password, array $options = []): string
     {
-        if (
-            ! $this->isValidPassword($password)
-            || \strlen($password) > self::MAXIMUM_BCRYPT_PASSWORD_LENGTH
-        ) {
+        if (! $this->isValidPassword($password)) {
+            throw new HashException('Invalid password provided.');
+        }
+
+        if (\strlen($password) > self::MAXIMUM_BCRYPT_PASSWORD_LENGTH) {
             throw new HashException('Invalid password provided.');
         }
 
