@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Nexus\Tests\Encryption;
 
 use Nexus\Encryption\EncoderInterface;
-use Nexus\Encryption\Key;
+use Nexus\Encryption\Secret;
 use Nexus\Encryption\Util;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -24,9 +24,9 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  */
-#[CoversClass(Key::class)]
+#[CoversClass(Secret::class)]
 #[Group('unit-test')]
-final class KeyTest extends TestCase
+final class SecretTest extends TestCase
 {
     private EncoderInterface&MockObject $encoder;
 
@@ -38,7 +38,7 @@ final class KeyTest extends TestCase
     public function testKeyArmor(): void
     {
         $key = Util::secureRandom(32);
-        $keyObj = new Key($key, $this->encoder);
+        $keyObj = new Secret($key, $this->encoder);
         $this->encoder->expects(self::once())
             ->method('bin2hex')
             ->with($key)
@@ -51,7 +51,7 @@ final class KeyTest extends TestCase
     public function testKeyUnarmor(): void
     {
         $key = Util::secureRandom(32);
-        $keyObj = new Key($key, $this->encoder);
+        $keyObj = new Secret($key, $this->encoder);
         $this->encoder->expects(self::once())
             ->method('hex2bin')
             ->with(bin2hex($key))

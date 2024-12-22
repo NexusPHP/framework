@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Nexus\Encryption;
 
-final readonly class Key
+final readonly class Secret
 {
     public function __construct(
         #[\SensitiveParameter]
@@ -22,7 +22,7 @@ final readonly class Key
     ) {}
 
     /**
-     * Armor the key in an ASCII format.
+     * Armor the secret in an ASCII format.
      */
     public function armor(): string
     {
@@ -30,7 +30,7 @@ final readonly class Key
     }
 
     /**
-     * Unarmor the key from an ASCII format to its raw binary form.
+     * Unarmor the secret from an ASCII format to its raw binary form.
      */
     public function unarmor(string $key): self
     {
@@ -38,7 +38,7 @@ final readonly class Key
     }
 
     /**
-     * Get the raw binary key.
+     * Get the raw binary secret.
      */
     public function raw(): string
     {
