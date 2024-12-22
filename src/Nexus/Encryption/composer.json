@@ -18,8 +18,7 @@
         "source": "https://github.com/NexusPHP/framework"
     },
     "require": {
-        "php": "^8.3",
-        "ext-mbstring": "*"
+        "php": "^8.3"
     },
     "suggest": {
         "ext-openssl": "Required for encrypting and decrypting data using the OpenSSL library.",
