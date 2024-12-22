@@ -18,6 +18,7 @@
     },
     "require": {
         "php": "^8.3",
+        "ext-mbstring": "*",
         "phpstan/phpdoc-parser": "^2.0",
         "phpstan/phpstan": "^2.0",
         "psr/clock": "^1.0"
@@ -33,6 +34,7 @@
     "replace": {
         "nexusphp/clock": "self.version",
         "nexusphp/collection": "self.version",
+        "nexusphp/encryption": "self.version",
         "nexusphp/option": "self.version",
         "nexusphp/password": "self.version",
         "nexusphp/phpstan-nexus": "self.version",
