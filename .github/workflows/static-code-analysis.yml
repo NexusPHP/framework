@@ -7,6 +7,11 @@ on:
   push:
     branches:
       - 1.x
+    paths:
+      - '**.php'
+      - .github/workflows/static-code-analysis.yml
+      - composer.json
+      - '**.neon'
 
 concurrency:
   group: sca-${{ github.head_ref || github.run_id }}

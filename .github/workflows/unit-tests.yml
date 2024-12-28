@@ -7,6 +7,13 @@ on:
   push:
     branches:
       - 1.x
+    paths:
+      - src/Nexus/**
+      - tests/**
+      - .github/workflows/unit-tests.yml
+      - composer.json
+      - infection.json5
+      - phpunit.xml.dist
 
 concurrency:
   group: unit-${{ github.head_ref || github.run_id }}
