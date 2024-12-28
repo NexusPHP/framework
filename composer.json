@@ -36,6 +36,7 @@
         "nexusphp/option": "self.version",
         "nexusphp/password": "self.version",
         "nexusphp/phpstan-nexus": "self.version",
+        "nexusphp/result": "self.version",
         "nexusphp/suppression": "self.version"
     },
     "provide": {
