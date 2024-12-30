@@ -117,6 +117,8 @@ interface Result
      * or `Result::unwrapOrElse()`.
      *
      * @return T
+     *
+     * @throws UnwrappedResultException if result is `Err`
      */
     public function unwrap(): mixed;
 
@@ -149,6 +151,8 @@ interface Result
      * provided by the `Ok`’s value.
      *
      * @return E
+     *
+     * @throws UnwrappedResultException if result is `Ok`
      */
     public function unwrapErr(): mixed;
 
