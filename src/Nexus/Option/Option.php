@@ -38,8 +38,6 @@ interface Option extends \IteratorAggregate
      * Returns `true` if the option is a **Some** and the value inside of it matches a predicate.
      *
      * @param (\Closure(T): bool) $predicate
-     *
-     * @param-immediately-invoked-callable $predicate
      */
     public function isSomeAnd(\Closure $predicate): bool;
 
@@ -87,8 +85,6 @@ interface Option extends \IteratorAggregate
      *
      * @param (\Closure(): S) $default
      *
-     * @param-immediately-invoked-callable $default
-     *
      * @return S|T
      */
     public function unwrapOrElse(\Closure $default): mixed;
@@ -100,8 +96,6 @@ interface Option extends \IteratorAggregate
      * @template U
      *
      * @param (\Closure(T): U) $predicate
-     *
-     * @param-immediately-invoked-callable $predicate
      *
      * @return self<U>
      */
@@ -121,8 +115,6 @@ interface Option extends \IteratorAggregate
      * @param V                $default
      * @param (\Closure(T): U) $predicate
      *
-     * @param-immediately-invoked-callable $predicate
-     *
      * @return U|V
      */
     public function mapOr(mixed $default, \Closure $predicate): mixed;
@@ -136,9 +128,6 @@ interface Option extends \IteratorAggregate
      *
      * @param (\Closure(): V)  $default
      * @param (\Closure(T): U) $predicate
-     *
-     * @param-immediately-invoked-callable $default
-     * @param-immediately-invoked-callable $predicate
      *
      * @return U|V
      */
@@ -167,8 +156,6 @@ interface Option extends \IteratorAggregate
      *
      * @param (\Closure(T): U) $predicate
      *
-     * @param-immediately-invoked-callable $predicate
-     *
      * @return U
      */
     public function andThen(\Closure $predicate): self;
@@ -180,8 +167,6 @@ interface Option extends \IteratorAggregate
      * - `None` if predicate returns false.
      *
      * @param (\Closure(T): bool) $predicate
-     *
-     * @param-immediately-invoked-callable $predicate
      *
      * @return self<T>
      */
@@ -209,8 +194,6 @@ interface Option extends \IteratorAggregate
      * @template S of Option
      *
      * @param (\Closure(): S) $other
-     *
-     * @param-immediately-invoked-callable $other
      *
      * @return S
      */

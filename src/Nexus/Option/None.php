@@ -67,8 +67,6 @@ final readonly class None implements Option
      * @param V                    $default
      * @param (\Closure(never): U) $predicate
      *
-     * @param-immediately-invoked-callable $predicate
-     *
      * @return V
      */
     public function mapOr(mixed $default, \Closure $predicate): mixed
@@ -82,9 +80,6 @@ final readonly class None implements Option
      *
      * @param (\Closure(): V)      $default
      * @param (\Closure(never): U) $predicate
-     *
-     * @param-immediately-invoked-callable $default
-     * @param-immediately-invoked-callable $predicate
      *
      * @return V
      */

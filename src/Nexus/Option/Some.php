@@ -68,8 +68,6 @@ final readonly class Some implements Option
      *
      * @param (\Closure(T): U) $predicate
      *
-     * @param-immediately-invoked-callable $predicate
-     *
      * @return self<U>
      */
     public function map(\Closure $predicate): self
@@ -83,8 +81,6 @@ final readonly class Some implements Option
      *
      * @param V                $default
      * @param (\Closure(T): U) $predicate
-     *
-     * @param-immediately-invoked-callable $predicate
      *
      * @return U
      */
