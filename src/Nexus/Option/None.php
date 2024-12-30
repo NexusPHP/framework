@@ -57,7 +57,7 @@ final readonly class None implements Option
 
     public function map(\Closure $predicate): self
     {
-        return clone $this;
+        return $this;
     }
 
     /**
@@ -90,17 +90,17 @@ final readonly class None implements Option
 
     public function and(Option $other): self
     {
-        return clone $this;
+        return $this;
     }
 
     public function andThen(\Closure $predicate): self
     {
-        return clone $this;
+        return $this;
     }
 
     public function filter(\Closure $predicate): self
     {
-        return clone $this;
+        return $this;
     }
 
     public function or(Option $other): Option
@@ -122,7 +122,7 @@ final readonly class None implements Option
      */
     public function xor(Option $other): Option
     {
-        return $other->isSome() ? $other : clone $this;
+        return $other->isSome() ? $other : $this;
     }
 
     /**

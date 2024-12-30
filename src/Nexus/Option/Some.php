@@ -106,7 +106,7 @@ final readonly class Some implements Option
 
     public function filter(\Closure $predicate): Option
     {
-        return $predicate($this->value) ? clone $this : new None();
+        return $predicate($this->value) ? $this : new None();
     }
 
     /**
@@ -118,7 +118,7 @@ final readonly class Some implements Option
      */
     public function or(Option $other): self
     {
-        return clone $this;
+        return $this;
     }
 
     /**
@@ -130,7 +130,7 @@ final readonly class Some implements Option
      */
     public function orElse(\Closure $other): self
     {
-        return clone $this;
+        return $this;
     }
 
     /**
@@ -142,7 +142,7 @@ final readonly class Some implements Option
      */
     public function xor(Option $other): Option
     {
-        return $other->isSome() ? new None() : clone $this;
+        return $other->isSome() ? new None() : $this;
     }
 
     /**
