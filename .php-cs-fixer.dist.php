@@ -36,7 +36,7 @@ $finder = Finder::create()
         __DIR__.'/tools',
     ])
     ->notPath([
-        '#PHPStan/.+/data/.+#',
+        '#.+/data/.+#',
     ])
     ->append([
         __FILE__,
