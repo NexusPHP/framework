@@ -65,7 +65,14 @@ final readonly class Err implements Result
         return $default($this->err);
     }
 
-    public function mapErr(\Closure $predicate): Result
+    /**
+     * @template F
+     *
+     * @param (\Closure(E): F) $predicate
+     *
+     * @return self<F>
+     */
+    public function mapErr(\Closure $predicate): self
     {
         return new self($predicate($this->err));
     }
@@ -133,10 +140,11 @@ final readonly class Err implements Result
     /**
      * @template T
      * @template F
+     * @template R of Result<T, F>
      *
-     * @param Result<T, F> $res
+     * @param R $res
      *
-     * @return Result<T, F>
+     * @return R
      */
     public function or(Result $res): Result
     {
@@ -146,10 +154,11 @@ final readonly class Err implements Result
     /**
      * @template T
      * @template F
+     * @template R of Result<T, F>
      *
-     * @param (\Closure(E): Result<T, F>) $op
+     * @param (\Closure(E): R) $op
      *
-     * @return Result<T, F>
+     * @return R
      */
     public function orElse(\Closure $op): Result
     {

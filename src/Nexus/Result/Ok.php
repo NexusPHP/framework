@@ -69,7 +69,10 @@ final readonly class Ok implements Result
         return $predicate($this->value);
     }
 
-    public function mapErr(\Closure $predicate): Result
+    /**
+     * @return self<T>
+     */
+    public function mapErr(\Closure $predicate): self
     {
         return $this;
     }
@@ -113,10 +116,11 @@ final readonly class Ok implements Result
     /**
      * @template U
      * @template E
+     * @template R of Result<U, E>
      *
-     * @param Result<U, E> $res
+     * @param R $res
      *
-     * @return Result<U, E>
+     * @return R
      */
     public function and(Result $res): Result
     {
@@ -126,10 +130,11 @@ final readonly class Ok implements Result
     /**
      * @template U
      * @template E
+     * @template R of Result<U, E>
      *
-     * @param (\Closure(T): Result<U, E>) $op
+     * @param (\Closure(T): R) $op
      *
-     * @return Result<U, E>
+     * @return R
      */
     public function andThen(\Closure $op): Result
     {
