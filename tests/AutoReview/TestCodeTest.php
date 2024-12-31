@@ -16,7 +16,10 @@ namespace Nexus\Tests\AutoReview;
 use Nexus\Collection\Collection;
 use Nexus\Option\None;
 use Nexus\Option\Some;
+use Nexus\Result\Err;
+use Nexus\Result\Ok;
 use Nexus\Tests\Option\OptionTest;
+use Nexus\Tests\Result\ResultTest;
 use PHPStan\Testing\TypeInferenceTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversFunction;
@@ -51,6 +54,7 @@ final class TestCodeTest extends TestCase
      */
     private const TEST_CLASSES_COVERS = [
         OptionTest::class => [None::class, Some::class],
+        ResultTest::class => [Err::class, Ok::class],
     ];
 
     /**

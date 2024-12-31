@@ -29,6 +29,9 @@ interface Result
 {
     /**
      * Returns `true` if the result is `Ok`.
+     *
+     * @phpstan-assert-if-true  Ok<T>  $this
+     * @phpstan-assert-if-false Err<E> $this
      */
     public function isOk(): bool;
 
@@ -41,6 +44,9 @@ interface Result
 
     /**
      * Returns `true` if the result is `Err`.
+     *
+     * @phpstan-assert-if-true  Err<E> $this
+     * @phpstan-assert-if-false Ok<T>  $this
      */
     public function isErr(): bool;
 
@@ -129,18 +135,22 @@ interface Result
      * the result of a method call, it is recommended to use `Result::unwrapOrElse()`,
      * which is lazily evaluated.
      *
-     * @param T $default
+     * @template U
      *
-     * @return T
+     * @param U $default
+     *
+     * @return T|U
      */
     public function unwrapOr(mixed $default): mixed;
 
     /**
      * Returns the contained `Ok` value or computes it from a closure.
      *
-     * @param (\Closure(E): T) $op
+     * @template U
      *
-     * @return T
+     * @param (\Closure(E): U) $op
+     *
+     * @return T|U
      */
     public function unwrapOrElse(\Closure $op): mixed;
 
