@@ -10,6 +10,31 @@ Result is a type that represents either success (`Ok`) or failure (`Err`).
 
 ## Getting Started
 
+```php
+<?php
+
+use Nexus\Result\Err;
+use Nexus\Result\Ok;
+use Nexus\Result\Result;
+
+function api_call(): Result
+{
+    // ...
+
+    if ($successful) {
+        return new Ok($value);
+    }
+
+    return new Err($error);
+}
+
+// call the function, then format any errors that may occur
+$value = api_call()
+    ->orElse(fn(string $err): Result => new Ok(sprintf('error: %s', $err)))
+    ->unwrap();
+
+```
+
 ## License
 
 Nexus Result is licensed under the [MIT License][1].
