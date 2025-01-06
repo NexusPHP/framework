@@ -72,7 +72,7 @@ final class FunctionNamingRule implements Rule
                 continue; // @codeCoverageIgnore
             }
 
-            if (preg_match('/^[a-z][a-zA-Z0-9]+$/', $param->var->name) !== 1) {
+            if (preg_match('/^[a-z][a-zA-Z0-9]*$/', $param->var->name) !== 1) {
                 $errors[] = RuleErrorBuilder::message(\sprintf(
                     'Parameter #%d $%s of function %s() should be in camelCase format.',
                     $index + 1,

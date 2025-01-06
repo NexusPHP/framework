@@ -20,4 +20,9 @@ abstract class Bar implements \SessionHandlerInterface
     public function base_band(): void {}
 
     abstract public function readline(int $max_lifetime): void;
+
+    protected function baziter(int $i): int
+    {
+        return $i;
+    }
 }

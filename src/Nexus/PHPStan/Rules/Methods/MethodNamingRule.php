@@ -94,7 +94,7 @@ final class MethodNamingRule implements Rule
                 continue; // @codeCoverageIgnore
             }
 
-            if (preg_match('/^[a-z][a-zA-Z0-9]+$/', $param->var->name) !== 1) {
+            if (preg_match('/^[a-z][a-zA-Z0-9]*$/', $param->var->name) !== 1) {
                 $errors[] = RuleErrorBuilder::message(\sprintf(
                     'Parameter #%d $%s of %s::%s() should be in camelCase with no underscores.',
                     $index + 1,

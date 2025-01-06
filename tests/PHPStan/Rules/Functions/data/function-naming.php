@@ -14,6 +14,11 @@ namespace Nexus\Tests\PHPStan\Rules\Functions {
     ): string {
         return $_bar;
     }
+
+    function baz(string $i): void
+    {
+        echo $i;
+    }
 }
 
 namespace {

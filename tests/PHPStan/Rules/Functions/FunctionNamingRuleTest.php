@@ -45,7 +45,7 @@ final class FunctionNamingRuleTest extends RuleTestCase
             ],
             [
                 'Function deride() should be namespaced using the "Nexus\\" namespace.',
-                20,
+                25,
             ],
         ]);
     }
