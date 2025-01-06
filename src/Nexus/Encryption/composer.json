@@ -1,0 +1,38 @@
+{
+    "name": "nexusphp/encryption",
+    "description": "The Nexus Encryption library.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "nexus",
+        "encryption"
+    ],
+    "authors": [
+        {
+            "name": "John Paul E. Balandan, CPA",
+            "email": "paulbalandan@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/NexusPHP/framework/issues",
+        "source": "https://github.com/NexusPHP/framework"
+    },
+    "require": {
+        "php": "^8.3",
+        "ext-mbstring": "*",
+        "ext-sodium": "*",
+        "nexusphp/suppression": "^1.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Nexus\\Encryption\\": ""
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
+}
