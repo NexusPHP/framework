@@ -204,6 +204,7 @@ final class SourceCodeTest extends TestCase
                 ...$allowedProtectedMethods,
                 ...$parent->getMethods(\ReflectionMethod::IS_PROTECTED),
             ];
+            $parent = $parent->getParentClass();
         }
 
         $allowedProtectedMethods = array_unique(array_map(
