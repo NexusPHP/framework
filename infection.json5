@@ -107,7 +107,6 @@
         "LogicalOrAllSubExprNegation": true,
         "LogicalOrNegation": true,
         "LogicalOrSingleSubExprNegation": true,
-        "MBString": true,
         "MatchArmRemoval": true,
         "MethodCallRemoval": true,
         "MinusEqual": true,

@@ -44,6 +44,7 @@ final class InfectionConfigBuilder
         'IntegerNegation',
         'LessThan',
         'LessThanOrEqualTo',
+        'MBString',
         'Minus',
         'NotIdentical',
         'NotIdenticalNotEqual', // @deprecated
