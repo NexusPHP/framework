@@ -16,6 +16,7 @@ namespace Nexus\Tools;
 use Infection\Mutator\ProfileList;
 use Nexus\Clock\SystemClock;
 use Nexus\Collection\Collection;
+use Nexus\Encryption\Key;
 use Nexus\Password\Hash\Pbkdf2Hash;
 use Nexus\Password\Hash\SodiumHash;
 
@@ -44,6 +45,7 @@ final class InfectionConfigBuilder
         'IntegerNegation',
         'LessThan',
         'LessThanOrEqualTo',
+        'MBString',
         'Minus',
         'NotIdentical',
         'NotIdenticalNotEqual', // @deprecated
@@ -81,6 +83,9 @@ final class InfectionConfigBuilder
         ],
         'ModEqual' => [
             SystemClock::class,
+        ],
+        'Throw_' => [
+            Key::class.'::__unserialize',
         ],
         'TrueValue' => [
             Collection::class.'::generateDiffHashTable',

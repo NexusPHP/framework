@@ -33,6 +33,7 @@
     "replace": {
         "nexusphp/clock": "self.version",
         "nexusphp/collection": "self.version",
+        "nexusphp/encryption": "self.version",
         "nexusphp/option": "self.version",
         "nexusphp/password": "self.version",
         "nexusphp/phpstan-nexus": "self.version",
