@@ -59,7 +59,6 @@ jobs:
         shell: bash
         run: |
           echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_OUTPUT
-          echo "EXPERIMENTAL_FLAG=${{ matrix.php-version == '8.4' && '--ignore-platform-req=php' || '' }}" >> $GITHUB_OUTPUT
 
       - name: Cache Composer dependencies
         uses: actions/cache@v4
@@ -71,7 +70,7 @@ jobs:
             ${{ github.workflow }}-PHP_${{ matrix.php-version }}-
 
       - name: Install dependencies
-        run: composer update --ansi ${{ steps.globals.outputs.EXPERIMENTAL_FLAG }}
+        run: composer update --ansi
 
       - name: Run Unit Tests
         shell: bash

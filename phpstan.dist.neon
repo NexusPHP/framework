@@ -4,7 +4,9 @@ includes:
   - src/Nexus/PHPStan/extension.neon
 
 parameters:
-  phpVersion: 80300
+  phpVersion:
+    min: 80300
+    max: 80499
   level: 10
   tmpDir: build/phpstan
   paths:

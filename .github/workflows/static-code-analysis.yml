@@ -26,7 +26,8 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - 8.3
+          - '8.3'
+          - '8.4'
 
     name: Static Code Analysis
     runs-on: ubuntu-24.04
@@ -102,6 +103,8 @@ jobs:
 
       - name: Check - PHP-CS-Fixer
         run: composer cs:check
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: ${{ matrix.php-version == '8.4' && '1' || ''}}
 
       - name: Check - PHPStan
         run: composer phpstan:check
