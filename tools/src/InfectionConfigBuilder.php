@@ -104,7 +104,7 @@ final class InfectionConfigBuilder
             'logs' => [
                 'text' => 'build/logs/infection/infection.log',
                 'html' => 'build/logs/infection/infection.html',
-                'stryker' => ['badge' => '1.x'],
+                'stryker' => ['report' => '1.x'],
             ],
             'tmpDir' => 'build',
             'minMsi' => 100,
