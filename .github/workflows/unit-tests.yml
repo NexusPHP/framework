@@ -31,7 +31,7 @@ jobs:
           - '8.3'
           - '8.4'
         os:
-          - ubuntu-22.04
+          - ubuntu-24.04
           - windows-2022
 
     name: Unit Tests
@@ -116,7 +116,7 @@ jobs:
 
   coveralls-finish:
     name: Notify Coveralls API
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: tests
 
     steps:
