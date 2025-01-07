@@ -142,7 +142,11 @@
         "SpreadRemoval": true,
         "Ternary": true,
         "This": true,
-        "Throw_": true,
+        "Throw_": {
+            "ignore": [
+                "Nexus\\Encryption\\Key::__unserialize"
+            ]
+        },
         "TrueValue": {
             "ignore": [
                 "Nexus\\Collection\\Collection::generateDiffHashTable"
