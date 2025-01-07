@@ -98,7 +98,11 @@
         "LogicalAndSingleSubExprNegation": true,
         "LogicalLowerAnd": true,
         "LogicalLowerOr": true,
-        "LogicalNot": true,
+        "LogicalNot": {
+            "ignore": [
+                "Nexus\\Password\\Hash\\Pbkdf2Hash::verify"
+            ]
+        },
         "LogicalOr": true,
         "LogicalOrAllSubExprNegation": true,
         "LogicalOrNegation": true,

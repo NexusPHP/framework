@@ -16,6 +16,7 @@ namespace Nexus\Tools;
 use Infection\Mutator\ProfileList;
 use Nexus\Clock\SystemClock;
 use Nexus\Collection\Collection;
+use Nexus\Password\Hash\Pbkdf2Hash;
 use Nexus\Password\Hash\SodiumHash;
 
 /**
@@ -63,13 +64,24 @@ final class InfectionConfigBuilder
             Collection::class.'::filterWithKey',
             Collection::class.'::reject',
         ],
-        'CastInt' => [SystemClock::class],
+        'CastInt' => [
+            SystemClock::class,
+        ],
         'CastString' => [
             Collection::class.'::toArrayKey',
         ],
-        'Division' => [SystemClock::class],
-        'LogicalAnd' => [SodiumHash::class.'::valid'],
-        'ModEqual' => [SystemClock::class],
+        'Division' => [
+            SystemClock::class,
+        ],
+        'LogicalAnd' => [
+            SodiumHash::class.'::valid',
+        ],
+        'LogicalNot' => [
+            Pbkdf2Hash::class.'::verify',
+        ],
+        'ModEqual' => [
+            SystemClock::class,
+        ],
         'TrueValue' => [
             Collection::class.'::generateDiffHashTable',
         ],
